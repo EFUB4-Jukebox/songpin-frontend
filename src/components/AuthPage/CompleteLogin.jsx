@@ -1,23 +1,23 @@
-import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import Button from '../common/Button';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
+import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
 
 const CompleteLogin = ({ setCompleteLogin }) => {
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setCompleteLogin(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
   }, [setCompleteLogin]);
 
   const gotoHomePage = () => {
-    navigate('/home');
+    navigate("/home");
   };
 
   return (
@@ -25,7 +25,7 @@ const CompleteLogin = ({ setCompleteLogin }) => {
       <CompleteWrapper ref={modalRef}>
         <div className="welcomeText">환영해요!</div>
         <div className="completeMsg">회원가입이 완료되었어요</div>
-        <Button name="음악지도 보러가기" onClick={gotoHomePage} />
+        <Button active="true" name="음악지도 보러가기" onClick={gotoHomePage} />
       </CompleteWrapper>
     </Wrapper>
   );

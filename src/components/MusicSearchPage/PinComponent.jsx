@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import pinImage from '../../assets/images/MusicSearchPage/Rectangle 217.png';
-import mapIconBallad from '../../assets/images/MusicSearchPage/flower.svg';
-import mapIconBlack from '../../assets/images/MusicSearchPage/flower_black.svg';
-import mapIconGray from '../../assets/images/MusicSearchPage/flower_gray.svg';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
+import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
+import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
+import { GenreList } from "../../constants/GenreList";
 
-const PinComponent = () => {
-  const [image, setImage] = useState(mapIconBlack);
+const PinComponent = ({ songInfo, avgGenreName, pinCount }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/details-song');
+    navigate(`/details-song/${songInfo?.songId}`);
   };
+
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
+      : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(avgGenreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
 
   return (
     <PinBox
-      onMouseEnter={() => setImage(mapIconBallad)}
-      onMouseLeave={() => setImage(mapIconBlack)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={handleNavigate}
     >
-      <PinImg src={pinImage} alt="앨범 이미지" />
+      <PinImg src={songInfo?.imgPath} alt="앨범 이미지" />
       <TextBox>
         <PinTitle>
-          <MapIcon src={image} alt="지도 아이콘" />
-          <TitleText>사랑</TitleText>
+          <MapIcon src={currentIconSrc} alt="지도 아이콘" />
+          <TitleText>{songInfo?.title || null}</TitleText>
         </PinTitle>
-        <PinSinger>임재범</PinSinger>
+        <PinSinger>{songInfo?.artist || null}</PinSinger>
         <PinTimes>
           <MapIconGray src={mapIconGray} />
-          <TimesNum>5</TimesNum>
+          <TimesNum>{pinCount || null}</TimesNum>
         </PinTimes>
       </TextBox>
     </PinBox>
@@ -49,7 +59,12 @@ const PinBox = styled.div`
   margin-bottom: 12px;
   &:active {
     border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%), var(--offwhite, #efefef);
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.2) 100%
+      ),
+      var(--offwhite, #efefef);
   }
 `;
 
@@ -64,7 +79,7 @@ const PinImg = styled.img`
 const TextBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px 15px 10px 29px;
+  margin: 16px 15px 10px 12px;
   width: 100%;
 `;
 
@@ -91,6 +106,10 @@ const TitleText = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  max-width: 284px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const PinSinger = styled.div`
@@ -100,6 +119,10 @@ const PinSinger = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
+  max-width: 312px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const PinTimes = styled.div`

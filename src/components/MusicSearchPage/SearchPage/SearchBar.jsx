@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import search from '../../../assets/images/MusicSearchPage/search.svg';
-import arrow_dropdown from '../../../assets/images/MusicSearchPage/arrow_drop_down.svg';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import search from "../../../assets/images/MusicSearchPage/search.svg";
+import arrow_dropdown from "../../../assets/images/MusicSearchPage/arrow_drop_down.svg";
 
-const options = ['노래', '장소'];
+const options = ["노래", "장소"];
 
-const SearchBar = ({ optionChange }) => {
+const SearchBar = ({ optionChange, onSearch }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('노래');
+  const [selectedOption, setSelectedOption] = useState("노래");
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    const storedOption = sessionStorage.getItem("selectedOption");
+    if (storedOption) {
+      setSelectedOption(storedOption);
+    }
+  }, []);
 
   const toggling = () => setIsOpen(!isOpen);
 
-  const onOptionClicked = (value) => () => {
+  const onOptionClicked = value => () => {
     setSelectedOption(value);
     setIsOpen(false);
     optionChange(value);
+    sessionStorage.setItem("selectedOption", value);
   };
 
-  const [inputValue, setInputValue] = useState('');
-
-  const handleChange = (event) => {
+  const handleChange = event => {
     setInputValue(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    onSearch(inputValue);
+  };
+
+  const handleEnterKeySearch = event => {
+    if (event.key === "Enter") {
+      handleSearchClick();
+    }
   };
 
   return (
@@ -34,11 +51,13 @@ const SearchBar = ({ optionChange }) => {
             </DropdownHeader>
             {isOpen && (
               <DropdownList>
-                {options.map((option) => (
+                {options.map(option => (
                   <ListItem
                     onClick={onOptionClicked(option)}
                     key={option}
-                    style={{ fontWeight: selectedOption === option ? '700' : '400' }}
+                    style={{
+                      fontWeight: selectedOption === option ? "700" : "400",
+                    }}
                   >
                     {option}
                   </ListItem>
@@ -47,10 +66,24 @@ const SearchBar = ({ optionChange }) => {
             )}
           </Dropdown>
           <InputBox>
-            <Input type="text" value={inputValue} onChange={handleChange} />
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
+              placeholder={
+                selectedOption === "장소"
+                  ? "장소명을 검색"
+                  : "노래 제목 또는 가수명을 검색"
+              }
+              onKeyPress={handleEnterKeySearch}
+            />
           </InputBox>
         </Search>
-        <SearchIcon src={search} alt="검색 아이콘" />
+        <SearchIcon
+          src={search}
+          alt="검색 아이콘"
+          onClick={handleSearchClick}
+        />
       </SearchBox>
       <Line />
     </SearchBarComponent>
@@ -131,7 +164,7 @@ const Toggle = styled.img`
   height: 24px;
   margin-left: 4px;
   cursor: pointer;
-  transform: ${(props) => (props.isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${props => (props.isOpen ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
 const InputBox = styled.div`
@@ -147,6 +180,14 @@ const Input = styled.input`
   line-height: normal;
   border: none;
   outline: none;
+  &::placeholder {
+    color: var(--gray, #bcbcbc);
+    font-family: Pretendard;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
 `;
 
 const SearchIcon = styled.img`

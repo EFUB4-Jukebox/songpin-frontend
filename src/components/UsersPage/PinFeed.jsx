@@ -1,17 +1,26 @@
-import React from 'react';
-import styled from 'styled-components';
-import PinComponent from './PinComponent';
-import pinImage from '../../assets/images/MusicSearchPage/spark_122.svg';
+import React from "react";
+import styled from "styled-components";
+import PinComponent from "./PinComponent";
+import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
 
-const PinFeed = () => {
+const PinFeed = ({ pins, totalElements }) => {
   return (
     <div>
       <PinBox>
         <PinImg src={pinImage} alt="핀이미지" />
-        <PinNum>9999</PinNum>
+        <PinNum>{totalElements}</PinNum>
       </PinBox>
-      <PinComponent />
-      <PinComponent />
+      <PinContainer>
+        {pins.map(pin => (
+          <PinComponent
+            key={pin.pinId}
+            // onClick={() => handlePlaylistClick(playlist.playlistId)}
+            pin={pin} // 플레이리스트 정보를 전달
+          />
+        ))}
+        {/* <PinComponent />
+        <PinComponent /> */}
+      </PinContainer>
     </div>
   );
 };
@@ -21,7 +30,8 @@ export default PinFeed;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: 37px;
+  margin-bottom: 34px;
+  margin-left: 34px;
   align-items: center;
 `;
 
@@ -41,4 +51,8 @@ const PinNum = styled.div`
   font-weight: 500;
   line-height: normal;
   margin-left: 8px;
+`;
+
+const PinContainer = styled.div`
+  margin-left: 32px;
 `;

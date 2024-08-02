@@ -1,20 +1,56 @@
-import React from 'react';
-import styled from 'styled-components';
-import bookmark from '../../assets/images/MyPage/bookmark-black.svg';
-import Playlist from './Playlist';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import bookmark from "../../assets/images/MyPage/bookmark-black.svg";
+import Playlist from "./Playlist";
+import { getMyPlaylistBookmark } from "../../services/api/myPage";
+import { useQuery } from "@tanstack/react-query";
 
 const Bookmarks = () => {
+  // const [bookmarkCount, setBookmarkCount] = useState();
+  // const [bookmarkList, setBookmarkList] = useState([]);
+
+  const { data, refetch } = useQuery({
+    queryKey: ["getMyPlaylistBookmark"],
+    queryFn: getMyPlaylistBookmark,
+  });
+
+  const bookmarkCount = data?.bookmarkCount || 0;
+  const bookmarkList = data?.bookmarkList || [];
+
+  // useEffect(() => {
+  //   const getBookmark = async () => {
+  //     try {
+  //       const res = await getMyPlaylistBookmark();
+  //       console.log(res);
+  //       if (res) {
+  //         setBookmarkCount(res.bookmarkCount);
+  //         setBookmarkList(res.bookmarkList);
+  //       }
+  //     } catch (error) {
+  //       console.log("데이터 불러오기에 실패했습니다.", error);
+  //     }
+  //   };
+  //   getBookmark();
+  // }, []);
   return (
     <BookmarkedContainer>
       <PlaylistOverview>
         <PlaylistIcon src={bookmark} />
-        <Num>50</Num>
+        <Num>{bookmarkCount}</Num>
       </PlaylistOverview>
       <PlaylistSection>
-        <Playlist />
-        <Playlist />
-        <Playlist />
-        <Playlist />
+        {bookmarkList &&
+          bookmarkList.map(it => (
+            <Playlist
+              playlistId={it.playlistId}
+              playlistName={it.playlistName}
+              creatorNickname={it.creatorNickname}
+              pinCount={it.pinCount}
+              updateDate={it.updatedDate}
+              bookmarkId={it.bookmarkId}
+              refetch={refetch}
+            />
+          ))}
       </PlaylistSection>
     </BookmarkedContainer>
   );

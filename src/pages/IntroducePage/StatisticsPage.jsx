@@ -1,10 +1,10 @@
-import Background from '../../components/IntroducePage/Background';
-import NavBar from '../../components/IntroducePage/NavBar';
-import StatBackground1 from '../../components/IntroducePage/StatBackground1';
-import StatBackground2 from '../../components/IntroducePage/StatBackground2';
-import styled from 'styled-components';
-import StatBackground3 from '../../components/IntroducePage/StatBackground3';
-import Stats from '../../components/IntroducePage/Stats';
+import Background from "../../components/IntroducePage/Background";
+import NavBar from "../../components/IntroducePage/NavBar";
+import StatBackground1 from "../../components/IntroducePage/StatBackground1";
+import StatBackground2 from "../../components/IntroducePage/StatBackground2";
+import styled from "styled-components";
+import StatBackground3 from "../../components/IntroducePage/StatBackground3";
+import Stats from "../../components/IntroducePage/Stats";
 const StatisticsPage = () => {
   return (
     <div>
@@ -40,7 +40,7 @@ const BackgroundWrapper1 = styled.div`
 `;
 const BackgroundWrapper2 = styled.div`
   position: relative;
-  z-index: 3;
+  z-index: 2;
 `;
 
 const BackgroundWrapper3 = styled.div`
@@ -53,5 +53,6 @@ const Statistics = styled.div`
   top: 254px;
   left: 50%;
   transform: translate(-50%);
+  z-index: 10;
 `;
 export default StatisticsPage;

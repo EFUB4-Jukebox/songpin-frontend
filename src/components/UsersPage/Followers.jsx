@@ -1,26 +1,96 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  addFollowing,
+  deleteFollowing,
+  getFollowingList,
+  getMyProfile,
+} from "../../services/api/myPage";
 
-const Followers = ({ myFollowId }) => {
+const Followers = ({ userData }) => {
   const navigate = useNavigate();
+  const { memberId } = useParams();
+  const [myId, setMyId] = useState();
+  const [isFollowing, setIsFollowing] = useState();
+  const [followId, setFollowId] = useState();
+  const [followerCount, setFollowerCount] = useState(userData.followerCount);
+  const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
-  const handleNavigation = (menu) => {
+  const handleNavigation = menu => {
     navigate(`/user-follows?menu=${menu}`);
   };
+
+  useEffect(() => {
+    const checkMyId = async () => {
+      try {
+        const res = await getMyProfile();
+        setMyId(res.memberId);
+      } catch (error) {
+        console.error("Error fetching my profile:", error);
+      }
+    };
+    checkMyId();
+  }, []);
+
+  useEffect(() => {
+    const checkFollowing = async () => {
+      const res = await getFollowingList(myId);
+      const followingList = res.followingList;
+      console.log(memberId);
+      const isFollow =
+        followingList &&
+        followingList.find(it => it.memberId === Number(memberId));
+      console.log(isFollow);
+
+      if (isFollow) {
+        setIsFollowing(true);
+        setFollowId(isFollow.followId);
+      }
+    };
+    checkFollowing();
+  }, [myId]);
+
+  const handleFollow = async () => {
+    console.log(isFollowing);
+    try {
+      if (isFollowing) {
+        console.log(followId);
+        const res = await deleteFollowing(followId);
+        console.log(res, " 팔로잉 삭제");
+        setIsFollowing(!isFollowing);
+        setFollowerCount(prevCount => prevCount - 1);
+      } else {
+        const addFollowingId = {
+          targetMemberId: memberId,
+        };
+        const res = await addFollowing(addFollowingId);
+        console.log(res, "팔로잉 추가");
+        setIsFollowing(!isFollowing);
+        setFollowerCount(prevCount => prevCount + 1);
+      }
+
+      console.log(followerCount, followingCount);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   return (
     <FollowerComponent>
       <FollowInfoBox>
-        <FollowBox onClick={() => handleNavigation('followers')}>
-          <FollowNumberBox>9999</FollowNumberBox>
+        <FollowBox onClick={() => handleNavigation("followers")}>
+          <FollowNumberBox>{followerCount}</FollowNumberBox>
           <FollowTextBox>팔로워</FollowTextBox>
         </FollowBox>
-        <FollowBox onClick={() => handleNavigation('following')}>
-          <FollowNumberBox>9999</FollowNumberBox>
+        <FollowBox onClick={() => handleNavigation("following")}>
+          <FollowNumberBox>{followingCount}</FollowNumberBox>
           <FollowTextBox>팔로잉</FollowTextBox>
         </FollowBox>
       </FollowInfoBox>
-      <FollowBtn myFollowId={myFollowId}>{myFollowId ? '팔로잉' : '팔로우'}</FollowBtn>
+      <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>
+        {isFollowing ? "팔로잉" : "팔로우"}
+      </FollowBtn>
     </FollowerComponent>
   );
 };
@@ -66,8 +136,11 @@ const FollowBtn = styled.div`
   height: 38px;
   flex-shrink: 0;
   border-radius: 30px;
-  background: ${({ myFollowId }) => (myFollowId ? 'var(--f8f8f8, #FCFCFC)' : 'var(--light_black, #232323)')};
-  color: ${({ myFollowId }) => (myFollowId ? 'var(--light_black, #232323)' : 'var(--f8f8f8, #FCFCFC)')};
+  border: 1px solid var(--gray02, #747474);
+  background: ${({ isFollowing }) =>
+    isFollowing ? "var(--f8f8f8, #FCFCFC)" : "var(--light_black, #232323)"};
+  color: ${({ isFollowing }) =>
+    isFollowing ? "var(--light_black, #232323)" : "var(--f8f8f8, #FCFCFC)"};
   display: flex;
   width: 142px;
   height: 30px;

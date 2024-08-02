@@ -1,45 +1,86 @@
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import nobookmark from '../../assets/images/MyPage/bookmark-no.svg';
-import yesbookmark from '../../assets/images/MyPage/bookmark-yes.svg';
-import pinImage from '../../assets/images/MusicSearchPage/spark_122.svg';
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import nobookmark from "../../assets/images/MyPage/bookmark-no.svg";
+import yesbookmark from "../../assets/images/MyPage/bookmark-yes.svg";
+import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
+import lock from "../../assets/images/UsersPage/lock.svg";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { addBookmarkOne, deleteBookmarkOne } from "../../services/api/myPage";
+import { useNavigate } from "react-router-dom";
 
-const Playlist = (/* { playlist }*/) => {
+const Playlist = ({ playlist }) => {
+  const {
+    playlistName,
+    creatorNickname,
+    pinCount,
+    updatedDate,
+    imgPathList,
+    bookmarkId,
+    playlistId,
+  } = playlist;
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(bookmarkId ? true : false);
+  const isPrivate = playlist.visibility === "PRIVATE";
 
-  const toggleBookmark = () => {
-    setIsBookmarked((prev) => !prev);
+  const toggleBookmark = async () => {
+    try {
+      if (isBookmarked) {
+        await deleteBookmarkOne(bookmarkId);
+      } else {
+        await addBookmarkOne({ playlistId });
+      }
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("북마크 변경에 실패했습니다.", error);
+    }
   };
+
+  const handlePlaylistClick = () => {
+    navigate(`/playlists/${playlistId}`);
+  };
+
+  const formattedUpdateDate = format(new Date(updatedDate), "yy.MM.dd", {
+    locale: ko,
+  });
 
   return (
     <PlaylistContainer>
       <PlaylistBox>
-        <BigBox>
-          <BookmarkBtn src={isBookmarked ? yesbookmark : nobookmark} alt="북마크 버튼" onClick={toggleBookmark} />
+        <BigBox imageUrl={imgPathList[0]}>
+          <BookmarkBtn
+            src={isBookmarked ? yesbookmark : nobookmark}
+            alt="북마크 버튼"
+            onClick={toggleBookmark}
+          />
         </BigBox>
         <SmallBoxContainer>
-          <SmallBox />
-          <SmallBox />
-          {/* <SmallBox imageUrl={coverImages[1]} />
-          <SmallBox imageUrl={coverImages[2]} /> */}
+          <SmallBox imageUrl={imgPathList[1]} />
+          <SmallBox imageUrl={imgPathList[2]} />
         </SmallBoxContainer>
       </PlaylistBox>
-      <PlaylistNameContainer onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-        <PlaylistName isHovered={isHovered}>
-          {/*{playlistName}*/}가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타
-          &nbsp;가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타
-        </PlaylistName>
-        <FadeOut />
-      </PlaylistNameContainer>
+      <PlaylistNameBox>
+        {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
+        <PlaylistNameContainer
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handlePlaylistClick}
+        >
+          <PlaylistName onClick={handlePlaylistClick} isHovered={isHovered}>
+            {playlistName}
+          </PlaylistName>
+          <FadeOut />
+        </PlaylistNameContainer>
+      </PlaylistNameBox>
       <NameBox>
-        <UserName>by 송송</UserName>
+        <UserName>by {creatorNickname}</UserName>
         <PinBox>
           <PinImg src={pinImage} alt="핀이미지" />
-          <PinNum>53</PinNum>
+          <PinNum>{pinCount}</PinNum>
         </PinBox>
       </NameBox>
-      <UpdatedDate>최근 업데이트: 20xx.xx.xx</UpdatedDate>
+      <UpdatedDate>최근 업데이트: {formattedUpdateDate}</UpdatedDate>
     </PlaylistContainer>
   );
 };
@@ -62,7 +103,9 @@ const BigBox = styled.div`
   height: 140px;
   border-radius: 8px 0px 0px 8px;
   border-right: 1px solid var(--f8f8f8, #fcfcfc);
-  background: #5452ff;
+  background: ${({ imageUrl }) =>
+    imageUrl ? `url(${imageUrl}) no-repeat center center` : "#E7E7E7"};
+  background-size: cover;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -78,13 +121,14 @@ const SmallBoxContainer = styled.div`
 const SmallBox = styled.div`
   width: 70px;
   height: 70px;
+  background: ${({ imageUrl }) =>
+    imageUrl ? `url(${imageUrl}) no-repeat center center` : "#E7E7E7"};
+  background-size: cover;
   &:first-child {
     border-radius: 0px 8px 0px 0px;
-    background: #00d2d2;
   }
   &:last-child {
     border-radius: 0px 0px 8px 0px;
-    background: var(--offwhite, #efefef);
   }
 `;
 
@@ -95,7 +139,8 @@ const BookmarkBtn = styled.img`
   padding: 10px;
   cursor: pointer;
   fill: #f8f8f8;
-  /* fill: ${(props) => (props.onClick ? '#f8f8f8' : 'none')}; */
+  /* fill: ${props => (props.onClick ? "#f8f8f8" : "none")}; */
+  /* fill: ${props => (props.onClick ? "#f8f8f8" : "none")}; */
   /* &:hover {
     fill: #f8f8f8;
   } */
@@ -107,6 +152,7 @@ const PlaylistNameContainer = styled.div`
   position: relative;
   width: 210px;
   overflow: hidden;
+  cursor: pointer;
 `;
 
 const scrollText = keyframes`
@@ -126,7 +172,10 @@ const PlaylistName = styled.div`
   font-weight: 600;
   line-height: normal;
   white-space: nowrap;
-  animation: ${(props) => (props.isHovered ? scrollText : 'none')} 9s linear infinite;
+  animation: ${props => (props.isHovered ? scrollText : "none")} 9s linear
+    infinite;
+  animation: ${props => (props.isHovered ? scrollText : "none")} 9s linear
+    infinite;
 `;
 
 const FadeOut = styled.div`
@@ -190,3 +239,15 @@ const UpdatedDate = styled.div`
   height: 24px;
   padding-left: 8px;
 `;
+
+const LockImg = styled.img`
+  width: 13px;
+  height: 16px;
+  flex-shrink: 0;
+  fill: var(--gray02, #747474);
+
+  padding-left: 3px;
+  padding-right: 7px;
+`;
+
+const PlaylistNameBox = styled.div``;

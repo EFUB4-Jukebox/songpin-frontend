@@ -1,14 +1,14 @@
-import React from 'react';
-import styled from 'styled-components';
-import UserInfo from './UserInfo';
-import Followers from './Followers';
-import settingIcon from '../../assets/images/MyPage/settings.svg';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import UserInfo from "./UserInfo";
+import Followers from "./Followers";
+import settingIcon from "../../assets/images/MyPage/settings.svg";
+import { useNavigate } from "react-router-dom";
 
 const MyInfoTop = () => {
   const navigate = useNavigate();
   const goSettingsPage = () => {
-    navigate('/settings');
+    navigate("/settings");
   };
 
   return (

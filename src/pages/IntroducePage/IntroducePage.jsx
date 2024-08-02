@@ -1,7 +1,12 @@
-import NavBar from '../../components/IntroducePage/NavBar';
-import main_center from '../../assets/introduce/main_center.svg';
-import styled from 'styled-components';
-import Background from '../../components/IntroducePage/Background';
+import NavBar from "../../components/IntroducePage/NavBar";
+import main_center from "../../assets/introduce/main_center.svg";
+import styled from "styled-components";
+import Background from "../../components/IntroducePage/Background";
+import logo_bottom from "../../assets/introduce/logo_bottom.svg";
+import first from "../../assets/introduce/intro_ex_first.svg";
+import second from "../../assets/introduce/intro_ex_second.svg";
+import third from "../../assets/introduce/intro_ex_third.svg";
+import fourth from "../../assets/introduce/intro_ex_fourth.svg";
 
 const IntroducePage = () => {
   return (
@@ -10,41 +15,29 @@ const IntroducePage = () => {
         <Background />
       </BackgroundWrapper>
       <Wrapper>
-        <NavWrap>
-          <NavBar />
-        </NavWrap>
+        <NavBar />
         <Center>
           <img src={main_center} alt="main center" />
         </Center>
+        <Mid>
+          <div className="first">
+            <img src={first} />
+          </div>
+          <div className="second">
+            <img src={second} />
+            <img src={third} />
+            <img src={fourth} />
+          </div>
+        </Mid>
         <Bottom>
-          <div>
-            송핀은 <br /> 이러이러한 서비스입니다.
-            <br />
-            <br />
-            송핀은 <br /> 이러이러한 서비스입니다.
-          </div>
-          <div>사용방법</div>
-          <div>
-            만든 사람들
-            <br />
-            <br />
-            프론트엔드 개발자
-            <br />
-            <br />
-            백엔드 개발자
-            <br />
-            <br />
-            디자이너{' '}
-          </div>
+          <img src={logo_bottom} />
         </Bottom>
       </Wrapper>
     </div>
   );
 };
 
-const NavWrap = styled.div`
-  font-size: 50px;
-`;
+export default IntroducePage;
 
 const BackgroundWrapper = styled.div`
   position: absolute;
@@ -56,6 +49,7 @@ const BackgroundWrapper = styled.div`
 `;
 const Wrapper = styled.div`
   position: relative;
+  z-index: 1;
 `;
 const Center = styled.div`
   display: flex;
@@ -64,16 +58,24 @@ const Center = styled.div`
   align-items: center;
   position: relative;
   z-index: 1;
+  top: -15px;
 `;
-const Bottom = styled.div`
-  font-size: 32px;
-  text-align: center;
-  font-weight: bold;
-  z-index: 0;
-  margin-top: 74px;
-  margin-bottom: 53px;
+const Mid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 336px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 115px;
+  .second {
+    display: flex;
+    margin-top: 44px;
+    gap: 161px;
+  }
 `;
-export default IntroducePage;
+const Bottom = styled.div`
+  position: relative;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+`;

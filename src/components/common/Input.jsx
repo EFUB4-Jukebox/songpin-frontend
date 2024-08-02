@@ -1,15 +1,21 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const Input = ({ placeholder, infoMsg }) => {
+const Input = ({ placeholder, infoMsg, type, value, onChange, hasError }) => {
   return (
     <>
-      <InputWrapper>
-        <input type="text" placeholder={placeholder} />
+      <InputWrapper hasError={hasError}>
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+        />
         {infoMsg && <div className="infoMsg">{infoMsg}</div>}
       </InputWrapper>
     </>
   );
 };
+
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,6 +27,10 @@ const InputWrapper = styled.div`
     height: 40px;
     font-size: 20px;
     padding: 10px;
+    border: ${props =>
+      props.hasError
+        ? "1px solid #FF3844"
+        : "1px solid var(--gray02, #747474)"};
   }
   .infoMsg {
     color: var(--gray02, #747474);
@@ -31,4 +41,5 @@ const InputWrapper = styled.div`
     line-height: 150%; /* 24px */
   }
 `;
+
 export default Input;

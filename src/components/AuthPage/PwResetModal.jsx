@@ -1,25 +1,25 @@
-import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import Button from '../common/Button';
-import { useNavigate } from 'react-router-dom';
-import Input from '../common/Input';
-import back from '../../assets/images/MusicSearchPage/arrow_back.svg';
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
+import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
+import Input from "../common/Input";
+import back from "../../assets/images/MusicSearchPage/arrow_back.svg";
 
 const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   const navigate = useNavigate();
   const modalRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setPwResetModal(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
   }, [setPwResetModal]);
 
   const handleSendMail = () => {
-    navigate('/resetPassword');
+    navigate("/resetPassword");
   };
 
   const handleGotoLoginModal = () => {
@@ -36,7 +36,11 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
         <div className="pwResetText">비밀번호를 잊으셨나요?</div>
         <InputWrapper>
           <Input placeholder="이메일" />
-          <Button name="비밀번호 재설정 메일 발송" onClick={handleSendMail} />
+          <Button
+            active="true"
+            name="비밀번호 재설정 메일 발송"
+            onClick={handleSendMail}
+          />
         </InputWrapper>
         <div className="pwResetMsg">등록되지 않은 이메일입니다.</div>
       </PwResetWrapper>

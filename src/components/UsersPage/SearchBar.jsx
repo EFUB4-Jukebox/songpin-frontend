@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import search from '../../assets/images/MusicSearchPage/search.svg';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import search from "../../assets/images/MusicSearchPage/search.svg";
 
-const SearchBar = ({ placeholder }) => {
-  const [inputValue, setInputValue] = useState('');
+const SearchBar = ({ placeholder, value, onSearch }) => {
+  const [inputValue, setInputValue] = useState("");
 
-  const handleChange = (event) => {
+  useEffect(() => {
+    setInputValue(value || "");
+  }, [value]); // value가 변경될 때마다 inputValue 업데이트
+
+  const handleChange = event => {
     setInputValue(event.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(inputValue);
+  };
+
+  const handleKeyDown = event => {
+    if (event.key === "Enter") {
+      handleSearch(); // Enter 키가 눌렸을 때 검색 수행
+    }
   };
 
   return (
@@ -14,10 +28,16 @@ const SearchBar = ({ placeholder }) => {
       <SearchBox>
         <Search>
           <InputBox>
-            <Input type="text" value={inputValue} onChange={handleChange} placeholder={placeholder} />
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+            />
           </InputBox>
         </Search>
-        <SearchIcon src={search} alt="검색 아이콘" />
+        <SearchIcon src={search} alt="검색 아이콘" onClick={handleSearch} />
       </SearchBox>
       <Line />
     </SearchBarComponent>
@@ -53,6 +73,10 @@ const InputBox = styled.div`
 
 const Input = styled.input`
   color: var(--light_black, #232323);
+
+  &::placeholder {
+    color: var(--gray, #bcbcbc);
+  }
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;

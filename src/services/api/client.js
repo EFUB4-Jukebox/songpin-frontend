@@ -1,11 +1,30 @@
 import axios from "axios";
 
-const client = axios.create();
-client.defaults.baseURL = `${process.env.REACT_APP_SERVER_URL}`;
-client.defaults.withCredentials = true;
+const client = axios.create({
+  baseURL: process.env.REACT_APP_SERVER_URL,
+  withCredentials: true,
+});
 
-const token = localStorage.getItem("paladintoken");
+client.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    return error.response;
+  },
+);
 
-client.defaults.headers.common["Authorization"] = token ? `${token}` : null;
+client.interceptors.request.use(async config => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch (e) {
+    return null;
+  }
+
+  return config;
+});
 
 export default client;
