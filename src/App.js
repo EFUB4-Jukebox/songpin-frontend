@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 
 import IntroducePage from "./pages/IntroducePage/IntroducePage";
 import HomePage from "./pages/HomePage/HomePage";
@@ -26,32 +31,35 @@ import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
-import { postAllMarkers, postRecentMarkers, postCustomPeriodMarkers } from './services/api/map';
+import {
+  postAllMarkers,
+  postRecentMarkers,
+  postCustomPeriodMarkers,
+} from "./services/api/map";
 
-import pop from './assets/map/glowing_map_pop.svg';
-import ballad from './assets/map/glowing_map_ballad.svg';
-import dance from './assets/map/glowing_map_dance.svg';
-import hiphop from './assets/map/glowing_map_hiphop.svg';
-import jazz from './assets/map/glowing_map_jazz.svg';
-import lofi from './assets/map/glowing_map_lofi.svg';
-import rock from './assets/map/glowing_map_rock.svg';
-import extra from './assets/map/glowing_map_extra.svg';
-import { GenreList } from './constants/GenreList';
-import MapFilter from './components/HomePage/MapFilter';
+import pop from "./assets/map/glowing_map_pop.svg";
+import ballad from "./assets/map/glowing_map_ballad.svg";
+import dance from "./assets/map/glowing_map_dance.svg";
+import hiphop from "./assets/map/glowing_map_hiphop.svg";
+import jazz from "./assets/map/glowing_map_jazz.svg";
+import lofi from "./assets/map/glowing_map_lofi.svg";
+import rock from "./assets/map/glowing_map_rock.svg";
+import extra from "./assets/map/glowing_map_extra.svg";
+import { GenreList } from "./constants/GenreList";
+import MapFilter from "./components/HomePage/MapFilter";
 
 const genreImages = {
-  "POP": pop,
-  "BALLAD": ballad,
-  "DANCE": dance,
-  "HIPHOP": hiphop,
-  "JAZZ": jazz,
-  "LOFI": lofi,
-  "ROCK": rock,
-  "EXTRA": extra,
+  POP: pop,
+  BALLAD: ballad,
+  DANCE: dance,
+  HIPHOP: hiphop,
+  JAZZ: jazz,
+  LOFI: lofi,
+  ROCK: rock,
+  EXTRA: extra,
 };
 
 function App() {
-
   const [allPins, setAllPins] = useState([]);
   const [recentPins, setRecentPins] = useState([]);
 
@@ -68,18 +76,20 @@ function App() {
   }, []);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === 'All') {
+    if (term === "All") {
       const data = await postAllMarkers();
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
     } else {
       const periodMap = {
-        '1week': 'week',
-        '1month': 'month',
-        '3months': 'three_months',
+        "1week": "week",
+        "1month": "month",
+        "3months": "three_months",
       };
       const periodFilter = periodMap[term];
-      const genreNameFilters = genres.map(genre => GenreList.find(g => g.id === genre).EngName);
+      const genreNameFilters = genres.map(
+        genre => GenreList.find(g => g.id === genre).EngName,
+      );
       const request = {
         boundCoords: {
           swLat: 0,
@@ -102,10 +112,21 @@ function App() {
         <Route path="/introduce" element={<IntroducePage />} />
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/resetPassword" element={<PwResetPage />} />
-        <Route path="/resetPasswordComplete" element={<PwResetCompletePage />} />
+        <Route
+          path="/resetPasswordComplete"
+          element={<PwResetCompletePage />}
+        />
         <Route path="*" element={<h1>Not Found</h1>} />
 
-        <Route element={<MapLayout allPins={allPins} recentPins={recentPins} handleFilterChange={handleFilterChange} />}>
+        <Route
+          element={
+            <MapLayout
+              allPins={allPins}
+              recentPins={recentPins}
+              handleFilterChange={handleFilterChange}
+            />
+          }
+        >
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
@@ -117,8 +138,14 @@ function App() {
           <Route path="/users/:memberId" element={<UsersPage />} />
           <Route path="/user-follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
-          <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
-          <Route path="/playlist-edit/:playlistId" element={<PlaylistEditPage />} />
+          <Route
+            path="/playlists/:playlistId"
+            element={<PlaylistDetailPage />}
+          />
+          <Route
+            path="/playlist-edit/:playlistId"
+            element={<PlaylistEditPage />}
+          />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
@@ -156,27 +183,29 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           pointerEvents: "auto",
         }}
       >
-        {pinsToDisplay.length > 0 && pinsToDisplay.map(pin => (
-          <MapMarker 
-            key={pin.id}
-            position={{ lat: pin.latitude, lng: pin.longitude }}
-            image={{
-              src: genreImages[pin.latestGenreName] || extra,
-              size: {
-                width: 114,
-                height: 114,
-              },
-            }}
-            onClick={() => {
-              if (pin.placePinCount >= 2) {
-                navigate(`/details-place/${pin.placeId}`);
-              } else {
-                navigate(`/details-song/${pin.latestSongId}`);
-              }
-            }}>
-            {/* <div style={{color:"#000"}}>{pin.name}</div> */}
-          </MapMarker>
-        ))}
+        {pinsToDisplay.length > 0 &&
+          pinsToDisplay.map(pin => (
+            <MapMarker
+              key={pin.id}
+              position={{ lat: pin.latitude, lng: pin.longitude }}
+              image={{
+                src: genreImages[pin.latestGenreName] || extra,
+                size: {
+                  width: 114,
+                  height: 114,
+                },
+              }}
+              onClick={() => {
+                if (pin.placePinCount >= 2) {
+                  navigate(`/details-place/${pin.placeId}`);
+                } else {
+                  navigate(`/details-song/${pin.latestSongId}`);
+                }
+              }}
+            >
+              {/* <div style={{color:"#000"}}>{pin.name}</div> */}
+            </MapMarker>
+          ))}
       </Map>
       <div
         style={{
@@ -200,8 +229,14 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/users/:memberId" element={<UsersPage />} />
           <Route path="/user-follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
-          <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
-          <Route path="/playlist-edit/:playlistId" element={<PlaylistEditPage />} />
+          <Route
+            path="/playlists/:playlistId"
+            element={<PlaylistDetailPage />}
+          />
+          <Route
+            path="/playlist-edit/:playlistId"
+            element={<PlaylistEditPage />}
+          />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
@@ -219,7 +254,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           zIndex: 1,
         }}
       >
-        <MapFilter onFilterChange={handleFilterChange}/>
+        <MapFilter onFilterChange={handleFilterChange} />
       </div>
       <Notification />
     </div>
