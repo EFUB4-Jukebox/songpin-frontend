@@ -59,7 +59,7 @@ const HomePage = () => {
                 ))}
             </PlaceListContainer>
         </SideSection>
-        <MapFilter />
+        {/* <MapFilter /> */}
         </div>
     );
 };
