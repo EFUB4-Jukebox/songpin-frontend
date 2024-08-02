@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import moment from "moment";
@@ -22,7 +22,11 @@ const MapFilter = () => {
   const [selectedDatesText, setSelectedDatesText] = useState(
     "YYYY.MM.DD ~ YYYY.MM.DD",
   );
+  const weekDaysShort = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
   const [recentPins, setRecentPins] = useState([]);
+  const optionsRef = useRef(null);
+  const [dropdownWidth, setDropdownWidth] = useState(0);
 
   const selectTerm = term => {
     setSelectedOption(term);
@@ -84,6 +88,12 @@ const MapFilter = () => {
       setSelectedDatesText("YYYY.MM.DD ~ YYYY.MM.DD");
     }
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    if (optionsRef.current) {
+      setDropdownWidth(optionsRef.current.offsetWidth);
+    }
+  }, [selectedOption]);
 
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
@@ -147,7 +157,7 @@ const MapFilter = () => {
 
   return (
     <FilterContainer>
-      <GivenOptions onClick={handleShowOptions}>
+      <GivenOptions onClick={handleShowOptions} ref={optionsRef}>
         {selectedOption === "All" && <span>전체 기간</span>}
         {selectedOption === "1week" && <span>최근 일주일</span>}
         {selectedOption === "1month" && <span>최근 한 달</span>}
@@ -158,7 +168,7 @@ const MapFilter = () => {
           alt="dropdown icon"
         />
         {showOptions && (
-          <Dropdown>
+          <Dropdown style={{ width: dropdownWidth }}>
             <Option onClick={() => selectTerm("All")}>전체 기간</Option>
             <Option onClick={() => selectTerm("1week")}>최근 일주일</Option>
             <Option onClick={() => selectTerm("1month")}>최근 한 달</Option>
@@ -172,7 +182,7 @@ const MapFilter = () => {
       {showSetTerm && (
         <SetTermWrapper>
           <SetTerm onClick={handleShowCalendar}>
-            {selectedDatesText}
+            <SelectedDateText>{selectedDatesText}</SelectedDateText>
             <DropdownIcon
               src={showCalendar ? close_dropdown : open_dropdown}
               alt="dropdown icon"
@@ -189,6 +199,9 @@ const MapFilter = () => {
                 formatYear={(locale, date) => moment(date).format("YYYY")}
                 formatMonthYear={(locale, date) =>
                   moment(date).format("YYYY. MMMM")
+                }
+                formatShortWeekday={(locale, date) =>
+                  weekDaysShort[date.getDay()]
                 }
                 showNeighboringMonth={true}
               />
@@ -269,18 +282,15 @@ const GivenOptions = styled.div`
   font-weight: 500;
   cursor: pointer;
 `;
-
 const DropdownIcon = styled.img`
   width: 30px;
   height: 30px;
-  margin-left: 4px;
 `;
 
 const Dropdown = styled.div`
   position: absolute;
-  top: 115%;
-  right: -75px;
-  transform: translateX(-50%);
+  top: 110%;
+  left: -2px;
   z-index: 10;
   display: flex;
   width: 154px;
@@ -316,20 +326,26 @@ const SetTermWrapper = styled.div`
 const SetTerm = styled.div`
   position: relative;
   display: flex;
-  padding: 10px 16px 10px 20px;
+  padding: 10px 14px;
   /* width: 142px; */
   height: 24px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-left: 20px;
   border-radius: 24px;
+  width: 290px;
   border: 1px solid var(--gray02, #747474);
   background: var(--offwhite_, #fcfcfc);
   font-family: Pretendard;
-  font-size: 18px;
+  font-size: 17px;
   font-style: normal;
   font-weight: 500;
   cursor: pointer;
+`;
+const SelectedDateText = styled.div`
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
 `;
 
 const SetGenre = styled.div`
@@ -352,11 +368,15 @@ const SetGenre = styled.div`
 `;
 
 const ApplyContainer = styled.div`
+  position: relative;
+  top: 37px;
+  left: 8px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 17px;
   background: none;
+  width: 320px;
   border: 1px solid var(--gray02, #747474);
   border-radius: 24px;
   background-color: var(--offwhite_, #fcfcfc);
@@ -364,29 +384,29 @@ const ApplyContainer = styled.div`
 
 const CalendarContainer = styled.div`
   position: absolute;
-  top: 233px;
-  left: 180px;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  border: 1px solid var(--gray02, #747474);
-  background: var(--offwhite_, #fcfcfc);
-  padding: 10px;
-  border-radius: 24px;
-  height: 340px;
   .react-calendar {
+    position: relative;
+    top: 50px;
+    right: -10px;
+    z-index: 10;
     border: none;
     border-radius: 24px;
+    width: 320px;
+    border: 1px solid var(--gray02, #747474);
   }
 `;
 
 const StyledCalendar = styled(Calendar)`
   font-family: Pretendard;
-
+  padding: 5px;
+  padding: 15px;
   .react-calendar__navigation {
+    margin: 5px;
     button {
       color: #232323;
-      font-size: 1.2em;
+      font-size: 16px;
       font-weight: bold;
+      padding: 0px;
     }
   }
 
@@ -423,6 +443,8 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__month-view__weekdays {
+    margin-bottom: 5px;
+
     abbr {
       text-decoration: none;
       font-family: Pretendard;
@@ -430,8 +452,9 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__month-view__days__day {
-    height: 50px;
+    height: 40px;
     width: 40px;
+    margin-bottom: 1px;
   }
 `;
 
@@ -439,8 +462,8 @@ const SelectedDates = styled.div`
   padding: 8px 16px;
   color: var(--light_black, #232323);
   font-family: Pretendard;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   display: flex;
   align-items: center;
 `;
@@ -472,7 +495,7 @@ const GenreTotal = styled.div`
 `;
 const GenreDropdown = styled.div`
   position: absolute;
-  top: 50px;
+  top: 110%;
   z-index: 10;
   width: 230px;
   height: 200px;
