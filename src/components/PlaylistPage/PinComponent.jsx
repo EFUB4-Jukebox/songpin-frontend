@@ -4,6 +4,7 @@ import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
 import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
 import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
 import PinModalBox from "../common/PinModalBox";
+import { useNavigate } from "react-router-dom";
 
 const PinComponent = ({
   pin = {},
@@ -15,10 +16,13 @@ const PinComponent = ({
   const [image, setImage] = useState(mapIconBlack);
   // const [isSelected, setIsSelected] = useState(false);
   const { songInfo = {} } = pin;
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (selectable) {
       onSelect(pin.playlistPinId);
+    } else {
+      navigate(`/details-song/${pin.songInfo.songId}`);
     }
   };
   const formatDate = dateString => {

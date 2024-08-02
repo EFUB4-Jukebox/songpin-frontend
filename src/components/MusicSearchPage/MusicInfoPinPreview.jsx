@@ -3,6 +3,7 @@ import styled from "styled-components";
 import lockIcon from "../../assets/images/MyPage/lock.svg";
 import { useNavigate } from "react-router-dom";
 import PinModalBox from "../common/PinModalBox";
+import { postAllMarkers } from "../../services/api/map";
 
 const MusicInfoPinPreview = ({ pin }) => {
   const [isTruncated, setIsTruncated] = useState(true);
@@ -23,6 +24,30 @@ const MusicInfoPinPreview = ({ pin }) => {
     navigate("/users");
   };
 
+  // const moveToLocation = (latitude, longitude) => {
+  //   const request = {
+  //     boundCoords: {
+  //       swLat: latitude - 0.05, // 대략적인 예시 좌표
+  //       swLng: longitude - 0.05,
+  //       neLat: latitude + 0.05,
+  //       neLng: longitude + 0.05,
+  //     },
+  //     genreNameFilters: null,
+  //   };
+
+  //   postAllMarkers(request)
+  //     .then(data => {
+  //       console.log("Received pins data:", data);
+  //     })
+  //     .catch(error => {
+  //       console.error("Error loading pins:", error.message);
+  //     });
+  // };
+
+  // const goMapLocation = () => {
+  //   moveToLocation(latitude, longitude);
+  // };
+
   const goMapLocation = () => {
     const location = {
       lat: latitude,
@@ -38,6 +63,14 @@ const MusicInfoPinPreview = ({ pin }) => {
   const maxLength = 59;
   const showMoreBtn = text.length > maxLength;
   const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+
+  const formatDate = dateString => {
+    const date = new window.Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
 
   return (
     <PinsContainer>
@@ -59,8 +92,8 @@ const MusicInfoPinPreview = ({ pin }) => {
               <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
             )}
           </PinMemo>
-          <Details>
-            <Date>{listenedDate}</Date>
+          <Details onClick={goMapLocation}>
+            <Date>{formatDate(listenedDate)}</Date>
             <Place>{placeName}</Place>
             <PlaceText>에서</PlaceText>
           </Details>

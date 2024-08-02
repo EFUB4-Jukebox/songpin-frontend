@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import moment from "moment";
@@ -8,9 +8,8 @@ import close_dropdown from "../../assets/filter/close_dropdown.svg";
 import calendar_selected from "../../assets/filter/calendar_selected.svg";
 import Genre from "../common/Genre";
 import { GenreList } from "../../constants/GenreList";
-import { postRecentMarkers } from "../../services/api/map";
 
-const MapFilter = () => {
+const MapFilter = ({ onFilterChange }) => {
   const [selectedOption, setSelectedOption] = useState("All");
   const [showOptions, setShowOptions] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -23,6 +22,7 @@ const MapFilter = () => {
     "YYYY.MM.DD ~ YYYY.MM.DD",
   );
   const weekDaysShort = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const [selectedPeriod, setSelectedPeriod] = useState("All");
 
   const [recentPins, setRecentPins] = useState([]);
   const optionsRef = useRef(null);
@@ -36,7 +36,7 @@ const MapFilter = () => {
     } else {
       setShowSetTerm(false);
     }
-    handleRequest(term, selectedGenres);
+    onFilterChange(term, selectedGenres);
   };
 
   const handleDateChange = date => {
@@ -63,16 +63,20 @@ const MapFilter = () => {
       const formattedEndDate = moment(endDate).format("YYYY.MM.DD");
       setSelectedOption("Userself");
       setSelectedDatesText(`${formattedStartDate} ~ ${formattedEndDate}`);
+      onFilterChange("Userself", selectedGenres, startDate, endDate);
     }
   };
 
   const toggleGenre = genre => {
-    console.log("로드");
-    setSelectedGenres(prevGenres =>
-      prevGenres.includes(genre)
+    setSelectedGenres(prevGenres => {
+      const newGenres = prevGenres.includes(genre)
         ? prevGenres.filter(g => g !== genre)
-        : [...prevGenres, genre],
-    );
+        : [...prevGenres, genre];
+
+      // 장르가 변경될 때마다 onFilterChange 함수 호출
+      onFilterChange(selectedOption, newGenres);
+      return newGenres;
+    });
   };
 
   useEffect(() => {
@@ -126,38 +130,29 @@ const MapFilter = () => {
     setShowCalendar(false);
   };
 
-  const handleRequest = async (term, genres) => {
-    const periodMap = {
-      //'All': 'all',
-      "1week": "week",
-      "1month": "month",
-      "3months": "three_months",
-      // 'Userself': 'custom'
-    };
-    const periodFilter = periodMap[term];
-    const genreNameFilters = genres.map(
-      genre => GenreList.find(g => g.id === genre).name,
-    );
+  const handlePeriodChange = e => {
+    const newPeriod = e.target.value;
+    setSelectedPeriod(newPeriod);
+    onFilterChange(newPeriod, selectedGenres);
+  };
 
-    const request = {
-      boundCoords: {
-        swLat: 0,
-        swLng: 0,
-        neLat: 90,
-        neLng: 180,
-      },
-      genreNameFilters,
-      periodFilter,
-    };
-
-    console.log("Request:", request);
-    const Data = await postRecentMarkers(request);
-    console.log("Data:", Data);
+  const handleGenreChange = e => {
+    const genreId = e.target.value;
+    const newGenres = e.target.checked
+      ? [...selectedGenres, genreId]
+      : selectedGenres.filter(id => id !== genreId);
+    setSelectedGenres(newGenres);
+    onFilterChange(selectedPeriod, newGenres);
   };
 
   return (
     <FilterContainer>
-      <GivenOptions onClick={handleShowOptions} ref={optionsRef}>
+      <GivenOptions
+        onClick={handleShowOptions}
+        value={selectedPeriod}
+        onChange={handlePeriodChange}
+        ref={optionsRef}
+      >
         {selectedOption === "All" && <span>전체 기간</span>}
         {selectedOption === "1week" && <span>최근 일주일</span>}
         {selectedOption === "1month" && <span>최근 한 달</span>}
@@ -268,7 +263,6 @@ const GivenOptions = styled.div`
   position: relative;
   display: flex;
   padding: 10px 16px 10px 20px;
-  //width: 120px;
   height: 24px;
   justify-content: center;
   align-items: center;

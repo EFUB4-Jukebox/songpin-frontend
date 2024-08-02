@@ -1,28 +1,25 @@
-import React from 'react';
-import styled from 'styled-components';
-import mapIconSpark from '../../assets/images/MusicSearchPage/spark_gray.svg';
-import { ReactComponent as LocationMark } from '../../assets/images/HomePage/location_on.svg';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import mapIconSpark from "../../assets/images/MusicSearchPage/spark_gray.svg";
+import { ReactComponent as LocationMark } from "../../assets/images/HomePage/location_on.svg";
+import { useNavigate } from "react-router-dom";
 
 const PlaceComponent = (place = {}) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate('/details-place');
+    navigate(`/details-place/${place.id}`);
   };
-
-  console.log(place.name);
-  console.log(place.cnt);
 
   return (
     <PlaceBox onClick={handleNavigate}>
       <Mark>
         <LocationMark />
       </Mark>
-        <PlaceName>{place.name}</PlaceName>
-        <PinTimes>
-            <MapIcon src={mapIconSpark} />
-            <TimesNum>{place.cnt}</TimesNum>
-        </PinTimes>
+      <PlaceName>{place.name}</PlaceName>
+      <PinTimes>
+        <MapIcon src={mapIconSpark} />
+        <TimesNum>{place.cnt}</TimesNum>
+      </PinTimes>
     </PlaceBox>
   );
 };
@@ -36,7 +33,7 @@ const PlaceBox = styled.div`
   width: 462px;
   height: 72px;
   border-radius: 8px;
-  background: var(--offwhite, #EFEFEF);
+  background: var(--offwhite, #efefef);
   flex-shrink: 0;
   margin-bottom: 12px;
   &:hover {

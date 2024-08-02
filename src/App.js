@@ -26,7 +26,7 @@ import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
-import { postAllMarkers, postRecentMarkers } from './services/api/map';
+import { postAllMarkers, postRecentMarkers, postCustomPeriodMarkers } from './services/api/map';
 
 import pop from './assets/map/glowing_map_pop.svg';
 import ballad from './assets/map/glowing_map_ballad.svg';
@@ -36,6 +36,8 @@ import jazz from './assets/map/glowing_map_jazz.svg';
 import lofi from './assets/map/glowing_map_lofi.svg';
 import rock from './assets/map/glowing_map_rock.svg';
 import extra from './assets/map/glowing_map_extra.svg';
+import { GenreList } from './constants/GenreList';
+import MapFilter from './components/HomePage/MapFilter';
 
 const genreImages = {
   "POP": pop,
@@ -48,22 +50,50 @@ const genreImages = {
   "EXTRA": extra,
 };
 
-
 function App() {
 
   const [allPins, setAllPins] = useState([]);
+  const [recentPins, setRecentPins] = useState([]);
 
-  useEffect(()=> {
+  useEffect(() => {
     const fetchAllPinData = async () => {
       try {
-      const Data = await postAllMarkers();
-      setAllPins(Data.mapPlaceSet);
+        const data = await postAllMarkers();
+        setAllPins(data.mapPlaceSet || []);
       } catch (error) {
-      console.error("Error fetching all pin data:", error);
+        console.error("Error fetching all pin data:", error);
       }
     };
     fetchAllPinData();
-  }, [])
+  }, []);
+
+  const handleFilterChange = async (term, genres) => {
+    if (term === 'All') {
+      const data = await postAllMarkers();
+      setAllPins(data.mapPlaceSet || []);
+      setRecentPins([]);
+    } else {
+      const periodMap = {
+        '1week': 'week',
+        '1month': 'month',
+        '3months': 'three_months',
+      };
+      const periodFilter = periodMap[term];
+      const genreNameFilters = genres.map(genre => GenreList.find(g => g.id === genre).EngName);
+      const request = {
+        boundCoords: {
+          swLat: 0,
+          swLng: 0,
+          neLat: 90,
+          neLng: 180,
+        },
+        genreNameFilters,
+        periodFilter,
+      };
+      const data = await postRecentMarkers(request);
+      setRecentPins(data.mapPlaceSet || []);
+    }
+  };
 
   return (
     <Router>
@@ -72,13 +102,10 @@ function App() {
         <Route path="/introduce" element={<IntroducePage />} />
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/resetPassword" element={<PwResetPage />} />
-        <Route
-          path="/resetPasswordComplete"
-          element={<PwResetCompletePage />}
-        />
+        <Route path="/resetPasswordComplete" element={<PwResetCompletePage />} />
         <Route path="*" element={<h1>Not Found</h1>} />
 
-        <Route element={<MapLayout allPins = {allPins}/>}>
+        <Route element={<MapLayout allPins={allPins} recentPins={recentPins} handleFilterChange={handleFilterChange} />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
@@ -90,14 +117,8 @@ function App() {
           <Route path="/users/:memberId" element={<UsersPage />} />
           <Route path="/user-follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
-          <Route
-            path="/playlists/:playlistId"
-            element={<PlaylistDetailPage />}
-          />
-          <Route
-            path="/playlist-edit/:playlistId"
-            element={<PlaylistEditPage />}
-          />
+          <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
+          <Route path="/playlist-edit/:playlistId" element={<PlaylistEditPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
@@ -111,8 +132,9 @@ function App() {
 
 export default App;
 
-function MapLayout({ allPins }) {
+function MapLayout({ allPins, recentPins, handleFilterChange }) {
   const navigate = useNavigate();
+  const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
 
   return (
     <div
@@ -134,7 +156,7 @@ function MapLayout({ allPins }) {
           pointerEvents: "auto",
         }}
       >
-        {allPins.map(pin => (
+        {pinsToDisplay.length > 0 && pinsToDisplay.map(pin => (
           <MapMarker 
             key={pin.id}
             position={{ lat: pin.latitude, lng: pin.longitude }}
@@ -163,8 +185,7 @@ function MapLayout({ allPins }) {
           left: 0,
           width: "80px",
           height: "100%",
-          zIndex: 1,
-          // pointerEvents: "none",
+          zIndex: 2,
         }}
       >
         <Routes>
@@ -179,14 +200,8 @@ function MapLayout({ allPins }) {
           <Route path="/users/:memberId" element={<UsersPage />} />
           <Route path="/user-follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
-          <Route
-            path="/playlists/:playlistId"
-            element={<PlaylistDetailPage />}
-          />
-          <Route
-            path="/playlist-edit/:playlistId"
-            element={<PlaylistEditPage />}
-          />
+          <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
+          <Route path="/playlist-edit/:playlistId" element={<PlaylistEditPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
@@ -194,7 +209,19 @@ function MapLayout({ allPins }) {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Routes>
       </div>
-      <Notification></Notification>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          //width: "50px",
+          height: "100%",
+          zIndex: 1,
+        }}
+      >
+        <MapFilter onFilterChange={handleFilterChange}/>
+      </div>
+      <Notification />
     </div>
   );
 }

@@ -38,3 +38,14 @@ export const postRecentMarkers = async (request) => {
         throw new Error("최근 기간 핀 로드 실패");
     }
 };
+
+export const postCustomPeriodMarkers = async (request) => {
+    try {
+        console.log('Sending Request:', request);
+        const data = await post(`/map/period/custom`, request);
+        console.log('Received Data:', data);
+        return data;
+    } catch (error) {
+        throw new Error("사용자 설정 기간 핀 로드 실패");
+    }
+};

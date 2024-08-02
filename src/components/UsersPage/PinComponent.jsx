@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import albumImage from "../../assets/images/UsersPage/Rectangle 205.svg";
+import { useNavigate } from "react-router-dom";
 import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
 import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
-import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
-import moreMenu from "../../assets/images/UsersPage/more_vert.svg";
 import lock from "../../assets/images/UsersPage/lock.svg";
+import { GenreList } from "../../constants/GenreList";
+
 const PinComponent = ({ pin }) => {
-  const [image, setImage] = useState(mapIconBlack);
   const [isTruncated, setIsTruncated] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  const { songInfo = {} } = pin;
+  const goSongInfo = () => {
+    navigate(`/details-song/${songInfo?.songId}`);
+  };
 
   const isPrivate = pin.visibility === "PRIVATE";
   const text =
@@ -18,6 +23,16 @@ const PinComponent = ({ pin }) => {
   const maxLength = 59;
   const showMoreBtn = text.length > maxLength;
   const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
+      : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(pin.genreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
 
   const toggleTruncation = () => {
     setIsTruncated(!isTruncated);
@@ -33,15 +48,15 @@ const PinComponent = ({ pin }) => {
 
   return (
     <PinBox
-      onMouseEnter={() => setImage(mapIconBallad)}
-      onMouseLeave={() => setImage(mapIconBlack)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <TextBox>
-        <SongBox>
+        <SongBox onClick={goSongInfo}>
           <PinImg src={pin.songInfo.imgPath} alt="앨범 이미지" />
           <TitleBox>
             <PinTitle>
-              <MapIcon src={image} alt="지도 아이콘" />
+              <MapIcon src={currentIconSrc} alt="지도 아이콘" />
               <TitleText>{pin.songInfo.title}</TitleText>
             </PinTitle>
             <PinSinger>{pin.songInfo.artist}</PinSinger>

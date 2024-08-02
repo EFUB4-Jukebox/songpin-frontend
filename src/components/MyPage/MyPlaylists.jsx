@@ -8,11 +8,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const MyPlaylists = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [myPlaylistCount, setMyPlaylistCount] = useState();
   const [myPlaylist, setMyPlaylist] = useState([]);
   const openCreatePlaylist = () => {
     setIsOpen(prevState => !prevState);
+  };
+  const handlePlaylistClick = playlistId => {
+    navigate(`/playlists/${playlistId}`);
   };
   // const { data, refetch } = useQuery({
   //   queryKey: ["getMyPlaylist"],
@@ -52,15 +56,18 @@ const MyPlaylists = () => {
       </PlaylistOverview>
       <PlaylistSection>
         {myPlaylist &&
-          myPlaylist.map(it => (
+          myPlaylist.map(playlist => (
             <Playlist
-              key={it.playlistId}
-              playlistId={it.playlistId}
-              playlistName={it.playlistName}
-              creatorNickname={it.creatorNickname}
-              pinCount={it.pinCount}
-              updateDate={it.updatedDate}
-              bookmarkId={it.bookmarkId}
+              // key={it.playlistId}
+              // playlistId={it.playlistId}
+              // playlistName={it.playlistName}
+              // creatorNickname={it.creatorNickname}
+              // pinCount={it.pinCount}
+              // updateDate={it.updatedDate}
+              // bookmarkId={it.bookmarkId}
+              key={playlist.playlistId}
+              playlist={playlist}
+              onClick={() => handlePlaylistClick(playlist.playlistId)}
             />
           ))}
       </PlaylistSection>

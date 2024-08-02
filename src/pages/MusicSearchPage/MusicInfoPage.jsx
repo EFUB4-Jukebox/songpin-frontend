@@ -100,6 +100,14 @@ const MusicInfoPage = () => {
 
   const iconSrc = getGenreIcon(songInfo?.avgGenreName || null);
 
+  const formatDate = dateString => {
+    const date = new window.Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
   if (loading) {
     return <SideSection />; // 로딩 중
   }
@@ -136,7 +144,7 @@ const MusicInfoPage = () => {
           <PinInfo>
             <ListenedTimes>
               {songInfo.lastListenedDate
-                ? `최근 들은 날짜: ${songInfo.lastListenedDate}`
+                ? `최근 들은 날짜: ${formatDate(songInfo.lastListenedDate)}`
                 : "아직 듣지 않았어요"}
             </ListenedTimes>
             <CheckMyPin>
