@@ -1,23 +1,75 @@
-import React from 'react';
-import styled from 'styled-components';
-import musicLibraryIcon from '../../assets/images/MyPage/music-library.svg';
-import Playlist from './Playlist';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import musicLibraryIcon from "../../assets/images/MyPage/music-library.svg";
+import Playlist from "./Playlist";
+import CreatePlaylistModal from "../common/Modal/CreatePlaylistModal";
+import { getMyPlaylist } from "../../services/api/myPage";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const MyPlaylists = () => {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [myPlaylistCount, setMyPlaylistCount] = useState();
+  const [myPlaylist, setMyPlaylist] = useState([]);
+  const openCreatePlaylist = () => {
+    setIsOpen(prevState => !prevState);
+  };
+  const handlePlaylistClick = playlistId => {
+    navigate(`/playlists/${playlistId}`);
+  };
+  // const { data, refetch } = useQuery({
+  //   queryKey: ["getMyPlaylist"],
+  //   queryFn: getMyPlaylist,
+  // });
+
+  // const myPlaylistCount = data.playlistCount;
+  // const myPlaylist = data.playlistList;
+
+  useEffect(() => {
+    const getPlaylist = async () => {
+      try {
+        const res = await getMyPlaylist();
+        console.log(res);
+        if (res) {
+          setMyPlaylistCount(res.playlistCount);
+          setMyPlaylist(res.playlistList);
+        }
+      } catch (error) {
+        console.log("데이터 불러오기에 실패했습니다.", error);
+      }
+    };
+    getPlaylist();
+  }, []);
+
   return (
     <PlaylistsContainer>
       <PlaylistOverview>
         <PlaylistTimes>
           <PlaylistIcon src={musicLibraryIcon} />
-          <Num>50</Num>
+          <Num>{myPlaylistCount}</Num>
         </PlaylistTimes>
-        <CreateNewPlaylist>새 플레이리스트 만들기</CreateNewPlaylist>
+        <CreateNewPlaylist onClick={openCreatePlaylist}>
+          새 플레이리스트 만들기
+        </CreateNewPlaylist>
+        {isOpen && <CreatePlaylistModal setModalCommon={openCreatePlaylist} />}
       </PlaylistOverview>
       <PlaylistSection>
-        <Playlist />
-        <Playlist />
-        <Playlist />
-        <Playlist />
+        {myPlaylist &&
+          myPlaylist.map(playlist => (
+            <Playlist
+              // key={it.playlistId}
+              // playlistId={it.playlistId}
+              // playlistName={it.playlistName}
+              // creatorNickname={it.creatorNickname}
+              // pinCount={it.pinCount}
+              // updateDate={it.updatedDate}
+              // bookmarkId={it.bookmarkId}
+              key={playlist.playlistId}
+              playlist={playlist}
+              onClick={() => handlePlaylistClick(playlist.playlistId)}
+            />
+          ))}
       </PlaylistSection>
     </PlaylistsContainer>
   );

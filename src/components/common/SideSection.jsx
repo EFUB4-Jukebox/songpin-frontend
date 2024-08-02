@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import arrowIcon from '../../assets/images/MyPage/arrow.svg';
+import React, { useState } from "react";
+import styled from "styled-components";
+import arrowIcon from "../../assets/images/MyPage/arrow.svg";
+import SideBar from "../HomePage/SideBar";
 
 const SideSection = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -11,7 +12,9 @@ const SideSection = ({ children }) => {
 
   return (
     <SideComponent>
-      <SideBar></SideBar>
+      <SideBarContainer>
+        <SideBar />
+      </SideBarContainer>
       <SideBox isOpen={isOpen}>
         <Content>{children}</Content>
       </SideBox>
@@ -30,20 +33,23 @@ const SideComponent = styled.div`
   display: flex;
   flex-direction: row;
   min-height: 100vh;
+  position: absolute;
+  z-index: 10;
   /* overflow-y: overlay; */
 `;
 
-const SideBar = styled.div`
+const SideBarContainer = styled.div`
   width: 80px;
   border-right: 1px solid var(--gray, #bcbcbc);
 `;
 
 const SideBox = styled.div`
-  width: ${(props) => (props.isOpen ? '528px' : '0')};
+  width: ${props => (props.isOpen ? "528px" : "0")};
   border-right: 1px solid var(--gray, #bcbcbc);
   flex-shrink: 0;
   height: 100vh;
   overflow-x: hidden;
+  background-color: white;
   /* overflow-y: overlay; */
 
   &::-webkit-scrollbar {
@@ -63,11 +69,14 @@ const SideBox = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
+  background-color: white;
 `;
 
 const BoxHandle = styled.div`
   display: flex;
   align-items: center;
+  height: 120px;
+  margin: auto;
 `;
 
 const CloseBar = styled.div`
@@ -81,6 +90,7 @@ const CloseBar = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
 `;
 
 const Arrow = styled.img`
@@ -88,5 +98,5 @@ const Arrow = styled.img`
   width: 30px;
   height: 30px;
   padding-left: 10px;
-  transform: ${(props) => (props.isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
+  transform: ${props => (props.isOpen ? "rotate(0deg)" : "rotate(180deg)")};
 `;

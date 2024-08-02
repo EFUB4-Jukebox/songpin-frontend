@@ -1,21 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
-import mapIconSpark from '../../../assets/images/MusicSearchPage/spark_gray.svg';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import mapIconSpark from "../../../assets/images/MusicSearchPage/spark_gray.svg";
+import { useNavigate } from "react-router-dom";
 
-const PlaceComponent = () => {
+const PlaceComponent = ({ placeId, placeName, placePinCount }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate('/details-place');
+    navigate(`/details-place/${placeId}`);
   };
 
   return (
     <PlaceBox onClick={handleNavigate}>
       <Content>
-        <PlaceName>신촌역</PlaceName>
+        <PlaceName>{placeName}</PlaceName>
         <PinTimes>
           <MapIcon src={mapIconSpark} />
-          <TimesNum>5</TimesNum>
+          <TimesNum>{placePinCount}</TimesNum>
         </PinTimes>
       </Content>
       <Line />

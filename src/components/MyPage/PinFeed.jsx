@@ -1,28 +1,94 @@
-import React from 'react';
-import styled from 'styled-components';
-import pinIconSpark from '../../assets/images/MyPage/spark-51.svg';
-import calendarIcon from '../../assets/images/MyPage/calendar.svg';
-import searchIcon from '../../assets/images/MyPage/search.svg';
-import PinMemoComponent from './PinMemoComponent';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import pinIconSpark from "../../assets/images/MyPage/spark-51.svg";
+import calendarIcon from "../../assets/images/MyPage/calendar.svg";
+import searchIcon from "../../assets/images/MyPage/search.svg";
+import PinMemoComponent from "./PinMemoComponent";
+import { useNavigate } from "react-router-dom";
+import { getMyPinFeed } from "../../services/api/myPage";
+import { useQuery } from "@tanstack/react-query";
 
 const PinFeed = () => {
+  // const [totalPinNum, setTotalPinNum] = useState();
+  // const [pinFeedList, setPinFeedList] = useState([]);
+  // const [feedElementTitle, setFeedElementTitle] = useState();
+  // const [feedElementArtist, setFeedElementArtist] = useState();
+  // const [feedElementImgPath, setFeedElementImgPath] = useState();
+  // const [listenedDate, setListenedDate] = useState();
+  // const [placeName, setPlaceName] = useState();
+
+  const navigate = useNavigate();
+  const goCalendar = () => {
+    navigate("/calendar");
+  };
+  const goMySearch = () => {
+    navigate("/mypin-search");
+  };
+  const { data } = useQuery({
+    queryKey: ["pinfeed"],
+    queryFn: getMyPinFeed,
+  });
+
+  const totalPinNum = data?.totalElements || 0;
+  const pinFeedList = data?.pinFeedList || [];
+
+  useEffect(() => {
+    console.log(pinFeedList);
+    {
+      pinFeedList &&
+        pinFeedList.map(it => {
+          console.log(it.songInfo.title);
+          console.log(it.listenedDate);
+        });
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   const getMyFeed = async () => {
+  //     try {
+  //       const res = await getMyPinFeed();
+  //       console.log(res);
+  //       if (res) {
+  //         setTotalPinNum(res.totalElements);
+  //         setPinFeedList(res.pinFeedList);
+  //         // pinFeedList && setFeedElementTitle(pinFeedList.songInfo.title);
+  //         // pinFeedList && setFeedElementArtist(pinFeedList.songInfo.artist);
+  //         // pinFeedList && setFeedElementImgPath(pinFeedList.songInfo.imgPath);
+  //         // pinFeedList && setListenedDate(pinFeedList.listenedDate);
+  //         // pinFeedList && setPlaceName(pinFeedList.placeName);
+  //       }
+  //     } catch (error) {
+  //       console.log("데이터 불러오기에 실패했습니다.", error);
+  //     }
+  //   };
+  //   getMyFeed();
+  // }, []);
+
   return (
     <PinFeedContainer>
       <PinShow>
         <PinTimes>
           <PinIcon src={pinIconSpark} />
-          <Num>9999</Num>
+          <Num>{totalPinNum}</Num>
         </PinTimes>
         <ShowIcons>
-          <Calendar src={calendarIcon} />
-          <Search src={searchIcon} />
+          <Calendar src={calendarIcon} onClick={goCalendar} />
+          <Search src={searchIcon} onClick={goMySearch} />
         </ShowIcons>
       </PinShow>
       <PinsSection>
-        <PinMemoComponent />
-        <PinMemoComponent />
-        <PinMemoComponent />
-        <PinMemoComponent />
+        {pinFeedList &&
+          pinFeedList.map(it => (
+            <PinMemoComponent
+              title={it.songInfo.title}
+              artist={it.songInfo.artist}
+              imgPath={it.songInfo.imgPath}
+              genre={it.genreName}
+              listenedDate={it.listenedDate}
+              placeName={it.placeName}
+              pinId={it.pinId}
+            />
+          ))}
       </PinsSection>
     </PinFeedContainer>
   );
@@ -34,6 +100,7 @@ const PinFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 25px;
+  /* width: 528px; */
 `;
 
 const PinShow = styled.div`
@@ -88,4 +155,5 @@ const PinsSection = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 32px;
+  margin-bottom: 13px;
 `;

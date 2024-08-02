@@ -1,18 +1,61 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import SideSection from '../../components/common/SideSection';
-import backIcon from '../../assets/images/MusicSearchPage/arrow_back.svg';
-import userLogoPop from '../../assets/images/MyPage/user-logo-pop.svg'; //임시 유저 프로필
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import SideSection from "../../components/common/SideSection";
+import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
+import userLogoPop from "../../assets/images/MyPage/user-logo-pop.svg"; //임시 유저 프로필
+import OpenQuitModal from "../../components/common/Modal/MemberQuitModal";
+import { postLogout } from "../../services/api/auth";
+import { getMyProfile } from "../../services/api/myPage";
+import { useQuery } from "@tanstack/react-query";
+import { ProfileImg } from "../../constants/ProfileImg";
 
 const SettingsPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsModalOpen(prevState => !prevState);
+  };
+
+  const handleQuitBtn = () => {
+    setIsModalOpen(false);
+    navigate("/");
+  };
+
   const navigate = useNavigate();
+
   const goMyPage = () => {
-    navigate('/mypage');
+    navigate("/mypage");
   };
   const goEditPage = () => {
-    navigate('/edit');
+    navigate("/edit");
   };
+  const goPwEditPage = () => {
+    navigate("/resetPassword");
+  };
+
+  const onLogout = async () => {
+    await postLogout();
+    navigate("/introduce");
+  };
+
+  const { isError, data, error } = useQuery({
+    queryKey: ["getMyProfile"],
+    queryFn: getMyProfile,
+  });
+  if (!data) {
+    return <div>데이터가 없습니다.</div>;
+  }
+
+  if (isError) {
+    console.error("Error fetching user info:", error);
+    return <div>오류 발생: {error.message}</div>;
+  }
+  const profileData = data;
+  const img = ProfileImg.find(it => it.EngName === profileData.profileImg);
+  const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
+  const nickname = profileData.nickname;
+  const email = profileData.email;
 
   return (
     <SideSection>
@@ -20,18 +63,25 @@ const SettingsPage = () => {
         <BackIcon src={backIcon} onClick={goMyPage} />
         <UserInfoBox>
           <UserInformation>
-            <UserLogo src={userLogoPop} alt="User logo pop" />
+            <UserLogo src={profileImg} alt="User logo pop" />
             <UserNameBox>
-              <UserName>송핀</UserName>
-              <UserMail>songpin@gmail.com</UserMail>
+              <UserName>{nickname}</UserName>
+              <UserMail>{email}</UserMail>
             </UserNameBox>
           </UserInformation>
           <ProfileEditBtn onClick={goEditPage}>프로필 편집</ProfileEditBtn>
         </UserInfoBox>
         <ClickBtnsSection>
-          <Button>비밀번호 재설정</Button>
-          <Button>로그아웃</Button>
-          <Button>회원탈퇴</Button>
+          <Button onClick={goPwEditPage}>비밀번호 재설정</Button>
+          <Button onClick={onLogout}>로그아웃</Button>
+          <Button onClick={handleModal}>회원탈퇴</Button>
+          {isModalOpen && (
+            <OpenQuitModal
+              setIsModalOpen={setIsModalOpen}
+              onClose={handleModal}
+              onQuit={handleQuitBtn}
+            />
+          )}
         </ClickBtnsSection>
       </SettingComponent>
     </SideSection>

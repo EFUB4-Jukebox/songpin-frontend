@@ -1,13 +1,13 @@
-import styled from 'styled-components';
-import Input from '../../components/common/Input';
-import Button from '../../components/common/Button';
-import { useNavigate } from 'react-router-dom';
+import styled from "styled-components";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
+import { useNavigate } from "react-router-dom";
 
 const PwResetCompletePage = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate('/');
+    navigate("/");
   };
   return (
     <Wrapper>
@@ -15,7 +15,7 @@ const PwResetCompletePage = () => {
         비밀번호 재설정이 완료되었습니다. <br /> 새 비밀번호로 로그인해주세요.
       </div>
 
-      <Button onClick={handleLogin} name="로그인하러 가기" />
+      <Button active="true" onClick={handleLogin} name="로그인하러 가기" />
     </Wrapper>
   );
 };

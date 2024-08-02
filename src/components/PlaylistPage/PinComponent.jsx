@@ -1,58 +1,64 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import albumImage from '../../assets/images/UsersPage/Rectangle 205.svg';
-import mapIconBallad from '../../assets/images/MusicSearchPage/flower.svg';
-import mapIconBlack from '../../assets/images/MusicSearchPage/flower_black.svg';
-import mapIconGray from '../../assets/images/MusicSearchPage/flower_gray.svg';
-import moreMenu from '../../assets/images/UsersPage/more_vert.svg';
-const options = ['핀 수정', '핀 삭제'];
+import React, { useState } from "react";
+import styled from "styled-components";
+import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
+import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
+import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
+import PinModalBox from "../common/PinModalBox";
+import { useNavigate } from "react-router-dom";
 
-const PinComponent = ({ selectable, buttonVisible }) => {
+const PinComponent = ({
+  pin = {},
+  selectable,
+  buttonVisible,
+  onSelect,
+  pinId,
+}) => {
   const [image, setImage] = useState(mapIconBlack);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
+  // const [isSelected, setIsSelected] = useState(false);
+  const { songInfo = {} } = pin;
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (selectable) {
-      setIsSelected((prev) => !prev);
+      onSelect(pin.playlistPinId);
+    } else {
+      navigate(`/details-song/${pin.songInfo.songId}`);
     }
   };
-
-  const handlePopup = () => {
-    setIsOpen(!isOpen);
+  const formatDate = dateString => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
   };
+
   return (
     <PinBox
       onClick={handleClick}
       onMouseEnter={() => setImage(mapIconBallad)}
       onMouseLeave={() => setImage(mapIconBlack)}
       bgColor={
-        isSelected
-          ? 'linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--offwhite, #EFEFEF)'
-          : 'var(--offwhite, #efefef)'
+        pin.isSelected
+          ? "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--offwhite, #EFEFEF)"
+          : "var(--offwhite, #efefef)"
       }
     >
       <SongBox>
-        <PinImg src={albumImage} alt="앨범 이미지" />
+        <PinImg src={songInfo.imgPath} alt="앨범 이미지" />
         <TitleBox>
           <PinTitle>
-            <MapIcon src={image} alt="지도 아이콘" />
-            <TitleText>
-              사랑하긴 했었나요 스쳐가는 인연이었나요 짧지않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네
-            </TitleText>
-            {buttonVisible && <MoreIcon src={moreMenu} alt="더보기 아이콘" onClick={handlePopup} />}
-            {isOpen && (
-              <MorePopup>
-                {options.map((option) => (
-                  <ListItem>{option}</ListItem>
-                ))}
-              </MorePopup>
+            {/* 장르에 따라 아이콘 변경해야함 */}
+            <MapIcon src={image} alt="장르 아이콘" />
+            <TitleText>{songInfo.title}</TitleText>
+            {buttonVisible && (
+              <PinModalBox top="30px" right="0px" pinId={pinId} />
             )}
           </PinTitle>
-          <PinSinger>잔나비</PinSinger>
+          <PinSinger>{songInfo.artist}</PinSinger>
           <InfoBox>
-            <InfoText>2024.04.04</InfoText>
-            <PlaceText>이화여대 학문관</PlaceText>
+            <InfoText>{formatDate(pin.listenedDate)}</InfoText>
+            <PlaceText>{pin.placeName}</PlaceText>
             <InfoText>에서</InfoText>
           </InfoBox>
         </TitleBox>
@@ -66,16 +72,16 @@ export default PinComponent;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* align-items: center; */
   width: 462px;
   height: 100px;
   flex-shrink: 0;
   border-radius: 8px;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 
   /* background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--offwhite, #EFEFEF); */
   /* background: var(--offwhite, #efefef); */
-  background: ${({ bgColor }) => bgColor || 'var(--offwhite, #efefef)'};
+  background: ${({ bgColor }) => bgColor || "var(--offwhite, #efefef)"};
   cursor: pointer;
   margin-bottom: 12px;
 `;
@@ -84,7 +90,7 @@ const PinImg = styled.img`
   width: 78px;
   height: 78px;
   flex-shrink: 0;
-  /* padding-left: 12px; */
+  padding-left: 12px;
   border-radius: 4px;
 `;
 
@@ -105,6 +111,8 @@ const PinTitle = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
+  height: 28px;
 `;
 
 const MapIcon = styled.img`
@@ -147,6 +155,8 @@ const InfoBox = styled.div`
   justify-content: flex-end;
   align-items: center;
   white-space: nowrap;
+  /* padding-right: 23px; */
+  width: 350px;
 `;
 
 const InfoText = styled.div`
@@ -157,12 +167,12 @@ const InfoText = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  padding-right: 12px;
   white-space: nowrap;
   flex-shrink: 0;
 `;
 
 const PlaceText = styled.div`
+  padding-left: 8px;
   color: var(--gray02, #747474);
   text-align: right;
   font-family: Pretendard;
@@ -176,43 +186,4 @@ const PlaceText = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
-`;
-
-const MoreIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-`;
-
-const MorePopup = styled.div`
-  display: flex;
-  /* width: 182px; */
-  padding: 18px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  flex-shrink: 0;
-  border-radius: 8px;
-  border: 1px solid var(--gray02, #747474);
-  background: var(--f8f8f8, #fcfcfc);
-  z-index: 1000;
-  position: absolute;
-  /* top: 100%; */
-  /* right: -163px; */
-  top: 7%;
-  left: 35%;
-  /* 
-  z-index: 1000;
-  position: absolute;
-  top: 100%; */
-`;
-
-const ListItem = styled.div`
-  color: var(--light_black, #232323);
-  font-family: Pretendard;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  cursor: pointer;
 `;

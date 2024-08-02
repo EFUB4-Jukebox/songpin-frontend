@@ -1,34 +1,51 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import arrowDown from '../../assets/images/MusicSearchPage/arrow_down.svg';
-import SideSection from '../../components/common/SideSection';
-import SearchBar from '../../components/MusicSearchPage/SearchPage/SearchBar';
-import SearchSongs from '../../components/MusicSearchPage/SearchPage/SearchSongs';
-import SearchPlaces from '../../components/MusicSearchPage/SearchPage/SearchPlaces';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import arrowDown from "../../assets/images/MusicSearchPage/arrow_down.svg";
+import SideSection from "../../components/common/SideSection";
+import SearchBar from "../../components/MusicSearchPage/SearchPage/SearchBar";
+import SearchSongs from "../../components/MusicSearchPage/SearchPage/SearchSongs";
+import SearchPlaces from "../../components/MusicSearchPage/SearchPage/SearchPlaces";
 
-const values = ['정확도순', '핀 등록 많은순', '최근 핀 등록순'];
+const values = ["정확도순", "등록 핀 많은순", "최근 핀 등록순"];
 
 const SearchContainer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('정확도순');
+  const [selectedValue, setSelectedValue] = useState("정확도순");
+  const [selectedOption, setSelectedOption] = useState(() => {
+    return sessionStorage.getItem("selectedOption") || "노래";
+  });
+  const [keyword, setKeyword] = useState("");
 
-  const onValueClicked = (value) => () => {
+  useEffect(() => {
+    sessionStorage.setItem("selectedOption", selectedOption);
+  }, [selectedOption]);
+
+  const onValueClicked = value => () => {
     setSelectedValue(value);
     setIsOpen(false);
   };
 
   const toggling = () => setIsOpen(!isOpen);
 
-  const [selectedOption, setSelectedOption] = useState('노래');
-
-  const handleOptionChange = (option) => {
+  const handleOptionChange = option => {
     setSelectedOption(option);
+  };
+
+  const handleSearch = newKeyword => {
+    setKeyword(newKeyword);
+    setSelectedValue("정확도순");
+  };
+
+  const sortOptions = {
+    정확도순: "ACCURACY",
+    "등록 핀 많은순": "COUNT",
+    "최근 핀 등록순": "NEWEST",
   };
 
   return (
     <SideSection>
       <Content>
-        <SearchBar optionChange={handleOptionChange} />
+        <SearchBar optionChange={handleOptionChange} onSearch={handleSearch} />
         <Sorting>
           <DropdownSorting>
             <DropdownHeader onClick={toggling}>
@@ -37,10 +54,12 @@ const SearchContainer = () => {
             </DropdownHeader>
             {isOpen && (
               <DropdownList>
-                {values.map((value) => (
+                {values.map(value => (
                   <ListItem
                     onClick={onValueClicked(value)}
-                    style={{ fontWeight: selectedValue === value ? '700' : '400' }}
+                    style={{
+                      fontWeight: selectedValue === value ? "700" : "400",
+                    }}
                   >
                     {value}
                   </ListItem>
@@ -50,8 +69,18 @@ const SearchContainer = () => {
           </DropdownSorting>
         </Sorting>
         <SearchResult>
-          {selectedOption === '노래' && <SearchSongs />}
-          {selectedOption === '장소' && <SearchPlaces />}
+          {selectedOption === "노래" && (
+            <SearchSongs
+              keyword={keyword}
+              sortBy={sortOptions[selectedValue]}
+            />
+          )}
+          {selectedOption === "장소" && (
+            <SearchPlaces
+              keyword={keyword}
+              sortBy={sortOptions[selectedValue]}
+            />
+          )}
         </SearchResult>
       </Content>
     </SideSection>
@@ -103,7 +132,7 @@ const DropIcon = styled.img`
   height: 6.016px;
   margin-right: 4.69px;
   cursor: pointer;
-  transform: ${(props) => (props.isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${props => (props.isOpen ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
 const DropdownList = styled.div`

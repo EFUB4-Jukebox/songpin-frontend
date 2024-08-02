@@ -1,50 +1,82 @@
-import react, { useState } from 'react';
-import styled from 'styled-components';
-import albumImgExample from '../../assets/images/MyPage/album-eg.png';
-import pinIcon from '../../assets/images/MyPage/vector-icon.svg';
-import moreButton from '../../assets/images/MyPage/more-icon.svg';
-import lockIcon from '../../assets/images/MyPage/lock.svg';
+import react, { useEffect, useState } from "react";
+import styled from "styled-components";
+import albumImgExample from "../../assets/images/MyPage/album-eg.png";
+import pinIcon from "../../assets/images/MyPage/vector-icon.svg";
+import lockIcon from "../../assets/images/MyPage/lock.svg";
+import PinModalBox from "../common/PinModalBox";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { GenreList } from "../../constants/GenreList";
+import { useNavigate } from "react-router-dom";
 
-const options = ['플레이리스트에 추가', '핀 수정', '핀 삭제'];
+const PinMemoComponent = ({
+  title,
+  artist,
+  imgPath,
+  listenedDate,
+  placeName,
+  genre,
+  pinId,
+}) => {
+  const [isTruncated, setIsTruncated] = useState(true);
+  const toggleTruncation = () => {
+    setIsTruncated(!isTruncated);
+  };
+  const text =
+    "사랑하긴 했었나요 스쳐가는 인연이었나요\n\n누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 \n사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네";
+  const maxLength = 59;
+  const showMoreBtn = text.length > maxLength;
+  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
 
-const PinMemoComponent = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const getLineLength = event => {
+  //   const { lines } = event.nativeEvent;
+  // };
 
-  const handlePopup = () => {
-    setIsOpen(!isOpen);
+  const navigate = useNavigate();
+  const goMusicInfoPage = () => {
+    navigate("/details-song");
+  };
+  const goLocation = () => {
+    // 지도 위치 이동 코드 추가
   };
 
+  const formattedDate = format(new Date(listenedDate), "yy.MM.dd", {
+    locale: ko,
+  });
+
+  const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
   return (
     <PinBox>
       <TitleSection>
-        <AlbumImg src={albumImgExample} />
+        <AlbumImg src={imgPath} />
         <SongInfo>
           <SongTitle>
-            <SongIcon src={pinIcon} />
-            <TitleText>사랑하긴 했었나요 스쳐 지나가는 인연이었나요aaaaa</TitleText>
+            <SongIcon src={genreIcon} />
+            <TitleText>{title}</TitleText>
           </SongTitle>
-          <Singer>잔나비</Singer>
+          <Singer>{artist}</Singer>
         </SongInfo>
-        <MoreBtn src={moreButton} onClick={handlePopup} />
-        {isOpen && (
-          <MorePopup>
-            {options.map((option) => (
-              <ListItem>{option}</ListItem>
-            ))}
-          </MorePopup>
-        )}
+        <PinModalBox top="48px" right="12px" pinId={pinId} />
       </TitleSection>
       <DetailsSection>
         <Memo>
-          <Text>
+          <Text
+            onClick={isTruncated ? () => {} : toggleTruncation}
+            isTruncated={isTruncated}
+            style={{ whiteSpace: "pre-wrap" }}
+            // onTextLayout={getLineLength}
+          >
             <SecretPin src={lockIcon} />
-            사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의
-            눈빛은 날 얼어붙게 해 그대의
+            {displayText}
+            {showMoreBtn && isTruncated && (
+              <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
+            )}
           </Text>
         </Memo>
-        <Info>
-          <Date>2024.04.04</Date>
-          <Place>이화여대 학문관에서</Place>
+        <Info onClick={goLocation}>
+          <PinDate>{formattedDate}</PinDate>
+          <Place>{placeName}</Place>
+          <PlaceText>에서</PlaceText>
         </Info>
       </DetailsSection>
     </PinBox>
@@ -80,6 +112,7 @@ const SongInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-right: 250px;
 `;
 
 const SongTitle = styled.div`
@@ -119,41 +152,6 @@ const Singer = styled.div`
   padding-top: 4px;
 `;
 
-const MoreBtn = styled.img`
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  padding-left: 6px;
-  cursor: pointer;
-`;
-
-const MorePopup = styled.div`
-  display: flex;
-  /* width: 197px; */
-  padding: 18px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  flex-shrink: 0;
-  border-radius: 8px;
-  border: 1px solid var(--gray02, #747474);
-  background: var(--f8f8f8, #fcfcfc);
-  z-index: 1000;
-  position: absolute;
-  right: -163px;
-  bottom: 0;
-`;
-
-const ListItem = styled.div`
-  color: var(--light_black, #232323);
-  font-family: Pretendard;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  cursor: pointer;
-`;
-
 const DetailsSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -186,20 +184,30 @@ const SecretPin = styled.img`
   width: 13px;
   height: 16px;
   flex-shrink: 0;
-  margin-right: 8px;
-  margin-left: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+  vertical-align: calc(-12%);
+`;
+
+const MoreBtn = styled.span`
+  color: var(--gray02, #747474);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  cursor: pointer;
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  gap: 8px;
   padding-top: 4px;
+  white-space: nowrap;
 `;
 
-const Date = styled.div`
-  overflow: hidden;
+const PinDate = styled.div`
   color: var(--gray02, #747474);
   text-overflow: ellipsis;
   font-family: Pretendard;
@@ -209,4 +217,29 @@ const Date = styled.div`
   line-height: 150%; /* 24px */
 `;
 
-const Place = styled(Date)``;
+const Place = styled.div`
+  color: var(--gray02, #747474);
+  text-align: right;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  max-width: 218px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  padding-left: 8px;
+`;
+
+const PlaceText = styled.div`
+  color: var(--gray02, #747474);
+  text-align: right;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-right: 2px;
+`;

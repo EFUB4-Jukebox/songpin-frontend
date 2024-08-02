@@ -1,39 +1,83 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import albumImage from '../../assets/images/UsersPage/Rectangle 205.svg';
-import mapIconBallad from '../../assets/images/MusicSearchPage/flower.svg';
-import mapIconBlack from '../../assets/images/MusicSearchPage/flower_black.svg';
-import mapIconGray from '../../assets/images/MusicSearchPage/flower_gray.svg';
-import moreMenu from '../../assets/images/UsersPage/more_vert.svg';
-import lock from '../../assets/images/UsersPage/lock.svg';
-const PinComponent = () => {
-  const [image, setImage] = useState(mapIconBlack);
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
+import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
+import lock from "../../assets/images/UsersPage/lock.svg";
+import { GenreList } from "../../constants/GenreList";
+
+const PinComponent = ({ pin }) => {
+  const [isTruncated, setIsTruncated] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  const { songInfo = {} } = pin;
+  const goSongInfo = () => {
+    navigate(`/details-song/${songInfo?.songId}`);
+  };
+
+  const isPrivate = pin.visibility === "PRIVATE";
+  const text =
+    isPrivate && !pin.isMine
+      ? "비공개인 메모입니다."
+      : pin.memo || "메모가 비어 있습니다.";
+  const maxLength = 59;
+  const showMoreBtn = text.length > maxLength;
+  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
+      : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(pin.genreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
+
+  const toggleTruncation = () => {
+    setIsTruncated(!isTruncated);
+  };
+
+  const formatDate = dateString => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
 
   return (
-    <PinBox onMouseEnter={() => setImage(mapIconBallad)} onMouseLeave={() => setImage(mapIconBlack)}>
+    <PinBox
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <TextBox>
-        <SongBox>
-          <PinImg src={albumImage} alt="앨범 이미지" />
+        <SongBox onClick={goSongInfo}>
+          <PinImg src={pin.songInfo.imgPath} alt="앨범 이미지" />
           <TitleBox>
             <PinTitle>
-              <MapIcon src={image} alt="지도 아이콘" />
-              <TitleText>
-                사랑하긴 했었나요 스쳐가는 인연이었나요 짧지않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네
-              </TitleText>
+              <MapIcon src={currentIconSrc} alt="지도 아이콘" />
+              <TitleText>{pin.songInfo.title}</TitleText>
             </PinTitle>
-            <PinSinger>잔나비</PinSinger>
+            <PinSinger>{pin.songInfo.artist}</PinSinger>
           </TitleBox>
-          <MoreIcon src={moreMenu} alt="더보기 아이콘" />
+          {/* <MoreIcon src={moreMenu} alt="더보기 아이콘" /> */}
         </SongBox>
         <ContentBox>
-          <LyricText>
-            <LockImg src={lock} alt="나만보기 아이콘" />
-            사랑하긴 했었나요 스쳐가는 인연이었나요 짧지 않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네 누가 내
-            가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나
+          <LyricText
+            onClick={isTruncated && !isPrivate ? () => {} : toggleTruncation}
+            isTruncated={isTruncated}
+          >
+            {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
+            {displayText}
+            {showMoreBtn && isTruncated && (
+              <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
+            )}
           </LyricText>
           <InfoBox>
-            <InfoText>2024.04.04</InfoText>
-            <InfoText>이화여대 학문관에서</InfoText>
+            <InfoText>{formatDate(pin.listenedDate)}</InfoText>
+            <PlaceText>{pin.placeName}</PlaceText>
+            <InfoText>에서</InfoText>
           </InfoBox>
         </ContentBox>
       </TextBox>
@@ -47,7 +91,7 @@ const PinBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 462px;
-  height: 174px;
+  min-height: 174px;
   flex-shrink: 0;
   border-radius: 8px;
 
@@ -145,16 +189,16 @@ const LockImg = styled.img`
 
 const LyricText = styled.div`
   width: 426px;
-  height: 48px;
+  min-height: 48px;
   flex-shrink: 0;
 
   overflow: hidden;
   color: var(--light_black, #232323);
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  white-space: normal;
+  -webkit-line-clamp: 2; */
+  /* -webkit-box-orient: vertical;
+  white-space: normal; */
 
   font-family: Pretendard;
   font-size: 16px;
@@ -163,6 +207,7 @@ const LyricText = styled.div`
   line-height: 150%; /* 24px */
 
   margin-top: 11px;
+  cursor: ${props => (props.isTruncated ? "auto" : "pointer")};
 `;
 
 const ContentBox = styled.div`
@@ -191,5 +236,33 @@ const InfoText = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  padding-left: 8px;
+  padding-right: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+`;
+
+const PlaceText = styled.div`
+  color: var(--gray02, #747474);
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  max-width: 220px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+`;
+
+const MoreBtn = styled.span`
+  color: var(--gray02, #747474);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  cursor: pointer;
 `;

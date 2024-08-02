@@ -1,11 +1,17 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const Genre = ({ name, img, bgColor, width, height, text }) => {
+const Genre = ({ name, img, bgColor, width, height, text, onClick }) => {
   return (
-    <GenreWrapper bgColor={bgColor} width={width} height={height} text={text}>
-      <span># {name}</span>
+    <GenreWrapper
+      bgColor={bgColor}
+      width={width}
+      height={height}
+      text={text}
+      onClick={onClick}
+    >
+      <span>#{name}</span>
       <span>
-        <ImgWrapper className={bgColor ? 'colored' : ''}>
+        <ImgWrapper className={bgColor ? "colored" : ""}>
           <img src={img} />
         </ImgWrapper>
       </span>
@@ -13,19 +19,23 @@ const Genre = ({ name, img, bgColor, width, height, text }) => {
   );
 };
 const GenreWrapper = styled.div`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height || '25px'};
-  font-size: ${(props) => props.text || '20px'};
-  background-color: ${(props) => props.bgColor || 'transparent'};
-  color: ${(props) => props.bgColor && 'white'};
+  width: ${props => props.width};
+  height: ${props => props.height || "25px"};
+  font-size: ${props => props.text || "20px"};
+  background-color: ${props => props.bgColor || "transparent"};
+  color: ${props => props.bgColor && "white"};
   border-radius: 45px;
-  border: ${(props) => (props.bgColor ? 'none' : '1px solid var(--light_black, #232323)')};
+  border: ${props =>
+    props.bgColor
+      ? "1px solid rgba(0, 0, 0, 0)"
+      : "1px solid var(--light_black, #232323)"};
   display: flex;
-  padding: 8px 16px;
+  padding: 6px 9px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  font-weight: 600;
+  gap: 4px;
+  font-weight: 500;
+  cursor: pointer;
 `;
 const ImgWrapper = styled.span`
   img {
