@@ -39,18 +39,7 @@ const Bookmarks = () => {
         <Num>{bookmarkCount}</Num>
       </PlaylistOverview>
       <PlaylistSection>
-        {bookmarkList &&
-          bookmarkList.map(it => (
-            <Playlist
-              playlistId={it.playlistId}
-              playlistName={it.playlistName}
-              creatorNickname={it.creatorNickname}
-              pinCount={it.pinCount}
-              updateDate={it.updatedDate}
-              bookmarkId={it.bookmarkId}
-              refetch={refetch}
-            />
-          ))}
+        {bookmarkList && bookmarkList.map(it => <Playlist playlist={it} />)}
       </PlaylistSection>
     </BookmarkedContainer>
   );
