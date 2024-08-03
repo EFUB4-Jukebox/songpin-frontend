@@ -28,7 +28,6 @@ export const postLogin = async userData => {
     const token = res.accessToken;
     localStorage.setItem("accessToken", token);
     console.log(token);
-    window.location.href = "/home";
     return { token };
   } catch (e) {
     if (e.response) {
