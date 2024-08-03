@@ -109,3 +109,17 @@ export const postMail = async email => {
       : { message: e.message };
   }
 };
+
+export const patchResetPw = async (uuid, password, confirmPassword) => {
+  try {
+    const requestBody = {
+      uuid,
+      password,
+      confirmPassword,
+    };
+    const data = await client.patch(`/login/pw`, requestBody);
+    return data;
+  } catch (error) {
+    throw new Error("데이터 불러오기에 실패하였습니다.");
+  }
+};
