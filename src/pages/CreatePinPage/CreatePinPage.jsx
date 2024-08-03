@@ -24,11 +24,12 @@ const CreatePinPage = () => {
   const [selectedPin, setSelectedPin] = useState(null);
   const [showSearchPlaceContainer, setShowSearchPlaceContainer] =
     useState(false);
-  const [selectedPlace, setSelectedPlace] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
+  const [memo, setMemo] = useState("");
 
   const navigate = useNavigate();
 
@@ -38,6 +39,7 @@ const CreatePinPage = () => {
 
   const onInputHandler = e => {
     setInputCount(e.target.value.length);
+    setMemo(e.target.value);
   };
 
   const handlePinClick = () => {
@@ -54,8 +56,8 @@ const CreatePinPage = () => {
     setShowSearchPlaceContainer(!showSearchPlaceContainer);
   };
 
-  const handlePlaceSelect = placeName => {
-    setSelectedPlace(placeName);
+  const handlePlaceSelect = place => {
+    setSelectedPlace(place);
     setShowSearchPlaceContainer(false);
   };
 
@@ -78,14 +80,14 @@ const CreatePinPage = () => {
       },
       listenedDate: moment(date).format("YYYY-MM-DD"),
       place: {
-        placeName: "이화여자대학교 아산공학관",
-        address: "서울 서대문구 이화여대길 52",
-        providerAddressId: 356498231,
-        latitude: 37.561859,
-        longitude: 126.946834,
+        placeName: selectedPlace.place_name,
+        address: selectedPlace.address_name,
+        providerAddressId: Number(selectedPlace.id),
+        latitude: parseFloat(selectedPlace.y),
+        longitude: parseFloat(selectedPlace.x),
       },
       genreName: selectedGenre?.EngName,
-      memo: "힘내자!",
+      memo: memo,
       visibility: isPublic ? "PUBLIC" : "PRIVATE",
     };
     console.log(selectedPin);
@@ -141,7 +143,13 @@ const CreatePinPage = () => {
         )}
         <Title>어디서</Title>
         <Where onClick={handlePlaceClick}>
-          {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
+          {selectedPlace ? (
+            <div>
+              <div>{selectedPlace.place_name}</div>
+            </div>
+          ) : (
+            "이 노래를 들었던 장소는 어디였나요?"
+          )}
           <LocationImg />
         </Where>
         <Title>장르</Title>
@@ -164,6 +172,7 @@ const CreatePinPage = () => {
         <Title>메모</Title>
         <MemoArea
           placeholder="이곳에 메모를 남겨주세요."
+          value={memo}
           maxLength={200}
           onChange={onInputHandler}
         ></MemoArea>
