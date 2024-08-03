@@ -418,7 +418,7 @@ const GenreContainer = styled.div`
 const SearchSongContainerWrapper = styled.div`
   display: flex;
   position: absolute;
-  left: 608px;
+  left: 528px;
   width: 50%;
   height: 100%;
   z-index: 10;

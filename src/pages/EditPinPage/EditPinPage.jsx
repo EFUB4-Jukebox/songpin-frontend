@@ -6,8 +6,6 @@ import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import SideBar from '../../components/HomePage/SideBar';
 import EditSection from '../../components/common/SideSection';
-import SearchSongContainer from '../../components/CreatePinPage/SearchSongContainer';
-import SearchPlaceContainer from '../../components/CreatePinPage/SearchPlaceContainer';
 import PinComponent from '../../components/CreatePinPage/PinComponent';
 import Genre from '../../components/common/Genre';
 import { GenreList } from '../../constants/GenreList';
@@ -21,9 +19,7 @@ const EditPinPage = () => {
     const [inputCount, setInputCount] = useState(0);
     const [isSongSelected, setIsSongSelected] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [showSearchSongContainer, setShowSearchSongContainer] = useState(false);
     const [selectedPin, setSelectedPin] = useState(null);
-    const [showSearchPlaceContainer, setShowSearchPlaceContainer] = useState(false);
     const [selectedPlace, setSelectedPlace] = useState("");
     const [showCalendar, setShowCalendar] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -44,25 +40,6 @@ const EditPinPage = () => {
         setInputCount(e.target.value.length);
     };
 
-    const handlePinClick = () => {
-        setShowSearchSongContainer(true);
-    };
-
-    const handlePinSelect = (pinInfo) => {
-        setSelectedPin(pinInfo);
-        setIsSongSelected(true);
-        setShowSearchSongContainer(false);
-    };
-
-    const handlePlaceClick = () => {
-        setShowSearchPlaceContainer(true);
-    };
-
-    const handlePlaceSelect = (placeName) => {
-        setSelectedPlace(placeName);
-        setShowSearchPlaceContainer(false);
-    };
-
     const handleDateChange = (date) => {
         setDate(date);
     };
@@ -79,16 +56,15 @@ const EditPinPage = () => {
                 {/* {showModal && (<EditModal></EditModal>)} */}
                 <Content>
                     {!isSongSelected ? (
-                        <PinBox onClick={handlePinClick}>
+                        <PinBox>
                             <PinImg></PinImg>
                             <PinText>노래를 선택해주세요.</PinText>
                         </PinBox>
                     ) : (
                         <PinComponent
-                        onPinClick={handlePinClick}
-                        imgPath={selectedPin.image}
-                        title={selectedPin.title}
-                        artist={selectedPin.singer}
+                            imgPath={selectedPin.image}
+                            title={selectedPin.title}
+                            artist={selectedPin.singer}
                         />
                     )}
                 </Content>
@@ -110,7 +86,7 @@ const EditPinPage = () => {
                         </CalendarContainer>
                     )}
                     <Title>어디서</Title>
-                    <Where onClick={handlePlaceClick}>
+                    <Where>
                         {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
                         <LocationImg />
                     </Where>
@@ -146,16 +122,6 @@ const EditPinPage = () => {
                         onClick={handleNavigate}
                     >수정 완료</CreateBtn> 
             </EditSection>
-            {showSearchSongContainer && (
-                <SearchSongContainerWrapper>
-                <SearchSongContainer onPinSelect={handlePinSelect} />
-                </SearchSongContainerWrapper>
-            )}
-            {showSearchPlaceContainer && (
-                <SearchPlaceContainerWrapper>
-                <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
-                </SearchPlaceContainerWrapper>
-            )}
         </MainContainer>
     );
 };
@@ -197,7 +163,7 @@ const PinBox = styled.div`
     height: 100px;
     border-radius: 8px;
     background: var(--offwhite, #efefef);
-    cursor: pointer;
+    /* cursor: pointer; */
     margin-bottom: 12px;
     /* &:active {
         border-radius: 8px;
@@ -272,7 +238,7 @@ const Where = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
-    cursor: pointer;
+    /* cursor: pointer; */
 `;
 
 const MemoArea = styled.textarea`
@@ -404,24 +370,6 @@ const GenreContainer = styled.div`
     margin-left: 30px;
     margin-bottom: 35px;
     gap: 5px;
-`;
-
-const SearchSongContainerWrapper = styled.div`
-    display: flex;
-    position: absolute;
-    left: 608px;
-    width: 50%;
-    height: 100%;
-    z-index: 10;
-`;
-
-const SearchPlaceContainerWrapper = styled.div`
-    display: flex;
-    position: absolute;
-    left: 528px;
-    width: 50%;
-    height: 100%;
-    z-index: 10;
 `;
 
 export default EditPinPage;
