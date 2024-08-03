@@ -15,6 +15,7 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
+import { postNewPin } from '../../services/api/create';
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -62,9 +63,42 @@ const CreatePinPage = () => {
     setDate(date);
   };
 
-  const handleGenreClick = id => {
-    setSelectedGenre(id);
+  const handleGenreClick = (id, EngName) => {
+    setSelectedGenre({ id, EngName });
   };
+
+  const handlePostPin = async (e) => {
+    e.preventDefault();
+    const request = {
+        "song": {
+          "title": selectedPin.title,
+          "artist": selectedPin.singer,
+          "imgPath": selectedPin.image,
+          "providerTrackCode": selectedPin.key,
+        },
+        "listenedDate": moment(date).format("YYYY-MM-DD"),
+        "place": {
+          "placeName": "이화여자대학교 아산공학관",
+          "address": "서울 서대문구 이화여대길 52",
+          "providerAddressId": 356498231,
+          "latitude": 37.561859,
+          "longitude": 126.946834
+        },
+        "genreName": selectedGenre?.EngName,
+        "memo": "힘내자!",
+        "visibility": isPublic ? "PUBLIC" : "PRIVATE"
+    };
+    console.log(selectedPin);
+    console.log('Posting data:', request);
+    const response = await postNewPin(request);
+    console.log('PostPin response:', response);
+    if (response && response.status === 201) {
+        console.log('Pin Post Success');
+        handleNavigate();
+    } else {
+        console.error('Failed to post Pin:', response);
+    }
+};
 
   return (
     <MainContainer>
@@ -117,10 +151,10 @@ const CreatePinPage = () => {
                 key={genre.id}
                 name={genre.name}
                 img={
-                  selectedGenre === genre.id ? genre.whiteImgSrc : genre.imgSrc
+                  selectedGenre?.id === genre.id ? genre.whiteImgSrc : genre.imgSrc
                 }
-                bgColor={selectedGenre === genre.id ? genre.bgColor : null}
-                onClick={() => handleGenreClick(genre.id)}
+                bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
+                onClick={() => handleGenreClick(genre.id, genre.EngName)}
                 height="24px"
               />
             ))}
@@ -139,7 +173,7 @@ const CreatePinPage = () => {
             <Title>공개 여부</Title>
             <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
           </IsPublic>
-          <CreateBtn onClick={handleNavigate}>핀 생성하기</CreateBtn>
+          <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
         </CreateSection>
       {showSearchSongContainer && (
         <SearchSongContainerWrapper>

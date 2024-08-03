@@ -43,6 +43,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
       title: result.title,
       singer: result.artist,
       image: result.imgPath,
+      key: result.providerTrackCode,
     };
     onPinSelect(pinInfo);
   };
