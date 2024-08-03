@@ -101,7 +101,11 @@ export const postMail = async email => {
   try {
     const res = await client.post("/mail/pw", { email });
     console.log(res);
+    return res;
   } catch (e) {
     console.error(e);
+    throw e.response && e.response.data
+      ? e.response.data
+      : { message: e.message };
   }
 };

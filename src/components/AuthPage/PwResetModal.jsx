@@ -22,7 +22,23 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   }, [setPwResetModal]);
 
   const handleSendMail = async () => {
-    await postMail(email);
+    try {
+      const response = await postMail(email);
+      const responseMsg = response.data.message;
+
+      if (response.data.status === 400 && response.data.errorCode === "ERROR") {
+        handleSendMail();
+      } else if (response.data.status === 400) {
+        const errorMessage = responseMsg.replace(/^email:\s*/, "");
+        setMailMsg(errorMessage);
+      } else {
+        setMailMsg(
+          responseMsg || "비밀번호 재설정을 위한 메일이 발송되었습니다.",
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleGotoLoginModal = () => {
@@ -50,7 +66,7 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
             onClick={handleSendMail}
           />
         </InputWrapper>
-        <div className="pwResetMsg">등록되지 않은 이메일입니다.</div>
+        {mailMsg && <div className="pwResetMsg">{mailMsg}</div>}
       </PwResetWrapper>
     </Wrapper>
   );
