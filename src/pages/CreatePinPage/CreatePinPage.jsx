@@ -33,7 +33,7 @@ const CreatePinPage = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate("/details-song");
+    navigate("/details-song"); // 곡 ID로 수정
   };
 
   const onInputHandler = e => {

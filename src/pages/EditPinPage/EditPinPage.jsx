@@ -5,7 +5,7 @@ import Calendar from 'react-calendar';
 import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import SideBar from '../../components/HomePage/SideBar';
-import EditSection from '../../components/CreatePinPage/CreateSection';
+import EditSection from '../../components/common/SideSection';
 import SearchSongContainer from '../../components/CreatePinPage/SearchSongContainer';
 import SearchPlaceContainer from '../../components/CreatePinPage/SearchPlaceContainer';
 import PinComponent from '../../components/CreatePinPage/PinComponent';
@@ -28,11 +28,12 @@ const EditPinPage = () => {
     const [showCalendar, setShowCalendar] = useState(false);
     const [date, setDate] = useState(new Date());
     const [selectedGenre, setSelectedGenre] = useState(null);
+    const [isPublic, setIsPublic] = useState(true);
 
     const navigate = useNavigate();
 
     const handleNavigate = () => {
-        navigate('/details-song');
+        navigate('/details-song');// 곡 ID로 수정
     };
 
     const handleModal = () => {
@@ -66,8 +67,8 @@ const EditPinPage = () => {
         setDate(date);
     };
 
-    const handleGenreClick = (id) => {
-        setSelectedGenre(id);
+    const handleGenreClick = (id, EngName) => {
+        setSelectedGenre(id, EngName);
     };
 
     return (
@@ -85,7 +86,9 @@ const EditPinPage = () => {
                     ) : (
                         <PinComponent
                         onPinClick={handlePinClick}
-                        pinInfo={selectedPin}
+                        imgPath={selectedPin.image}
+                        title={selectedPin.title}
+                        artist={selectedPin.singer}
                         />
                     )}
                 </Content>
@@ -117,10 +120,10 @@ const EditPinPage = () => {
                             <Genre
                                 key={genre.id}
                                 name={genre.name}
-                                img={selectedGenre === genre.id ? genre.whiteImgSrc : genre.imgSrc}
-                                bgColor={selectedGenre === genre.id ? genre.bgColor : null}
-                                onClick={() => handleGenreClick(genre.id)}
-                                height={40}
+                                img={selectedGenre?.id === genre.id ? genre.whiteImgSrc : genre.imgSrc}
+                                bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
+                                onClick={() => handleGenreClick(genre.id, genre.EngName)}
+                                height="24px"
                             />
                         ))}
                     </GenreContainer>
@@ -136,15 +139,23 @@ const EditPinPage = () => {
                     </TextNum>
                     <IsPublic>
                         <Title>공개 여부</Title>
-                        <PublicToggle />
+                        <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
                     </IsPublic>
                     {/* 아래 생성 버튼에 핀 위치 주소 연결하기 */}
                     <CreateBtn
                         onClick={handleNavigate}
                     >수정 완료</CreateBtn> 
             </EditSection>
-            {showSearchSongContainer && <SearchSongContainer onPinSelect={handlePinSelect}/>}
-            {showSearchPlaceContainer && (<SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />)}
+            {showSearchSongContainer && (
+                <SearchSongContainerWrapper>
+                <SearchSongContainer onPinSelect={handlePinSelect} />
+                </SearchSongContainerWrapper>
+            )}
+            {showSearchPlaceContainer && (
+                <SearchPlaceContainerWrapper>
+                <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
+                </SearchPlaceContainerWrapper>
+            )}
         </MainContainer>
     );
 };
@@ -218,7 +229,7 @@ const Title = styled.div`
     display: flex;
     justify-content: flex-start;
     margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     margin-left: 32px;
     color: var(--light_black, #232323);
     font-family: Pretendard;
@@ -235,6 +246,7 @@ const When = styled.div`
     align-content: center;
     margin-left: 32px;
     padding-bottom: 10px;
+    margin-bottom: 17px;
     width: 462px;
     border-bottom: 1px solid #747474;
     color: var(--gray02, #747474);
@@ -251,6 +263,7 @@ const Where = styled.div`
     justify-content: space-between;
     margin-left: 32px;
     padding-bottom: 10px;
+    margin-bottom: 17px;
     width: 462px;
     border-bottom: 1px solid #747474;
     color: var(--gray02, #747474);
@@ -264,9 +277,9 @@ const Where = styled.div`
 
 const MemoArea = styled.textarea`
     display: flex;
-    margin-left: 30px;
+    margin-left: 32px;
     padding: 20px;
-    width: 442px;
+    width: 422px;
     height: 134px;
     resize: none;
     border: none;
@@ -282,7 +295,8 @@ const MemoArea = styled.textarea`
 
 const TextNum = styled.p`
     color: var(--gray, #BCBCBC);
-    margin-right: 20px;
+    margin-right: 32px;
+    margin-top: 4px;
     text-align: right;
     font-family: Pretendard;
     font-size: 16px;
@@ -295,6 +309,8 @@ const IsPublic = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 26px;
+    margin-right: 32px;
 `;
 
 const CreateBtn = styled.button`
@@ -302,26 +318,26 @@ const CreateBtn = styled.button`
     width: 462px;
     padding: 16px 0px;
     margin-left: 30px;
-    margin-top: 53px;
-    margin-bottom: 28px;
+    margin-top: 37px;
+    margin-bottom: 45px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     border: 1px solid var(--light_black, #232323);
     background: var(--light_black, #232323);
     color: var(--f8f8f8, #FCFCFC);
     font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+    font-weight: 700;
+    line-height: 150%;
     cursor: pointer;
 `;
 
 const CalendarContainer = styled.div`
     position: absolute;
-    top: 27%;
-    left: 16%;
+    top: 27.4%;
+    left: 45%;
     z-index: 10;
     border: 1px solid var(--gray02, #747474);
     background: var(--offwhite_, #FCFCFC);
@@ -384,8 +400,28 @@ const GenreContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    width: 450px;
     margin-left: 30px;
+    margin-bottom: 35px;
     gap: 5px;
+`;
+
+const SearchSongContainerWrapper = styled.div`
+    display: flex;
+    position: absolute;
+    left: 608px;
+    width: 50%;
+    height: 100%;
+    z-index: 10;
+`;
+
+const SearchPlaceContainerWrapper = styled.div`
+    display: flex;
+    position: absolute;
+    left: 528px;
+    width: 50%;
+    height: 100%;
+    z-index: 10;
 `;
 
 export default EditPinPage;
