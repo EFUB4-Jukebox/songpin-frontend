@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SideSection from './SideSection';
+import SideSection from '../common/SideSection';
 import PlainSearchBar from './PlainSearchBar';
 import PlaceComponent from './PlaceComponent';
 
 const SearchPlaceContainer = ({onPlaceSelect}) => {
     const handlePlaceClick = (placeName) => {
         onPlaceSelect(placeName);
+        setShowSideBar(false);
     };
     
+    const [showSideBar, setShowSideBar] = useState(false);
+
+    
     return (
-            <SideSection>
+            <SideSection showSideBar={showSideBar}>
                 <Content>
                     <PlainSearchBar />
                     <SearchResult>
@@ -30,6 +34,7 @@ const Content = styled.div`
     flex-direction: column;
     align-items: center;
     padding-top: 40px;
+    background-color: white;
 `;
 
 const SearchResult = styled.div``;

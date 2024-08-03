@@ -5,7 +5,7 @@ import Calendar from "react-calendar";
 import moment from "moment";
 import "react-calendar/dist/Calendar.css";
 import SideBar from "../../components/HomePage/SideBar";
-import CreateSection from "../../components/CreatePinPage/CreateSection";
+import CreateSection from "../../components/common/SideSection";
 import SearchSongContainer from "../../components/CreatePinPage/SearchSongContainer";
 import SearchPlaceContainer from "../../components/CreatePinPage/SearchPlaceContainer";
 import PinComponent from "../../components/CreatePinPage/PinComponent";
@@ -68,83 +68,87 @@ const CreatePinPage = () => {
   return (
     <MainContainer>
       <SideBar></SideBar>
-      <CreateSection>
-        <Content>
-          {!isSongSelected ? (
-            <PinBox onClick={handlePinClick}>
-              <PinImg></PinImg>
-              <PinText>노래를 선택해주세요.</PinText>
-            </PinBox>
-          ) : (
-            <PinComponent
-              onPinClick={handlePinClick}
-              imgPath={selectedPin.image}
-              title={selectedPin.title}
-              artist={selectedPin.singer}
-            />
+        <CreateSection>
+          <Content>
+            {!isSongSelected ? (
+              <PinBox onClick={handlePinClick}>
+                <PinImg></PinImg>
+                <PinText>노래를 선택해주세요.</PinText>
+              </PinBox>
+            ) : (
+              <PinComponent
+                onPinClick={handlePinClick}
+                imgPath={selectedPin.image}
+                title={selectedPin.title}
+                artist={selectedPin.singer}
+              />
+            )}
+          </Content>
+          <Title>언제</Title>
+          <When>
+            {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
+            <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
+          </When>
+          {showCalendar && (
+            <CalendarContainer>
+              <StyledCalendar
+                calendarType="gregory"
+                value={date}
+                onChange={handleDateChange}
+                formatDay={(locale, date) => moment(date).format("D")}
+                formatYear={(locale, date) => moment(date).format("YYYY")}
+                formatMonthYear={(locale, date) =>
+                  moment(date).format("YYYY. MMMM")
+                }
+                showNeighboringMonth={true}
+              />
+            </CalendarContainer>
           )}
-        </Content>
-        <Title>언제</Title>
-        <When>
-          {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
-          <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
-        </When>
-        {showCalendar && (
-          <CalendarContainer>
-            <StyledCalendar
-              calendarType="gregory"
-              value={date}
-              onChange={handleDateChange}
-              formatDay={(locale, date) => moment(date).format("D")}
-              formatYear={(locale, date) => moment(date).format("YYYY")}
-              formatMonthYear={(locale, date) =>
-                moment(date).format("YYYY. MMMM")
-              }
-              showNeighboringMonth={true}
-            />
-          </CalendarContainer>
-        )}
-        <Title>어디서</Title>
-        <Where onClick={handlePlaceClick}>
-          {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
-          <LocationImg />
-        </Where>
-        <Title>장르</Title>
-        <GenreContainer>
-          {GenreList.map(genre => (
-            <Genre
-              key={genre.id}
-              name={genre.name}
-              img={
-                selectedGenre === genre.id ? genre.whiteImgSrc : genre.imgSrc
-              }
-              bgColor={selectedGenre === genre.id ? genre.bgColor : null}
-              onClick={() => handleGenreClick(genre.id)}
-              height="24px"
-            />
-          ))}
-        </GenreContainer>
-        <Title>메모</Title>
-        <MemoArea
-          placeholder="이곳에 메모를 남겨주세요."
-          maxLength={200}
-          onChange={onInputHandler}
-        ></MemoArea>
-        <TextNum>
-          <span>{inputCount}</span>
-          <span>/200</span>
-        </TextNum>
-        <IsPublic>
-          <Title>공개 여부</Title>
-          <PublicToggle />
-        </IsPublic>
-        <CreateBtn onClick={handleNavigate}>핀 생성하기</CreateBtn>
-      </CreateSection>
+          <Title>어디서</Title>
+          <Where onClick={handlePlaceClick}>
+            {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
+            <LocationImg />
+          </Where>
+          <Title>장르</Title>
+          <GenreContainer>
+            {GenreList.map(genre => (
+              <Genre
+                key={genre.id}
+                name={genre.name}
+                img={
+                  selectedGenre === genre.id ? genre.whiteImgSrc : genre.imgSrc
+                }
+                bgColor={selectedGenre === genre.id ? genre.bgColor : null}
+                onClick={() => handleGenreClick(genre.id)}
+                height="24px"
+              />
+            ))}
+          </GenreContainer>
+          <Title>메모</Title>
+          <MemoArea
+            placeholder="이곳에 메모를 남겨주세요."
+            maxLength={200}
+            onChange={onInputHandler}
+          ></MemoArea>
+          <TextNum>
+            <span>{inputCount}</span>
+            <span>/200</span>
+          </TextNum>
+          <IsPublic>
+            <Title>공개 여부</Title>
+            <PublicToggle />
+          </IsPublic>
+          <CreateBtn onClick={handleNavigate}>핀 생성하기</CreateBtn>
+        </CreateSection>
       {showSearchSongContainer && (
-        <SearchSongContainer onPinSelect={handlePinSelect} />
+        <SearchSongContainerWrapper>
+          <SearchSongContainer onPinSelect={handlePinSelect} />
+        </SearchSongContainerWrapper>
       )}
       {showSearchPlaceContainer && (
-        <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
+        <SearchPlaceContainerWrapper>
+          <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
+        </SearchPlaceContainerWrapper>
       )}
     </MainContainer>
   );
@@ -198,7 +202,7 @@ const Title = styled.div`
   display: flex;
   justify-content: flex-start;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   margin-left: 32px;
   color: var(--light_black, #232323);
   font-family: Pretendard;
@@ -215,6 +219,7 @@ const When = styled.div`
   align-content: center;
   margin-left: 32px;
   padding-bottom: 10px;
+  margin-bottom: 17px;
   width: 462px;
   border-bottom: 1px solid #747474;
   color: var(--gray02, #747474);
@@ -231,6 +236,7 @@ const Where = styled.div`
   justify-content: space-between;
   margin-left: 32px;
   padding-bottom: 10px;
+  margin-bottom: 17px;
   width: 462px;
   border-bottom: 1px solid #747474;
   color: var(--gray02, #747474);
@@ -244,9 +250,9 @@ const Where = styled.div`
 
 const MemoArea = styled.textarea`
   display: flex;
-  margin-left: 30px;
+  margin-left: 32px;
   padding: 20px;
-  width: 442px;
+  width: 422px;
   height: 134px;
   resize: none;
   border: none;
@@ -262,7 +268,8 @@ const MemoArea = styled.textarea`
 
 const TextNum = styled.p`
   color: var(--gray, #bcbcbc);
-  margin-right: 20px;
+  margin-right: 32px;
+  margin-top: 4px;
   text-align: right;
   font-family: Pretendard;
   font-size: 16px;
@@ -275,6 +282,8 @@ const IsPublic = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 26px;
+  margin-right: 32px;
 `;
 
 const CreateBtn = styled.button`
@@ -282,8 +291,8 @@ const CreateBtn = styled.button`
   width: 462px;
   padding: 16px 0px;
   margin-left: 30px;
-  margin-top: 53px;
-  margin-bottom: 42px;
+  margin-top: 37px;
+  margin-bottom: 45px;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -301,8 +310,8 @@ const CreateBtn = styled.button`
 
 const CalendarContainer = styled.div`
   position: absolute;
-  top: 25%;
-  left: 16%;
+  top: 25.4%;
+  left: 45%;
   z-index: 10;
   border: 1px solid var(--gray02, #747474);
   background: var(--offwhite_, #fcfcfc);
@@ -365,8 +374,28 @@ const GenreContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  width: 450px;
   margin-left: 30px;
+  margin-bottom: 35px;
   gap: 5px;
+`;
+
+const SearchSongContainerWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  left: 608px;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
+`;
+
+const SearchPlaceContainerWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  left: 528px;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
 `;
 
 export default CreatePinPage;
