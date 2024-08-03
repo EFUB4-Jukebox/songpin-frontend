@@ -113,6 +113,7 @@ export const postMail = async email => {
 export const patchResetPw = async uuidResetPw => {
   try {
     const data = await client.patch(`/login/pw`, uuidResetPw);
+    console.log(data);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
