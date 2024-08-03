@@ -25,6 +25,7 @@ const PinComponent = ({
       navigate(`/details-song/${pin.songInfo.songId}`);
     }
   };
+
   const formatDate = dateString => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -35,7 +36,6 @@ const PinComponent = ({
 
   return (
     <PinBox
-      onClick={handleClick}
       onMouseEnter={() => setImage(mapIconBallad)}
       onMouseLeave={() => setImage(mapIconBlack)}
       bgColor={
@@ -44,7 +44,7 @@ const PinComponent = ({
           : "var(--offwhite, #efefef)"
       }
     >
-      <SongBox>
+      <SongBox onClick={handleClick}>
         <PinImg src={songInfo.imgPath} alt="앨범 이미지" />
         <TitleBox>
           <PinTitle>
