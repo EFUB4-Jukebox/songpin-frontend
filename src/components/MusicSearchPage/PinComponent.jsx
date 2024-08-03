@@ -47,7 +47,7 @@ const PinComponent = ({ songInfo, avgGenreName, pinCount }) => {
         <PinSinger>{songInfo?.artist || null}</PinSinger>
         <PinTimes>
           <MapIconGray src={grayIconSrc} />
-          <TimesNum>{pinCount || null}</TimesNum>
+          <TimesNum>{pinCount || 0}</TimesNum>
         </PinTimes>
       </TextBox>
     </PinBox>
