@@ -27,6 +27,7 @@ const CreatePinPage = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [isPublic, setIsPublic] = useState(true);
 
   const navigate = useNavigate();
 
@@ -136,7 +137,7 @@ const CreatePinPage = () => {
           </TextNum>
           <IsPublic>
             <Title>공개 여부</Title>
-            <PublicToggle />
+            <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
           </IsPublic>
           <CreateBtn onClick={handleNavigate}>핀 생성하기</CreateBtn>
         </CreateSection>
