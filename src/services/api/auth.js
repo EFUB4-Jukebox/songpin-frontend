@@ -96,3 +96,12 @@ export const postToken = async () => {
     throw e;
   }
 };
+
+export const postMail = async email => {
+  try {
+    const res = await client.post("/mail/pw", { email });
+    console.log(res);
+  } catch (e) {
+    console.error(e);
+  }
+};

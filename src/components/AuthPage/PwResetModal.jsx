@@ -1,13 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../common/Input";
 import back from "../../assets/images/MusicSearchPage/arrow_back.svg";
+import { postMail } from "../../services/api/auth";
 
 const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   const navigate = useNavigate();
   const modalRef = useRef(null);
+  const [email, setEmail] = useState("");
+  const [mailMsg, setMailMsg] = useState("");
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -18,8 +21,8 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
     document.addEventListener("mousedown", handleClickOutside);
   }, [setPwResetModal]);
 
-  const handleSendMail = () => {
-    navigate("/resetPassword");
+  const handleSendMail = async () => {
+    await postMail(email);
   };
 
   const handleGotoLoginModal = () => {
@@ -35,7 +38,12 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
         </div>
         <div className="pwResetText">비밀번호를 잊으셨나요?</div>
         <InputWrapper>
-          <Input placeholder="이메일" />
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
           <Button
             active="true"
             name="비밀번호 재설정 메일 발송"
