@@ -15,7 +15,7 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
-import { postNewPin } from '../../services/api/create';
+import { postNewPin } from "../../services/api/create";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -51,7 +51,7 @@ const CreatePinPage = () => {
   };
 
   const handlePlaceClick = () => {
-    setShowSearchPlaceContainer(true);
+    setShowSearchPlaceContainer(!showSearchPlaceContainer);
   };
 
   const handlePlaceSelect = placeName => {
@@ -67,114 +67,116 @@ const CreatePinPage = () => {
     setSelectedGenre({ id, EngName });
   };
 
-  const handlePostPin = async (e) => {
+  const handlePostPin = async e => {
     e.preventDefault();
     const request = {
-        "song": {
-          "title": selectedPin.title,
-          "artist": selectedPin.singer,
-          "imgPath": selectedPin.image,
-          "providerTrackCode": selectedPin.key,
-        },
-        "listenedDate": moment(date).format("YYYY-MM-DD"),
-        "place": {
-          "placeName": "이화여자대학교 아산공학관",
-          "address": "서울 서대문구 이화여대길 52",
-          "providerAddressId": 356498231,
-          "latitude": 37.561859,
-          "longitude": 126.946834
-        },
-        "genreName": selectedGenre?.EngName,
-        "memo": "힘내자!",
-        "visibility": isPublic ? "PUBLIC" : "PRIVATE"
+      song: {
+        title: selectedPin.title,
+        artist: selectedPin.singer,
+        imgPath: selectedPin.image,
+        providerTrackCode: selectedPin.key,
+      },
+      listenedDate: moment(date).format("YYYY-MM-DD"),
+      place: {
+        placeName: "이화여자대학교 아산공학관",
+        address: "서울 서대문구 이화여대길 52",
+        providerAddressId: 356498231,
+        latitude: 37.561859,
+        longitude: 126.946834,
+      },
+      genreName: selectedGenre?.EngName,
+      memo: "힘내자!",
+      visibility: isPublic ? "PUBLIC" : "PRIVATE",
     };
     console.log(selectedPin);
-    console.log('Posting data:', request);
+    console.log("Posting data:", request);
     const response = await postNewPin(request);
-    console.log('PostPin response:', response);
+    console.log("PostPin response:", response);
     if (response && response.status === 201) {
-        console.log('Pin Post Success');
-        handleNavigate();
+      console.log("Pin Post Success");
+      handleNavigate();
     } else {
-        console.error('Failed to post Pin:', response);
+      console.error("Failed to post Pin:", response);
     }
-};
+  };
 
   return (
     <MainContainer>
       <SideBar></SideBar>
-        <CreateSection>
-          <Content>
-            {!isSongSelected ? (
-              <PinBox onClick={handlePinClick}>
-                <PinImg></PinImg>
-                <PinText>노래를 선택해주세요.</PinText>
-              </PinBox>
-            ) : (
-              <PinComponent
-                onPinClick={handlePinClick}
-                imgPath={selectedPin.image}
-                title={selectedPin.title}
-                artist={selectedPin.singer}
-              />
-            )}
-          </Content>
-          <Title>언제</Title>
-          <When>
-            {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
-            <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
-          </When>
-          {showCalendar && (
-            <CalendarContainer>
-              <StyledCalendar
-                calendarType="gregory"
-                value={date}
-                onChange={handleDateChange}
-                formatDay={(locale, date) => moment(date).format("D")}
-                formatYear={(locale, date) => moment(date).format("YYYY")}
-                formatMonthYear={(locale, date) =>
-                  moment(date).format("YYYY. MMMM")
-                }
-                showNeighboringMonth={true}
-              />
-            </CalendarContainer>
+      <CreateSection>
+        <Content>
+          {!isSongSelected ? (
+            <PinBox onClick={handlePinClick}>
+              <PinImg></PinImg>
+              <PinText>노래를 선택해주세요.</PinText>
+            </PinBox>
+          ) : (
+            <PinComponent
+              onPinClick={handlePinClick}
+              imgPath={selectedPin.image}
+              title={selectedPin.title}
+              artist={selectedPin.singer}
+            />
           )}
-          <Title>어디서</Title>
-          <Where onClick={handlePlaceClick}>
-            {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
-            <LocationImg />
-          </Where>
-          <Title>장르</Title>
-          <GenreContainer>
-            {GenreList.map(genre => (
-              <Genre
-                key={genre.id}
-                name={genre.name}
-                img={
-                  selectedGenre?.id === genre.id ? genre.whiteImgSrc : genre.imgSrc
-                }
-                bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
-                onClick={() => handleGenreClick(genre.id, genre.EngName)}
-                height="24px"
-              />
-            ))}
-          </GenreContainer>
-          <Title>메모</Title>
-          <MemoArea
-            placeholder="이곳에 메모를 남겨주세요."
-            maxLength={200}
-            onChange={onInputHandler}
-          ></MemoArea>
-          <TextNum>
-            <span>{inputCount}</span>
-            <span>/200</span>
-          </TextNum>
-          <IsPublic>
-            <Title>공개 여부</Title>
-            <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
-          </IsPublic>
-          <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
-        </CreateSection>
+        </Content>
+        <Title>언제</Title>
+        <When>
+          {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
+          <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
+        </When>
+        {showCalendar && (
+          <CalendarContainer>
+            <StyledCalendar
+              calendarType="gregory"
+              value={date}
+              onChange={handleDateChange}
+              formatDay={(locale, date) => moment(date).format("D")}
+              formatYear={(locale, date) => moment(date).format("YYYY")}
+              formatMonthYear={(locale, date) =>
+                moment(date).format("YYYY. MMMM")
+              }
+              showNeighboringMonth={true}
+            />
+          </CalendarContainer>
+        )}
+        <Title>어디서</Title>
+        <Where onClick={handlePlaceClick}>
+          {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
+          <LocationImg />
+        </Where>
+        <Title>장르</Title>
+        <GenreContainer>
+          {GenreList.map(genre => (
+            <Genre
+              key={genre.id}
+              name={genre.name}
+              img={
+                selectedGenre?.id === genre.id
+                  ? genre.whiteImgSrc
+                  : genre.imgSrc
+              }
+              bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
+              onClick={() => handleGenreClick(genre.id, genre.EngName)}
+              height="24px"
+            />
+          ))}
+        </GenreContainer>
+        <Title>메모</Title>
+        <MemoArea
+          placeholder="이곳에 메모를 남겨주세요."
+          maxLength={200}
+          onChange={onInputHandler}
+        ></MemoArea>
+        <TextNum>
+          <span>{inputCount}</span>
+          <span>/200</span>
+        </TextNum>
+        <IsPublic>
+          <Title>공개 여부</Title>
+          <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
+        </IsPublic>
+        <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
+      </CreateSection>
       {showSearchSongContainer && (
         <SearchSongContainerWrapper>
           <SearchSongContainer onPinSelect={handlePinSelect} />
