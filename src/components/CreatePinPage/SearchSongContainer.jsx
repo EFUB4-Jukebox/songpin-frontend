@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import SideSection from "./SideSection";
+import SideSection from "../common/SideSection";
 import PlainSearchBar from "./PlainSearchBar";
 import PinComponent from "./PinComponent";
 import { getExSpotify } from "../../services/api/spotify";
