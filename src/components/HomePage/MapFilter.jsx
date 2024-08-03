@@ -193,7 +193,7 @@ const MapFilter = ({ onFilterChange }) => {
                 formatDay={(locale, date) => moment(date).format("D")}
                 formatYear={(locale, date) => moment(date).format("YYYY")}
                 formatMonthYear={(locale, date) =>
-                  moment(date).format("YYYY. MMMM")
+                  moment(date).format("YYYY년 MM월")
                 }
                 formatShortWeekday={(locale, date) =>
                   weekDaysShort[date.getDay()]
@@ -404,6 +404,12 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
+  .react-calendar__month-view__days__day--weekend {
+    &:nth-child(7n) { /* 토요일 */
+      color: #00bfff;
+    }
+  }
+
   .react-calendar__tile {
     font-size: 16px;
     display: flex;
@@ -434,6 +440,10 @@ const StyledCalendar = styled(Calendar)`
     background: url(${calendar_selected}) center center no-repeat !important;
     background-size: 15%;
     color: white;
+
+    &:nth-child(7n) { /* 토요일 */
+      color: white;
+    }
   }
 
   .react-calendar__month-view__weekdays {

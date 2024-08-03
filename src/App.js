@@ -194,6 +194,12 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
                   width: 114,
                   height: 114,
                 },
+                options: {
+                  offset: {
+                    x: 57,
+                    y: 57,
+                  },
+                }
               }}
               onClick={() => {
                 if (pin.placePinCount >= 2) {
