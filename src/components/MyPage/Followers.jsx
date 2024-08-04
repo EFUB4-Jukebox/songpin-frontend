@@ -19,6 +19,7 @@ const Followers = () => {
 
   const followerCount = data.followerCount;
   const followingCount = data.followingCount;
+  const memberId = data.memberId;
 
   // useEffect(() => {
   //   const getProfile = async () => {
@@ -37,7 +38,7 @@ const Followers = () => {
   // }, []);
 
   const handleNavigation = menu => {
-    navigate(`/user-follows?menu=${menu}`);
+    navigate(`/users/${memberId}/follows?menu=${menu}`);
   };
 
   const goEditPage = () => {
