@@ -132,7 +132,8 @@ const Stats = () => {
         <MostRegisterPlace>
           <div>
             가장 많이 등록된 장소는
-            <br /> <Place>{popularPlaceName && popularPlaceName}</Place>이에요.
+            <br /> <Place>{popularPlaceName && popularPlaceName}</Place>
+            {popularGenreName && getPostPosition(popularPlaceName)}
           </div>
           <div>
             <DynamicSvg id="popular-place-map" lat={lat} lng={lng} />

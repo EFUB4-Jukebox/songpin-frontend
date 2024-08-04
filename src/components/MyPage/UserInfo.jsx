@@ -6,24 +6,39 @@ import { ProfileImg } from "../../constants/ProfileImg";
 import { useQuery } from "@tanstack/react-query";
 
 const UserInfo = () => {
-  const { isError, data, error } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-  });
-  if (!data) {
-    return <div>데이터가 없습니다.</div>;
-  }
+  const [profileImg, setProfileImg] = useState();
+  const [nickname, setNickname] = useState();
+  const [handle, setHandle] = useState();
+  // const { isError, data, error } = useQuery({
+  //   queryKey: ["getMyProfile"],
+  //   queryFn: getMyProfile,
+  // });
+  // if (!data) {
+  //   return <div>데이터가 없습니다.</div>;
+  // }
 
-  if (isError) {
-    console.error("Error fetching user info:", error);
-    return <div>오류 발생: {error.message}</div>;
-  }
-  const profileData = data;
-  const img = ProfileImg.find(it => it.EngName === profileData.profileImg);
-  const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
-  const nickname = profileData.nickname;
-  const handle = profileData.handle;
+  // if (isError) {
+  //   console.error("Error fetching user info:", error);
+  //   return <div>오류 발생: {error.message}</div>;
+  // }
+  // const profileData = data;
+  // const img = ProfileImg.find(it => it.EngName === profileData.profileImg);
+  // const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
+  // const nickname = profileData.nickname;
+  // const handle = profileData.handle;
 
+  useEffect(() => {
+    const getData = async () => {
+      const res = await getMyProfile();
+
+      console.log(res);
+      const img = ProfileImg.find(it => it.EngName === res.profileImg);
+      setProfileImg(img.imgSrc);
+      setNickname(res.nickname);
+      setHandle(res.handle);
+    };
+    getData();
+  }, []);
   return (
     <UserInfoBox>
       <UserLogo src={profileImg} alt="User logo pop" />
