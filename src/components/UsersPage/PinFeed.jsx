@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PinComponent from "./PinComponent";
 import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
 
-const PinFeed = ({ pins, totalElements }) => {
+const PinFeed = ({ pins = [], totalElements }) => {
   return (
     <div>
       <PinBox>

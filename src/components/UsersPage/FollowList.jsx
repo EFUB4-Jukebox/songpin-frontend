@@ -15,6 +15,7 @@ const FollowList = ({ followerList, followingList, selectedMenu }) => {
                 handle={it.handle}
                 isFollowing={it.isFollowing}
                 followId={it.followId}
+                memberId={it.memberId}
               />
             </ContentBox>
           ))
@@ -27,6 +28,7 @@ const FollowList = ({ followerList, followingList, selectedMenu }) => {
                 handle={it.handle}
                 isFollowing={it.isFollowing}
                 followId={it.followId}
+                memberId={it.memberId}
               />
             </ContentBox>
           ))}
