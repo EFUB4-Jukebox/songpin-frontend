@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   background: rgba(0, 0, 0, 0.2);
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,6 +52,7 @@ const CompleteWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 15px;
+
   .welcomeText {
     color: var(--light_black, #232323);
     font-size: 32px;
