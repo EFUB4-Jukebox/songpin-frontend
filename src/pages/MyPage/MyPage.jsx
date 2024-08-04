@@ -10,6 +10,8 @@ const MyPage = () => {
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handlePageClick = page => {
     setClickedPage(page);
@@ -108,4 +110,21 @@ const Line = styled.div`
   width: 528px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--gray, #bcbcbc);
+`;
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 24px;
+  color: #333;
+`;
+
+const ErrorContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 24px;
+  color: red;
 `;

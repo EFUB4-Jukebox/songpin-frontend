@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import userLogoPop from "../../assets/images/MyPage/user-logo-pop.svg"; //임시 유저 프로필
+import userLogoEx from "../../assets/images/MyPage/user-logo-ex.svg"; //임시 유저 프로필
 import { getMyProfile } from "../../services/api/myPage";
 import { ProfileImg } from "../../constants/ProfileImg";
 import { useQuery } from "@tanstack/react-query";
@@ -41,10 +41,13 @@ const UserInfo = () => {
   }, []);
   return (
     <UserInfoBox>
-      <UserLogo src={profileImg} alt="User logo pop" />
+      <UserLogo
+        src={profileImg ? profileImg : userLogoEx}
+        alt="User logo pop"
+      />
       <UserNameBox>
-        <UserName>{nickname}</UserName>
-        <UserId>@{handle}</UserId>
+        <UserName>{nickname ? nickname : ""}</UserName>
+        <UserId>{handle ? `@ ${handle}` : ""}</UserId>
       </UserNameBox>
     </UserInfoBox>
   );

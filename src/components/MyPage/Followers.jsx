@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 const Followers = () => {
   const [followerCount, setFollowerCount] = useState();
   const [followingCount, setFollowingCount] = useState();
+  const [data, setData] = useState(false);
   const navigate = useNavigate();
 
   // const { data, error, isLoading } = useQuery({
@@ -36,6 +37,10 @@ const Followers = () => {
     getProfile();
   }, []);
 
+  useEffect(() => {
+    setData(true);
+  }, [setFollowerCount, setFollowingCount]);
+
   const handleNavigation = menu => {
     navigate(`/user-follows?menu=${menu}`);
   };
@@ -45,19 +50,30 @@ const Followers = () => {
   };
 
   return (
-    <FollowerComponent>
-      <FollowInfoBox>
-        <FollowBox onClick={() => handleNavigation("followers")}>
-          <FollowNumberBox>{followerCount}</FollowNumberBox>
-          <FollowTextBox>팔로워</FollowTextBox>
-        </FollowBox>
-        <FollowBox onClick={() => handleNavigation("following")}>
-          <FollowNumberBox>{followingCount}</FollowNumberBox>
-          <FollowTextBox>팔로잉</FollowTextBox>
-        </FollowBox>
-      </FollowInfoBox>
-      <EditBtn onClick={goEditPage}>프로필 편집</EditBtn>
-    </FollowerComponent>
+    <>
+      {data ? (
+        <FollowerComponent>
+          <FollowInfoBox>
+            <FollowBox onClick={() => handleNavigation("followers")}>
+              <FollowNumberBox>
+                {followerCount ? followerCount : 0}
+              </FollowNumberBox>
+              <FollowTextBox>팔로워</FollowTextBox>
+            </FollowBox>
+            <FollowBox onClick={() => handleNavigation("following")}>
+              <FollowNumberBox>
+                {followingCount ? followingCount : 0}
+              </FollowNumberBox>
+              <FollowTextBox>팔로잉</FollowTextBox>
+            </FollowBox>
+          </FollowInfoBox>
+
+          <EditBtn onClick={goEditPage}>프로필 편집</EditBtn>
+        </FollowerComponent>
+      ) : (
+        <></>
+      )}
+    </>
   );
 };
 
