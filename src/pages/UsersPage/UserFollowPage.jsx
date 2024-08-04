@@ -73,7 +73,7 @@ const UserFollowPage = () => {
       <ContentBox>
         <TopBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />
-          <UserId>@{handle}</UserId>
+          <UserId>{handle && `@${handle}`}</UserId>
         </TopBox>
         <MenuBox>
           <MenuText
@@ -90,15 +90,19 @@ const UserFollowPage = () => {
           </MenuText>
         </MenuBox>
       </ContentBox>
-      {selectedMenu === "followers" && followerList.length === 0 && (
-        <NoDataMessage>팔로워가 없습니다.</NoDataMessage>
-      )}
-      {selectedMenu === "following" && followingList.length === 0 && (
-        <NoDataMessage>팔로잉이 없습니다.</NoDataMessage>
-      )}
+      {selectedMenu === "followers" &&
+        followerList &&
+        followerList.length === 0 && (
+          <NoDataMessage>팔로워가 없습니다.</NoDataMessage>
+        )}
+      {selectedMenu === "following" &&
+        followingList &&
+        followingList.length === 0 && (
+          <NoDataMessage>팔로잉이 없습니다.</NoDataMessage>
+        )}
       <FollowList
-        followerList={followerList}
-        followingList={followingList}
+        followerList={followerList && followerList}
+        followingList={followerList && followingList}
         selectedMenu={selectedMenu}
       />
     </SideSection>

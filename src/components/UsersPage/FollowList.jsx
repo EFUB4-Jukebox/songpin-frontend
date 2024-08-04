@@ -3,16 +3,19 @@ import styled from "styled-components";
 import UserFollowInfo from "./UserFollowInfo";
 
 const sortFollowersOrFollowing = list => {
-  return list.sort((a, b) => {
-    if (a.isFollowing === null && b.isFollowing !== null) return -1;
-    if (b.isFollowing === null && a.isFollowing !== null) return 1;
-    if (a.isFollowing === null) return -1;
-    if (b.isFollowing === null) return 1;
+  return (
+    list &&
+    list.sort((a, b) => {
+      if (a.isFollowing === null && b.isFollowing !== null) return -1;
+      if (b.isFollowing === null && a.isFollowing !== null) return 1;
+      if (a.isFollowing === null) return -1;
+      if (b.isFollowing === null) return 1;
 
-    if (a.isFollowing !== b.isFollowing) return b.isFollowing - a.isFollowing;
+      if (a.isFollowing !== b.isFollowing) return b.isFollowing - a.isFollowing;
 
-    return b.followId - a.followId;
-  });
+      return b.followId - a.followId;
+    })
+  );
 };
 
 const FollowList = ({ followerList, followingList, selectedMenu }) => {
@@ -23,18 +26,19 @@ const FollowList = ({ followerList, followingList, selectedMenu }) => {
 
   return (
     <ListContainer>
-      {sortedList.map(it => (
-        <ContentBox key={it.memberId}>
-          <UserFollowInfo
-            profileImg={it.profileImg}
-            nickname={it.nickname}
-            handle={it.handle}
-            isFollowing={it.isFollowing}
-            followId={it.followId}
-            memberId={it.memberId}
-          />
-        </ContentBox>
-      ))}
+      {sortedList &&
+        sortedList.map(it => (
+          <ContentBox key={it.memberId}>
+            <UserFollowInfo
+              profileImg={it.profileImg}
+              nickname={it.nickname}
+              handle={it.handle}
+              isFollowing={it.isFollowing}
+              followId={it.followId}
+              memberId={it.memberId}
+            />
+          </ContentBox>
+        ))}
     </ListContainer>
   );
 };

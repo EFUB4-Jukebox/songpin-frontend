@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 const Followers = () => {
   const [followerCount, setFollowerCount] = useState();
   const [followingCount, setFollowingCount] = useState();
+  const [memberId, setMemberId] = useState();
   const [data, setData] = useState(false);
   const navigate = useNavigate();
 
@@ -20,7 +21,6 @@ const Followers = () => {
 
   // const followerCount = data.followerCount;
   // const followingCount = data.followingCount;
-  const memberId = data.memberId;
 
   useEffect(() => {
     const getProfile = async () => {
@@ -30,6 +30,7 @@ const Followers = () => {
         if (res) {
           setFollowerCount(res.followerCount);
           setFollowingCount(res.followingCount);
+          setMemberId(res.memberId);
         }
       } catch (error) {
         console.log("Login Failed", error);
@@ -43,7 +44,7 @@ const Followers = () => {
   }, [setFollowerCount, setFollowingCount]);
 
   const handleNavigation = menu => {
-    navigate(`/users/${memberId}/follows?menu=${menu}`);
+    if (memberId) navigate(`/users/${memberId}/follows?menu=${menu}`);
   };
 
   const goEditPage = () => {
