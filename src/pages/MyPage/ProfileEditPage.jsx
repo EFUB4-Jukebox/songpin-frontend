@@ -115,56 +115,60 @@ const ProfileEditPage = () => {
 
   return (
     <SideSection>
-      <ProfileEditComponent>
-        <ProfileImgSelect>
-          <UserLogo src={profileImg} />
-          {GenreList.map((it, index) => (
-            <SelectList
-              onClick={() => handleProfileImg(index)}
-              src={`${selected === index ? it.strokeIconSrc : it.iconSrc}`}
-            />
-          ))}
-        </ProfileImgSelect>
-        <EditSection>
-          <NickName>
-            <Title>닉네임</Title>
-            <Edit>
-              <EditText
-                type="text"
-                value={nickname}
-                onChange={changeNickname}
-                placeholder="닉네임을 입력하세요"
+      {email ? (
+        <ProfileEditComponent>
+          <ProfileImgSelect>
+            <UserLogo src={profileImg} />
+            {GenreList.map((it, index) => (
+              <SelectList
+                onClick={() => handleProfileImg(index)}
+                src={`${selected === index ? it.strokeIconSrc : it.iconSrc}`}
               />
-              <Line />
-              <AlarmMessage>{infoMsgNickname}</AlarmMessage>
-            </Edit>
-          </NickName>
-          <Handle>
-            <Title>핸들</Title>
-            <Edit>
-              <EditText
-                type="text"
-                value={handle}
-                onChange={changeHandle}
-                placeholder="핸들을 입력하세요"
-              />
-              <Line />
-              <AlarmMessage>{infoMsgHandle}</AlarmMessage>
-            </Edit>
-          </Handle>
-          <Email>
-            <Title>이메일</Title>
-            <MailText>{email}</MailText>
-          </Email>
-        </EditSection>
-        <Spacer />
-        <GoOutBtns>
-          <Button onClick={goBackPage}>취소</Button>
-          <Button isDisabled={!isFormValid} onClick={completeEditProfile}>
-            완료
-          </Button>
-        </GoOutBtns>
-      </ProfileEditComponent>
+            ))}
+          </ProfileImgSelect>
+          <EditSection>
+            <NickName>
+              <Title>닉네임</Title>
+              <Edit>
+                <EditText
+                  type="text"
+                  value={nickname}
+                  onChange={changeNickname}
+                  placeholder="닉네임을 입력하세요"
+                />
+                <Line />
+                <AlarmMessage>{infoMsgNickname}</AlarmMessage>
+              </Edit>
+            </NickName>
+            <Handle>
+              <Title>핸들</Title>
+              <Edit>
+                <EditText
+                  type="text"
+                  value={handle}
+                  onChange={changeHandle}
+                  placeholder="핸들을 입력하세요"
+                />
+                <Line />
+                <AlarmMessage>{infoMsgHandle}</AlarmMessage>
+              </Edit>
+            </Handle>
+            <Email>
+              <Title>이메일</Title>
+              <MailText>{email}</MailText>
+            </Email>
+          </EditSection>
+          <Spacer />
+          <GoOutBtns>
+            <Button onClick={goBackPage}>취소</Button>
+            <Button isDisabled={!isFormValid} onClick={completeEditProfile}>
+              완료
+            </Button>
+          </GoOutBtns>
+        </ProfileEditComponent>
+      ) : (
+        <></>
+      )}
     </SideSection>
   );
 };
@@ -200,6 +204,7 @@ const SelectList = styled.img`
 const EditSection = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 30px;
   padding-top: 56px;
 `;
 
@@ -221,6 +226,7 @@ const Title = styled.div`
 const Edit = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const EditText = styled.input`
@@ -235,12 +241,15 @@ const EditText = styled.input`
 `;
 
 const Line = styled.div`
-  width: 340px;
+  width: 345px;
   height: 1px;
   background: var(--gray02, #747474);
 `;
 
 const AlarmMessage = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 0px;
   color: var(--gray02, #747474);
   text-align: right;
   font-family: Pretendard;
@@ -290,6 +299,8 @@ const GoOutBtns = styled.div`
 const Button = styled.div`
   color: ${({ isDisabled }) =>
     isDisabled ? "var(--gray, #BCBCBC)" : "var(--light_black, #232323)"};
+  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
+
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
