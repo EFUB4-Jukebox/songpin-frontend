@@ -72,8 +72,7 @@ const Stats = () => {
         setPopularImgSrc(res.popularSong.imgPath);
         setPopularPlaceName(res.popularPlace.placeName);
         setPopularGenre(res.popularGenreName);
-        const genre = GenreList.find(it => it.EngName === popularGenre);
-        setPopularGenreName(genre.name);
+
         setLat(res.popularPlace.latitude);
         setLng(res.popularPlace.longitude);
       } catch (error) {
@@ -83,6 +82,12 @@ const Stats = () => {
 
     getStatsAll();
   }, []);
+
+  useEffect(() => {
+    const genre = GenreList.find(it => it.EngName === popularGenre);
+    if (genre) setPopularGenreName(genre.name);
+    console.log(genre);
+  }, [popularGenre]);
 
   const hasFinalConsonant = char => {
     const charCode = char.charCodeAt(0); //이름 끝자의 유니코드 값
@@ -130,7 +135,7 @@ const Stats = () => {
         </MostRegisterPlace>
         <MostRegisterGenre>
           <div>
-            가장 많이 등록된 장르는
+            가장 많이 등록된 장르는{" "}
             <GenreName>{popularGenreName && popularGenreName}</GenreName>
             {popularGenreName && getPostPosition(popularGenreName)}
           </div>
