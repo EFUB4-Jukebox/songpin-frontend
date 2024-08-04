@@ -28,11 +28,11 @@ const Wrapper = styled.div`
     height: 60px;
     flex-shrink: 0;
     color: var(--f8f8f8, #fcfcfc);
-    font-family: Inter;
+    font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
-    line-height: normal;
+    line-height: 40px;
   }
   .inactiveButton {
     cursor: pointer;
@@ -42,11 +42,11 @@ const Wrapper = styled.div`
     border: 1px solid var(--gray, #bcbcbc);
     background: var(--gray, #bcbcbc);
     color: var(--f8f8f8, #fcfcfc);
-    font-family: Inter;
+    font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
-    line-height: normal;
+    line-height: 40px;
   }
 `;
 export default Button;
