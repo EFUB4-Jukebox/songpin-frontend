@@ -1,15 +1,17 @@
 import styled from "styled-components";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { resetPassword } from "../../services/api/myPage";
+import { patchResetPw } from "../../services/api/auth";
 
 const PwResetPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
+  const { uuid } = useParams();
 
   const resetComplete = async () => {
     if (newPassword === confirmPassword) {
@@ -17,8 +19,19 @@ const PwResetPage = () => {
         password: newPassword,
         confirmPassword: confirmPassword,
       };
+      const uuidResetPw = {
+        uuid: uuid || "",
+        password: newPassword,
+        confirmPassword: confirmPassword,
+      };
+
       try {
-        await resetPassword(resetPw);
+        if (uuid) {
+          await patchResetPw(uuidResetPw); // UUID가 있는 경로
+          console.log(uuid);
+        } else {
+          await resetPassword(resetPw);
+        }
         navigate("/resetPasswordComplete");
       } catch (error) {
         console.error(error);
@@ -28,6 +41,7 @@ const PwResetPage = () => {
       setHasError(true);
     }
   };
+
   const handleNewPasswordChange = e => {
     setNewPassword(e.target.value);
   };
@@ -36,6 +50,7 @@ const PwResetPage = () => {
     setConfirmPassword(e.target.value);
     setHasError(newPassword !== e.target.value);
   };
+
   return (
     <Wrapper>
       <div className="resetText">비밀번호 재설정</div>
@@ -63,6 +78,7 @@ const PwResetPage = () => {
     </Wrapper>
   );
 };
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

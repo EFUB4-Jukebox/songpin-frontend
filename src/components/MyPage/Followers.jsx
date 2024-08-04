@@ -5,37 +5,39 @@ import { getMyProfile } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
 const Followers = () => {
-  // const [followerCount, setFollowerCount] = useState();
-  // const [followingCount, setFollowingCount] = useState();
+  const [followerCount, setFollowerCount] = useState();
+  const [followingCount, setFollowingCount] = useState();
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-  });
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ["getMyProfile"],
+  //   queryFn: getMyProfile,
+  // });
 
-  if (isLoading) return <div>로딩 중...</div>;
-  if (error) return <div>오류 발생: {error.message}</div>;
+  // if (isLoading) return <div>로딩 중...</div>;
+  // if (error) return <div>오류 발생: {error.message}</div>;
+
 
   const followerCount = data.followerCount;
   const followingCount = data.followingCount;
   const memberId = data.memberId;
 
-  // useEffect(() => {
-  //   const getProfile = async () => {
-  //     try {
-  //       const res = await getMyProfile();
-  //       console.log(res);
-  //       if (res) {
-  //         setFollowerCount(res.followerCount);
-  //         setFollowingCount(res.followingCount);
-  //       }
-  //     } catch (error) {
-  //       console.log("Login Failed", error);
-  //     }
-  //   };
-  //   getProfile();
-  // }, []);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const res = await getMyProfile();
+        console.log(res);
+        if (res) {
+          setFollowerCount(res.followerCount);
+          setFollowingCount(res.followingCount);
+        }
+      } catch (error) {
+        console.log("Login Failed", error);
+      }
+    };
+    getProfile();
+  }, []);
 
   const handleNavigation = menu => {
     navigate(`/users/${memberId}/follows?menu=${menu}`);

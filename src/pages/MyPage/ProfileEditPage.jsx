@@ -16,8 +16,37 @@ const ProfileEditPage = () => {
   const [originImg, setOriginImg] = useState("");
   const [infoMsgNickname, setInfoMsgNickname] = useState("");
   const [infoMsgHandle, setInfoMsgHandle] = useState("");
-
+  const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const nicknameRegex = /^[가-힣a-zA-Z0-9]{1,8}$/;
+    const handleRegex = /^[a-z0-9_]{3,12}$/;
+
+    // 닉네임 검증
+    let nicknameMessage = "";
+    if (!nickname) {
+      nicknameMessage = "닉네임을 입력하세요.";
+    } else if (nickname.length > 8) {
+      nicknameMessage = "닉네임은 8자 이내여야 합니다.";
+    } else if (!nicknameRegex.test(nickname)) {
+      nicknameMessage = "닉네임은 한글, 영문 대소문자, 숫자만 사용 가능합니다.";
+    }
+
+    // 핸들 검증
+    let handleMessage = "";
+    if (!handle) {
+      handleMessage = "핸들을 입력하세요.";
+    } else if (handle.length > 12 || handle.length < 3) {
+      handleMessage = "핸들은 최소 3자 이상, 12자 이내여야 합니다.";
+    } else if (!handleRegex.test(handle)) {
+      handleMessage = "핸들은 영문 소문자, 숫자, 언더바(_)만 사용 가능합니다.";
+    }
+    setInfoMsgNickname(nicknameMessage);
+    setInfoMsgHandle(handleMessage);
+
+    setIsFormValid(nicknameMessage === "" && handleMessage === "");
+  };
 
   const completeEditProfile = async () => {
     const selectedGenre = GenreList.find(it => it.id === selected);
@@ -29,6 +58,7 @@ const ProfileEditPage = () => {
     console.log(editProfile);
     const res = await editMyProfile(editProfile);
     console.log(res);
+
     if (res.data && res.data.message) {
       const message = res.data.message;
       if (message.startsWith("nickname")) {
@@ -61,6 +91,10 @@ const ProfileEditPage = () => {
     };
     getProfile();
   }, []);
+
+  useEffect(() => {
+    validateForm();
+  }, [nickname, handle]);
 
   const changeNickname = event => {
     setNickname(event.target.value);
@@ -126,7 +160,9 @@ const ProfileEditPage = () => {
         <Spacer />
         <GoOutBtns>
           <Button onClick={goBackPage}>취소</Button>
-          <Button onClick={completeEditProfile}>완료</Button>
+          <Button isDisabled={!isFormValid} onClick={completeEditProfile}>
+            완료
+          </Button>
         </GoOutBtns>
       </ProfileEditComponent>
     </SideSection>
@@ -252,11 +288,12 @@ const GoOutBtns = styled.div`
 `;
 
 const Button = styled.div`
-  color: var(--light_black, #232323);
+  color: ${({ isDisabled }) =>
+    isDisabled ? "var(--gray, #BCBCBC)" : "var(--light_black, #232323)"};
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 140%; /* 28px */
   cursor: pointer;
 `;

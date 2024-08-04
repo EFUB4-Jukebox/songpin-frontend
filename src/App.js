@@ -112,6 +112,7 @@ function App() {
         <Route path="/introduce" element={<IntroducePage />} />
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/resetPassword" element={<PwResetPage />} />
+        <Route path="/resetPassword/:uuid" element={<PwResetPage />} />
         <Route
           path="/resetPasswordComplete"
           element={<PwResetCompletePage />}

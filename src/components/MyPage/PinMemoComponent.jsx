@@ -40,7 +40,7 @@ const PinMemoComponent = ({
     // 지도 위치 이동 코드 추가
   };
 
-  const formattedDate = format(new Date(listenedDate), "yy.MM.dd", {
+  const formattedDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
 

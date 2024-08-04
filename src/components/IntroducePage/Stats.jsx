@@ -1,4 +1,3 @@
-import MostRegisterGenreEx from "../../assets/introduce/mostRegisterGenreEx.svg";
 import styled from "styled-components";
 import { GenreList } from "../../constants/GenreList";
 import Genre from "../common/Genre";
@@ -24,6 +23,8 @@ const Stats = () => {
   const [genreSongeArtist, setGenreSongeArtist] = useState();
   const [genreSongTitle, setGenreSongTitle] = useState();
   const [genreSongImgSrc, setGenreSongImgSrc] = useState();
+  const [popularGenreBg, setPopularGenreBg] = useState();
+  const [popularGenreIcon, setPopularGenreIcon] = useState();
 
   useEffect(() => {
     const handlePlace = async () => {
@@ -72,8 +73,7 @@ const Stats = () => {
         setPopularImgSrc(res.popularSong.imgPath);
         setPopularPlaceName(res.popularPlace.placeName);
         setPopularGenre(res.popularGenreName);
-        const genre = GenreList.find(it => it.EngName === popularGenre);
-        setPopularGenreName(genre.name);
+
         setLat(res.popularPlace.latitude);
         setLng(res.popularPlace.longitude);
       } catch (error) {
@@ -84,6 +84,16 @@ const Stats = () => {
     getStatsAll();
   }, []);
 
+  useEffect(() => {
+    const genre = GenreList.find(it => it.EngName === popularGenre);
+    if (genre) {
+      setPopularGenreName(genre.name);
+      setPopularGenreBg(genre.bgColor);
+      setPopularGenreIcon(genre.statsIcon);
+    }
+    console.log(genre);
+  }, [popularGenre]);
+
   const hasFinalConsonant = char => {
     const charCode = char.charCodeAt(0); //이름 끝자의 유니코드 값
     const diff = charCode - 0xac00; //유니코드 값에서 한글 음절의 시작점인 0XAC00을 뺌
@@ -91,9 +101,9 @@ const Stats = () => {
     return jong !== 0; //나머지가 0이 아니면 받침 존재
   };
   const getPostPosition = popularGenreName => {
-    if (!popularGenreName) return "예요"; //닉네임이 없으면 기본 조사 '은'
+    if (!popularGenreName) return "예요."; //닉네임이 없으면 기본 조사 '은'
     const lastChar = popularGenreName[popularGenreName.length - 1];
-    return hasFinalConsonant(lastChar) ? "이에요" : "예요";
+    return hasFinalConsonant(lastChar) ? "이에요." : "예요.";
   };
 
   return (
@@ -122,7 +132,8 @@ const Stats = () => {
         <MostRegisterPlace>
           <div>
             가장 많이 등록된 장소는
-            <br /> <Place>{popularPlaceName && popularPlaceName}</Place>이에요.
+            <br /> <Place>{popularPlaceName && popularPlaceName}</Place>
+            {popularGenreName && getPostPosition(popularPlaceName)}
           </div>
           <div>
             <DynamicSvg id="popular-place-map" lat={lat} lng={lng} />
@@ -130,12 +141,14 @@ const Stats = () => {
         </MostRegisterPlace>
         <MostRegisterGenre>
           <div>
-            가장 많이 등록된 장르는 {""}
-            <GenreName>{popularGenreName && popularGenreName}</GenreName>
+            가장 많이 등록된 장르는{" "}
+            <GenreName bgColor={popularGenreBg}>
+              {popularGenreName && popularGenreName}
+            </GenreName>
             {popularGenreName && getPostPosition(popularGenreName)}
           </div>
           <div>
-            <img src={MostRegisterGenreEx} />
+            <img src={popularGenreIcon} />
           </div>
         </MostRegisterGenre>
         <MostListenGenreWrapper>
@@ -149,6 +162,7 @@ const Stats = () => {
                   bgColor={GenreList.find(it => it.id === genrePlaceId).bgColor}
                   height="35px"
                   text="28px"
+                  padding="6px 15px"
                 />
               )}
 
@@ -189,11 +203,12 @@ const Stats = () => {
                   bgColor={GenreList.find(it => it.id === genreSongId).bgColor}
                   height="35px"
                   text="28px"
+                  padding="6px 15px"
                 />
               )}
               <div>장르 중 가장 인기가 많은 곡은</div>
             </div>
-            <span className="placeName">{genreSongeArtist}</span>
+            <span className="placeName">{genreSongeArtist} -</span>
             <br />
             <span className="placeName">"{genreSongTitle}"</span>
             <span> 이에요.</span>
@@ -300,7 +315,7 @@ const GenreName = styled.span`
   font-style: normal;
   font-weight: 700;
   line-height: 40px;
-  background-color: #d9a8ff;
+  background-color: ${props => props.bgColor || "transparent"};
 `;
 
 const MostListenGenre = styled.div`

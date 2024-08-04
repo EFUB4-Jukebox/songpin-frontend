@@ -1,18 +1,18 @@
 import NavBar from "../../components/IntroducePage/NavBar";
-import main_center from "../../assets/introduce/main_center.svg";
+import main_center from "../../assets/introduce/intro_center.svg";
 import styled from "styled-components";
-import Background from "../../components/IntroducePage/Background";
 import logo_bottom from "../../assets/introduce/logo_bottom.svg";
 import first from "../../assets/introduce/intro_ex_first.svg";
 import second from "../../assets/introduce/intro_ex_second.svg";
 import third from "../../assets/introduce/intro_ex_third.svg";
 import fourth from "../../assets/introduce/intro_ex_fourth.svg";
+import Background2 from "../../components/IntroducePage/Background2";
 
 const IntroducePage = () => {
   return (
     <div>
       <BackgroundWrapper>
-        <Background />
+        <Background2 />
       </BackgroundWrapper>
       <Wrapper>
         <NavBar />
