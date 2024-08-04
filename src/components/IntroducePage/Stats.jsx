@@ -91,9 +91,9 @@ const Stats = () => {
     return jong !== 0; //나머지가 0이 아니면 받침 존재
   };
   const getPostPosition = popularGenreName => {
-    if (!popularGenreName) return "예요"; //닉네임이 없으면 기본 조사 '은'
+    if (!popularGenreName) return "예요."; //닉네임이 없으면 기본 조사 '은'
     const lastChar = popularGenreName[popularGenreName.length - 1];
-    return hasFinalConsonant(lastChar) ? "이에요" : "예요";
+    return hasFinalConsonant(lastChar) ? "이에요." : "예요.";
   };
 
   return (
@@ -130,7 +130,7 @@ const Stats = () => {
         </MostRegisterPlace>
         <MostRegisterGenre>
           <div>
-            가장 많이 등록된 장르는 {""}
+            가장 많이 등록된 장르는
             <GenreName>{popularGenreName && popularGenreName}</GenreName>
             {popularGenreName && getPostPosition(popularGenreName)}
           </div>
@@ -193,7 +193,7 @@ const Stats = () => {
               )}
               <div>장르 중 가장 인기가 많은 곡은</div>
             </div>
-            <span className="placeName">{genreSongeArtist}</span>
+            <span className="placeName">{genreSongeArtist} -</span>
             <br />
             <span className="placeName">"{genreSongTitle}"</span>
             <span> 이에요.</span>
