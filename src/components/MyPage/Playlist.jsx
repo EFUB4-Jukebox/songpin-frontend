@@ -250,4 +250,8 @@ const LockImg = styled.img`
   padding-right: 7px;
 `;
 
-const PlaylistNameBox = styled.div``;
+const PlaylistNameBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
