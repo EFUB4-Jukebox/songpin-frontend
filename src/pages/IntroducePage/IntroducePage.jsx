@@ -158,7 +158,7 @@ const Center = styled.div`
   align-items: center;
   position: relative;
   z-index: 1;
-  top: -15px;
+  top: -30px;
 `;
 
 const CenterText = styled.div`
@@ -168,7 +168,7 @@ const CenterText = styled.div`
   align-items: center;
   position: absolute;
   width: 100vw;
-  top: 8.5%;
+  top: 8%;
   margin: auto;
   z-index: 2;
   .mainImg {

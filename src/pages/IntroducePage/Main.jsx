@@ -4,7 +4,7 @@ import main_bottom from "../../assets/introduce/main_bottom.svg";
 import styled from "styled-components";
 import Background from "../../components/IntroducePage/Background";
 import { useNavigate } from "react-router-dom";
-
+import main_bottom_text from "../../assets/introduce/main_bottom_text.svg";
 const Main = () => {
   const navigate = useNavigate();
   const handleGotoHomepage = () => {
@@ -25,9 +25,16 @@ const Main = () => {
           <img
             onClick={handleGotoHomepage}
             src={main_bottom}
-            alt="main bottom"
+            alt="main_bottom"
           />
         </Bottom>
+        <BottomText>
+          <img
+            onClick={handleGotoHomepage}
+            src={main_bottom_text}
+            alt="main_bottom_text"
+          />
+        </BottomText>
       </Wrapper>
     </>
   );
@@ -52,7 +59,7 @@ const Center = styled.div`
   align-items: center;
   position: relative;
   z-index: 1;
-  top: -15px;
+  top: -30px;
 `;
 const Bottom = styled.div`
   position: fixed;
@@ -60,6 +67,16 @@ const Bottom = styled.div`
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
+`;
+const BottomText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100vw;
+  bottom: 80px;
+  margin: auto;
+  z-index: 2;
 `;
 
 export default Main;
