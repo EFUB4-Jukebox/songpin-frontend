@@ -18,7 +18,7 @@ const Followers = ({ userData }) => {
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
   const handleNavigation = menu => {
-    navigate(`/user-follows?menu=${menu}`);
+    navigate(`/users/${memberId}/follows?menu=${menu}`);
   };
 
   useEffect(() => {
