@@ -2,36 +2,39 @@ import React from "react";
 import styled from "styled-components";
 import UserFollowInfo from "./UserFollowInfo";
 
+const sortFollowersOrFollowing = list => {
+  return list.sort((a, b) => {
+    if (a.isFollowing === null && b.isFollowing !== null) return -1;
+    if (b.isFollowing === null && a.isFollowing !== null) return 1;
+    if (a.isFollowing === null) return -1;
+    if (b.isFollowing === null) return 1;
+
+    if (a.isFollowing !== b.isFollowing) return b.isFollowing - a.isFollowing;
+
+    return b.followId - a.followId;
+  });
+};
+
 const FollowList = ({ followerList, followingList, selectedMenu }) => {
+  const sortedList =
+    selectedMenu === "followers"
+      ? sortFollowersOrFollowing(followerList)
+      : sortFollowersOrFollowing(followingList);
+
   return (
     <ListContainer>
-      {selectedMenu === "followers"
-        ? followerList &&
-          followerList.map(it => (
-            <ContentBox>
-              <UserFollowInfo
-                profileImg={it.profileImg}
-                nickname={it.nickname}
-                handle={it.handle}
-                isFollowing={it.isFollowing}
-                followId={it.followId}
-                memberId={it.memberId}
-              />
-            </ContentBox>
-          ))
-        : followingList &&
-          followingList.map(it => (
-            <ContentBox>
-              <UserFollowInfo
-                profileImg={it.profileImg}
-                nickname={it.nickname}
-                handle={it.handle}
-                isFollowing={it.isFollowing}
-                followId={it.followId}
-                memberId={it.memberId}
-              />
-            </ContentBox>
-          ))}
+      {sortedList.map(it => (
+        <ContentBox key={it.memberId}>
+          <UserFollowInfo
+            profileImg={it.profileImg}
+            nickname={it.nickname}
+            handle={it.handle}
+            isFollowing={it.isFollowing}
+            followId={it.followId}
+            memberId={it.memberId}
+          />
+        </ContentBox>
+      ))}
     </ListContainer>
   );
 };

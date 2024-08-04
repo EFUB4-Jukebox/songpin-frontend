@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UserInfo from "./UserInfo";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { addFollowing, deleteFollowing } from "../../services/api/myPage";
-import { searchUsers, getUserDetail } from "../../services/api/user";
+import { getUserDetail } from "../../services/api/user";
 import { getMyProfile } from "../../services/api/myPage";
 
 // myFollowId props 전달 받아야 함
@@ -61,9 +61,11 @@ const UserFollowInfo = ({
         handle={handle}
         onClick={() => handleUserClick(memberId)}
       />
-      <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>
-        {isFollowing ? "팔로잉" : "팔로우"}
-      </FollowBtn>
+      {isFollowing !== null && (
+        <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>
+          {isFollowing ? "팔로잉" : "팔로우"}
+        </FollowBtn>
+      )}
     </UserFollowInfoBox>
   );
 };
