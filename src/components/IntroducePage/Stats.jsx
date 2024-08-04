@@ -25,34 +25,34 @@ const Stats = () => {
   const [genreSongImgSrc, setGenreSongImgSrc] = useState();
   const [popularGenreBg, setPopularGenreBg] = useState();
   const [popularGenreIcon, setPopularGenreIcon] = useState();
+  const [placeList, setPlaceList] = useState([]);
+  const [songList, setSongList] = useState([]);
 
   useEffect(() => {
-    const handlePlace = async () => {
-      const res = await getStatsGenre();
-      const placeList = res.placeList;
-      console.log(placeList);
-
+    const handlePlace = () => {
       const selectedPlace = placeList.find(
         (_, index) => index === genrePlaceId,
       );
-      setGenrePlaceTitle(selectedPlace.placeName);
-      setGenrePlaceLat(selectedPlace.latitude);
-      setGenrePlaceLng(selectedPlace.longitude);
+      if (selectedPlace) {
+        setGenrePlaceTitle(selectedPlace.placeName);
+        setGenrePlaceLat(selectedPlace.latitude);
+        setGenrePlaceLng(selectedPlace.longitude);
+      }
     };
     handlePlace();
-  }, [genrePlaceId]);
+  }, [genrePlaceId, placeList]);
 
   useEffect(() => {
-    const handleSong = async () => {
-      const res = await getStatsGenre();
-      const songList = res.songList;
+    const handleSong = () => {
       const selectedSong = songList.find((it, index) => index === genreSongId);
-      setGenreSongeArtist(selectedSong.artist);
-      setGenreSongTitle(selectedSong.title);
-      setGenreSongImgSrc(selectedSong.imgPath);
+      if (selectedSong) {
+        setGenreSongeArtist(selectedSong.artist);
+        setGenreSongTitle(selectedSong.title);
+        setGenreSongImgSrc(selectedSong.imgPath);
+      }
     };
     handleSong();
-  }, [genreSongId]);
+  }, [genreSongId, songList]);
 
   const handleGenrePlace = async id => {
     setGenrePlaceId(id);
@@ -76,6 +76,10 @@ const Stats = () => {
 
         setLat(res.popularPlace.latitude);
         setLng(res.popularPlace.longitude);
+
+        const res2 = await getStatsGenre();
+        setPlaceList(res2.placeList);
+        setSongList(res2.songList);
       } catch (error) {
         console.error("Error", error);
       }
