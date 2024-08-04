@@ -10,9 +10,9 @@ const post = async (url, data) => {
     return res?.data;
 };
 
-export const postNewPin = async () => {
+export const postNewPin = async (request) => {
     try {
-        const data = await post(`/pins`);
+        const data = await post(`/pins`, request);
         return data;
     } catch (error) {
         throw new Error("핀 생성 실패");
