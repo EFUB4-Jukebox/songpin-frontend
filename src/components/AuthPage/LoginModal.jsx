@@ -50,6 +50,7 @@ const LoginModal = ({
       handleComplete();
       console.log("로그인 성공");
       setInfoMsg("");
+      window.location.href = "/home";
     } else if (result.status === 401 || result.status === 404) {
       setInfoMsg("이메일 또는 비밀번호가 다릅니다.");
     } else {

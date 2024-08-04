@@ -17,11 +17,19 @@ const PinComponent = ({ songInfo, avgGenreName, pinCount }) => {
   const getGenreIcon = genreName => {
     const genre = GenreList.find(item => item.EngName === genreName);
     return genre
-      ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
-      : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+      ? {
+          imgSrc: genre.imgSrc,
+          iconSrc: genre.iconSrc,
+          grayIconSrc: genre.imgSrc,
+        }
+      : {
+          imgSrc: mapIconBlack,
+          iconSrc: mapIconBallad,
+          grayIconSrc: mapIconGray,
+        };
   };
 
-  const { imgSrc, iconSrc } = getGenreIcon(avgGenreName || "");
+  const { imgSrc, iconSrc, grayIconSrc } = getGenreIcon(avgGenreName || "");
   const currentIconSrc = isHovered ? iconSrc : imgSrc;
 
   return (
@@ -38,8 +46,8 @@ const PinComponent = ({ songInfo, avgGenreName, pinCount }) => {
         </PinTitle>
         <PinSinger>{songInfo?.artist || null}</PinSinger>
         <PinTimes>
-          <MapIconGray src={mapIconGray} />
-          <TimesNum>{pinCount || null}</TimesNum>
+          <MapIconGray src={grayIconSrc} />
+          <TimesNum>{pinCount || 0}</TimesNum>
         </PinTimes>
       </TextBox>
     </PinBox>
@@ -136,6 +144,7 @@ const MapIconGray = styled.img`
   width: 16px;
   height: 17.801px;
   padding-right: 8px;
+  opacity: 0.6;
 `;
 
 const TimesNum = styled.div`

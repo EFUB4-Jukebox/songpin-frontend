@@ -28,7 +28,6 @@ export const postLogin = async userData => {
     const token = res.accessToken;
     localStorage.setItem("accessToken", token);
     console.log(token);
-    window.location.href = "/home";
     return { token };
   } catch (e) {
     if (e.response) {
@@ -95,5 +94,28 @@ export const postToken = async () => {
         window.location.href = "/home";
     }
     throw e;
+  }
+};
+
+export const postMail = async email => {
+  try {
+    const res = await client.post("/mail/pw", { email });
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.error(e);
+    throw e.response && e.response.data
+      ? e.response.data
+      : { message: e.message };
+  }
+};
+
+export const patchResetPw = async uuidResetPw => {
+  try {
+    const data = await client.patch(`/login/pw`, uuidResetPw);
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error("데이터 불러오기에 실패하였습니다.");
   }
 };
