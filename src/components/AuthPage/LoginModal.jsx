@@ -40,6 +40,7 @@ const LoginModal = ({
       password,
     };
 
+
     try {
       const result = await postLogin(userData);
       console.log(result);
