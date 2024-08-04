@@ -7,6 +7,7 @@ import Bookmarks from "../../components/MyPage/Bookmarks";
 import SideSection from "../../components/common/SideSection";
 
 const MyPage = () => {
+  const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
@@ -27,7 +28,7 @@ const MyPage = () => {
   }, []);
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <MyInfoTop />
       <TopBar>
         <PageSelect>

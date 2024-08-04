@@ -10,6 +10,7 @@ import { searchPin } from "../../services/api/myPage";
 
 const MyPinSearchPage = () => {
   const [inputValue, setInputValue] = useState();
+  const [showSideBar, setShowSideBar] = useState(true);
   const [pinList, setPinList] = useState();
   // const [searchTriggered, setSearchTriggered] = useState(false);
 
@@ -45,7 +46,7 @@ const MyPinSearchPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <BackIcon src={backIcon} onClick={goMyPage} />
       <Content>
         <MyPageSearchBar

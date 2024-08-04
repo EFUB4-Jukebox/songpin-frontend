@@ -14,6 +14,7 @@ const UserSearchPage = () => {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const [searched, setSearched] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
   const navigate = useNavigate();
 
   const handleUserClick = async memberId => {
@@ -50,7 +51,7 @@ const UserSearchPage = () => {
     }
   };
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <SearchBox>
         <SearchBar
           placeholder="닉네임 또는 핸들을 검색"

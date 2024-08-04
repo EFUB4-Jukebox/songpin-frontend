@@ -16,6 +16,7 @@ const ProfileEditPage = () => {
   const [originImg, setOriginImg] = useState("");
   const [infoMsgNickname, setInfoMsgNickname] = useState("");
   const [infoMsgHandle, setInfoMsgHandle] = useState("");
+  const [showSideBar, setShowSideBar] = useState(true);
 
   const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ const ProfileEditPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <ProfileEditComponent>
         <ProfileImgSelect>
           <UserLogo src={profileImg} />

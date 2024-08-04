@@ -22,6 +22,7 @@ const MusicInfoPage = () => {
   const [loading, setLoading] = useState(true);
   const [pins, setPins] = useState([]);
   const [myPins, setMyPins] = useState([]);
+  const [showSideBar, setShowSideBar] = useState(true);
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -109,11 +110,11 @@ const MusicInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection />; // 로딩 중
+    return <SideSection showSideBar={showSideBar}/>; // 로딩 중
   }
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <MusicInfo>
         <SongInfo>
           <BackIcon src={backIcon} onClick={goSearchPage} />
