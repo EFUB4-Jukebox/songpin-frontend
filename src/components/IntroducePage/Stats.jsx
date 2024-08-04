@@ -206,7 +206,7 @@ const Stats = () => {
                   padding="6px 15px"
                 />
               )}
-              <div>장르 중 가장 인기가 많은 곡은</div>
+              <div>장르에서 가장 인기가 많은 곡은</div>
             </div>
             <span className="placeName">{genreSongeArtist} -</span>
             <br />
