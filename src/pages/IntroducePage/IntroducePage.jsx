@@ -8,15 +8,28 @@ import second from "../../assets/introduce/intro_ex_second.svg";
 import third from "../../assets/introduce/intro_ex_third.svg";
 import fourth from "../../assets/introduce/intro_ex_fourth.svg";
 import Background2 from "../../components/IntroducePage/Background2";
+import main_center_text from "../../assets/introduce/intro_center_text.svg";
 
 const fadeInUp = keyframes`
   0% {
     opacity: 0;
     transform: translateY(50%);
   }
+  50% {
+    opacity: 0;
+    transform: translateY(50%);
+  }
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+`;
+const fadeInUp2 = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 `;
 
@@ -27,7 +40,7 @@ const IntroducePage = () => {
 
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.1, // 10%가 보일 때 트리거
+      threshold: 0, // 10%가 보일 때 트리거
     };
 
     const handleIntersect = entries => {
@@ -86,6 +99,9 @@ const IntroducePage = () => {
         <Center>
           <img src={main_center} alt="main center" />
         </Center>
+        <CenterText>
+          <img className="mainImg" src={main_center_text} alt="main text" />
+        </CenterText>
         <Mid>
           <div className="first">
             <img className="firstImg" src={first} alt="first" />
@@ -145,6 +161,22 @@ const Center = styled.div`
   top: -15px;
 `;
 
+const CenterText = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100vw;
+  top: 8.5%;
+  margin: auto;
+  z-index: 2;
+  .mainImg {
+    animation: ${fadeInUp2} 1.5s ease-in-out forwards;
+    opacity: 0;
+  }
+`;
+
 const Mid = styled.div`
   display: flex;
   flex-direction: column;
@@ -159,7 +191,7 @@ const Mid = styled.div`
   }
 
   .firstImg {
-    animation: ${fadeInUp} 1s ease-in-out forwards;
+    animation: ${fadeInUp} 2s ease-in-out forwards;
     opacity: 0;
     transform: translateY(50%);
   }
