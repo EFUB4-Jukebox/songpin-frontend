@@ -5,3 +5,10 @@ body {
   height: 100%;
   font-family: Pretendard;
 }
+html {
+  -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바 숨기기 */
+  /* chrome에서 스크롤바 숨기기*/
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -8,13 +8,12 @@ const post = async (url, data) => {
 export const postSignup = async userData => {
   try {
     const res = await client.post("/signup", userData);
+    if (res.status === 409) {
+      alert("이미 가입된 이메일입니다.");
+      return null;
+    }
     console.log(userData, "회원가입 성공");
   } catch (e) {
-    if (e.response) {
-      if (e.response.status === 409) {
-        alert("이미 가입된 이메일입니다.");
-      }
-    }
     console.error(e);
     throw new Error(e.response.data.message);
   }
@@ -28,14 +27,13 @@ export const postLogin = async userData => {
     const token = res.accessToken;
     localStorage.setItem("accessToken", token);
     console.log(token);
-    window.location.href = "/home";
     return { token };
   } catch (e) {
+    console.error(e);
     if (e.response) {
       return { error: e.response.data.message, status: e.response.status };
-    } else {
-      console.error(e);
     }
+    return null;
   }
 };
 
@@ -95,5 +93,28 @@ export const postToken = async () => {
         window.location.href = "/home";
     }
     throw e;
+  }
+};
+
+export const postMail = async email => {
+  try {
+    const res = await client.post("/mail/pw", { email });
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.error(e);
+    throw e.response && e.response.data
+      ? e.response.data
+      : { message: e.message };
+  }
+};
+
+export const patchResetPw = async uuidResetPw => {
+  try {
+    const data = await client.patch(`/login/pw`, uuidResetPw);
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error("데이터 불러오기에 실패하였습니다.");
   }
 };

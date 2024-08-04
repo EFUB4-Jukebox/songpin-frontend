@@ -71,7 +71,7 @@ const UserName = styled.div`
   font-weight: 500;
   line-height: normal;
   height: 24px;
-  margin-top: 5px;
+  margin-bottom: 5px;
 `;
 
 const UserId = styled.div`

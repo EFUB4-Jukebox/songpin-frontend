@@ -143,62 +143,32 @@ const HomeLogo = styled.img`
 const Home = styled.img`
   width: 40px;
   height: 40px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 const Search = styled.img`
   width: 27.308px;
   height: 27.308px;
   padding: 16px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 const Create = styled.img`
   width: 40px;
   height: 40px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 const Playlist = styled.img`
   width: 43px;
   height: 43px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 const UserSearch = styled.img`
   width: 40px;
   height: 40px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 const MyPage = styled.img`
   width: 30px;
   height: 28px;
-  transition: filter 0.3s ease;
-
-  ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
-  }
 `;
 
 export default SideBar;
