@@ -57,9 +57,6 @@ const UserSearchPage = () => {
         />
       </SearchBox>
       {!searched && <MainText>다른 사람을 팔로우해보세요</MainText>}
-      {/* <ContentBox>
-        <UserInfo />
-      </ContentBox> */}
       {searching ? (
         <div></div>
       ) : searchResults.length > 0 ? (
@@ -88,15 +85,12 @@ const UserSearchPage = () => {
 export default UserSearchPage;
 
 const ContentBox = styled.div`
-  /* padding: 34px;
-  padding-top: 40px; */
   padding: 32px 34px 32px 34px;
   border-bottom: 1px solid var(--gray, #bcbcbc);
 `;
 
 const SearchBox = styled.div`
   padding: 40px 34px 10px 34px;
-  /* border-bottom: 1px solid var(--gray, #bcbcbc); */
 `;
 
 const MainText = styled.div`
