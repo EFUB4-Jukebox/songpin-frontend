@@ -20,6 +20,7 @@ const PlaylistSearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState(""); // 검색어 상태 추가
   const [loading, setLoading] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -62,7 +63,7 @@ const PlaylistSearchPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <ContentBox>
         {/* 검색된 문구가 남아있어야 함  */}
         <SearchBar

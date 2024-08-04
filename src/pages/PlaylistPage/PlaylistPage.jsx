@@ -10,6 +10,7 @@ const PlaylistPage = () => {
   const [recentPlaylists, setRecentPlaylists] = useState([]);
   const [followingPlaylists, setFollowingPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showSideBar, setShowSideBar] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ const PlaylistPage = () => {
     }
   };
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <ContentBox>
         <SearchBar
           placeholder="플레이리스트 이름을 검색"

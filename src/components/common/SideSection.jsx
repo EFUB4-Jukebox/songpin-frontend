@@ -3,7 +3,7 @@ import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children }) => {
+const SideSection = ({ children, showSideBar }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleSideBox = () => {
@@ -13,15 +13,17 @@ const SideSection = ({ children }) => {
   return (
     <SideComponent>
       <SideBarContainer>
+      {showSideBar && (
         <SideBar />
+      )}
       </SideBarContainer>
       <SideBox isOpen={isOpen}>
         <Content>{children}</Content>
       </SideBox>
       <BoxHandle>
-        <CloseBar onClick={handleSideBox}>
-          <Arrow src={arrowIcon} isOpen={isOpen} />
-        </CloseBar>
+          <CloseBar onClick={handleSideBox}>
+            <Arrow src={arrowIcon} isOpen={isOpen} />
+          </CloseBar>
       </BoxHandle>
     </SideComponent>
   );

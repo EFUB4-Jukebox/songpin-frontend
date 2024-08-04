@@ -25,6 +25,7 @@ const UsersPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("pinFeed");
   const [followersData, setFollowersData] = useState(null);
   const [followingsData, setFollowingsData] = useState(null);
+  const [showSideBar, setShowSideBar] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const UsersPage = () => {
     navigate(-1);
   };
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <ContentBox>
         <BackBtn src={backArrow} onClick={handleBackClick} />
       </ContentBox>

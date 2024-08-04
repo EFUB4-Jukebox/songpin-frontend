@@ -16,6 +16,7 @@ const ProfileEditPage = () => {
   const [originImg, setOriginImg] = useState("");
   const [infoMsgNickname, setInfoMsgNickname] = useState("");
   const [infoMsgHandle, setInfoMsgHandle] = useState("");
+  const [showSideBar, setShowSideBar] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
 

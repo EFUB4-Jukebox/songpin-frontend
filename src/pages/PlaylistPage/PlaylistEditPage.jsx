@@ -19,6 +19,7 @@ const PlaylistEditPage = () => {
   const [isPublic, setIsPublic] = useState(true); // 추가: 공개 여부 상태
   const [inputValue, setInputValue] = useState("");
   const [pinList, setPinList] = useState([]); // 추가: 핀 리스트 상태
+  const [showSideBar, setShowSideBar] = useState(true);
 
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
@@ -93,7 +94,7 @@ const PlaylistEditPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <EditContainer>
         <ContentBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />

@@ -92,6 +92,7 @@ const PinBox = styled.div`
   border-radius: 8px;
   background: var(--offwhite, #efefef);
   position: relative;
+  width: 436px;
 `;
 
 const TitleSection = styled.div`

@@ -12,6 +12,7 @@ import { ProfileImg } from "../../constants/ProfileImg";
 
 const SettingsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
 
   const handleModal = () => {
     setIsModalOpen(prevState => !prevState);
@@ -58,7 +59,7 @@ const SettingsPage = () => {
   const email = profileData.email;
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <SettingComponent>
         <BackIcon src={backIcon} onClick={goMyPage} />
         <UserInfoBox>

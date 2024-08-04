@@ -11,6 +11,7 @@ const values = ["정확도순", "등록 핀 많은순", "최근 핀 등록순"];
 const SearchContainer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("정확도순");
+  const [showSideBar, setShowSideBar] = useState(true);
   const [selectedOption, setSelectedOption] = useState(() => {
     return sessionStorage.getItem("selectedOption") || "노래";
   });
@@ -43,7 +44,7 @@ const SearchContainer = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <Content>
         <SearchBar optionChange={handleOptionChange} onSearch={handleSearch} />
         <Sorting>

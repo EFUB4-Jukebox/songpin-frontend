@@ -15,6 +15,7 @@ const PlaceInfoPage = () => {
   const { placeId } = useParams();
   const [placeInfo, setPlaceInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSideBar, setShowSideBar] = useState(true);
 
   const handleNavigate = () => {
     navigate("/search");
@@ -52,11 +53,11 @@ const PlaceInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection />; // 로딩 중
+    return <SideSection showSideBar={showSideBar}/>; // 로딩 중
   }
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <PlaceInfo>
         <BackIcon src={backIcon} onClick={handleNavigate} />
         <PlaceDetails>
