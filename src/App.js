@@ -137,7 +137,9 @@ function App() {
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/user-follows" element={<UserFollowPage />} />
+          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
+          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -234,7 +236,8 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/user-follows" element={<UserFollowPage />} />
+          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
+          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"

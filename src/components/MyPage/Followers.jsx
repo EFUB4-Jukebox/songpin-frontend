@@ -18,8 +18,11 @@ const Followers = () => {
   // if (isLoading) return <div>로딩 중...</div>;
   // if (error) return <div>오류 발생: {error.message}</div>;
 
-  // const followerCount = data.followerCount;
-  // const followingCount = data.followingCount;
+
+  const followerCount = data.followerCount;
+  const followingCount = data.followingCount;
+  const memberId = data.memberId;
+
 
   useEffect(() => {
     const getProfile = async () => {
@@ -42,7 +45,7 @@ const Followers = () => {
   }, [setFollowerCount, setFollowingCount]);
 
   const handleNavigation = menu => {
-    navigate(`/user-follows?menu=${menu}`);
+    navigate(`/users/${memberId}/follows?menu=${menu}`);
   };
 
   const goEditPage = () => {
