@@ -1,4 +1,3 @@
-import MostRegisterGenreEx from "../../assets/introduce/mostRegisterGenreEx.svg";
 import styled from "styled-components";
 import { GenreList } from "../../constants/GenreList";
 import Genre from "../common/Genre";
@@ -24,6 +23,8 @@ const Stats = () => {
   const [genreSongeArtist, setGenreSongeArtist] = useState();
   const [genreSongTitle, setGenreSongTitle] = useState();
   const [genreSongImgSrc, setGenreSongImgSrc] = useState();
+  const [popularGenreBg, setPopularGenreBg] = useState();
+  const [popularGenreIcon, setPopularGenreIcon] = useState();
 
   useEffect(() => {
     const handlePlace = async () => {
@@ -85,7 +86,11 @@ const Stats = () => {
 
   useEffect(() => {
     const genre = GenreList.find(it => it.EngName === popularGenre);
-    if (genre) setPopularGenreName(genre.name);
+    if (genre) {
+      setPopularGenreName(genre.name);
+      setPopularGenreBg(genre.bgColor);
+      setPopularGenreIcon(genre.statsIcon);
+    }
     console.log(genre);
   }, [popularGenre]);
 
@@ -136,11 +141,13 @@ const Stats = () => {
         <MostRegisterGenre>
           <div>
             가장 많이 등록된 장르는{" "}
-            <GenreName>{popularGenreName && popularGenreName}</GenreName>
+            <GenreName bgColor={popularGenreBg}>
+              {popularGenreName && popularGenreName}
+            </GenreName>
             {popularGenreName && getPostPosition(popularGenreName)}
           </div>
           <div>
-            <img src={MostRegisterGenreEx} />
+            <img src={popularGenreIcon} />
           </div>
         </MostRegisterGenre>
         <MostListenGenreWrapper>
@@ -154,6 +161,7 @@ const Stats = () => {
                   bgColor={GenreList.find(it => it.id === genrePlaceId).bgColor}
                   height="35px"
                   text="28px"
+                  padding="6px 15px"
                 />
               )}
 
@@ -194,6 +202,7 @@ const Stats = () => {
                   bgColor={GenreList.find(it => it.id === genreSongId).bgColor}
                   height="35px"
                   text="28px"
+                  padding="6px 15px"
                 />
               )}
               <div>장르 중 가장 인기가 많은 곡은</div>
@@ -305,7 +314,7 @@ const GenreName = styled.span`
   font-style: normal;
   font-weight: 700;
   line-height: 40px;
-  background-color: #d9a8ff;
+  background-color: ${props => props.bgColor || "transparent"};
 `;
 
 const MostListenGenre = styled.div`

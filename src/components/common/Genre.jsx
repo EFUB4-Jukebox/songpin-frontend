@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-const Genre = ({ name, img, bgColor, width, height, text, onClick }) => {
+const Genre = ({ name, img, bgColor, padding, height, text, onClick }) => {
   return (
     <GenreWrapper
       bgColor={bgColor}
-      width={width}
       height={height}
       text={text}
       onClick={onClick}
+      padding={padding}
     >
       <span>#{name}</span>
       <span>
@@ -19,7 +19,6 @@ const Genre = ({ name, img, bgColor, width, height, text, onClick }) => {
   );
 };
 const GenreWrapper = styled.div`
-  width: ${props => props.width};
   height: ${props => props.height || "25px"};
   font-size: ${props => props.text || "20px"};
   background-color: ${props => props.bgColor || "transparent"};
@@ -30,7 +29,8 @@ const GenreWrapper = styled.div`
       ? "1px solid rgba(0, 0, 0, 0)"
       : "1px solid var(--light_black, #232323)"};
   display: flex;
-  padding: 6px 9px;
+  padding: ${props => props.padding || "6px 9px"};
+
   justify-content: center;
   align-items: center;
   gap: 4px;
