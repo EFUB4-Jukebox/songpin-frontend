@@ -125,11 +125,11 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
     //   });
 
     try {
-      await postSignup(userData);
+      const res = await postSignup(userData);
 
       const token = await postLogin({ email, password });
 
-      if (token.error) {
+      if (token.error || res === null) {
         console.error(token.error, "로그인 실패");
       } else {
         handleComplete();

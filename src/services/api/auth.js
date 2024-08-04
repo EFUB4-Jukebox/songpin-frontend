@@ -8,13 +8,12 @@ const post = async (url, data) => {
 export const postSignup = async userData => {
   try {
     const res = await client.post("/signup", userData);
+    if (res.status === 409) {
+      alert("이미 가입된 이메일입니다.");
+      return null;
+    }
     console.log(userData, "회원가입 성공");
   } catch (e) {
-    if (e.response) {
-      if (e.response.status === 409) {
-        alert("이미 가입된 이메일입니다.");
-      }
-    }
     console.error(e);
     throw new Error(e.response.data.message);
   }
@@ -30,11 +29,11 @@ export const postLogin = async userData => {
     console.log(token);
     return { token };
   } catch (e) {
+    console.error(e);
     if (e.response) {
       return { error: e.response.data.message, status: e.response.status };
-    } else {
-      console.error(e);
     }
+    return null;
   }
 };
 

@@ -29,10 +29,6 @@ const LoginModal = ({
     setLoginModal(false);
     setPwResetModal(true);
   };
-  const handleComplete = () => {
-    // setLoginModal(false);
-    // setCompleteLogin(true);
-  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,17 +40,20 @@ const LoginModal = ({
       password,
     };
 
-    const result = await postLogin(userData);
-    console.log(result);
-    if (result.token) {
-      handleComplete();
-      console.log("로그인 성공");
-      setInfoMsg("");
-      window.location.href = "/home";
-    } else if (result.status === 401 || result.status === 404) {
-      setInfoMsg("이메일 또는 비밀번호가 다릅니다.");
-    } else {
-      console.error("로그인 실패");
+
+    try {
+      const result = await postLogin(userData);
+      console.log(result);
+      if (result.token) {
+        console.log("로그인 성공");
+        setInfoMsg("");
+        window.location.href = "/home";
+      } else {
+        setInfoMsg("이메일 또는 비밀번호가 다릅니다.");
+      }
+    } catch (error) {
+      console.error("로그인 실패", error);
+      setInfoMsg("로그인에 실패했습니다.");
     }
   };
 

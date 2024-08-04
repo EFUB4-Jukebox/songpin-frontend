@@ -72,8 +72,7 @@ const Stats = () => {
         setPopularImgSrc(res.popularSong.imgPath);
         setPopularPlaceName(res.popularPlace.placeName);
         setPopularGenre(res.popularGenreName);
-        const genre = GenreList.find(it => it.EngName === popularGenre);
-        setPopularGenreName(genre.name);
+
         setLat(res.popularPlace.latitude);
         setLng(res.popularPlace.longitude);
       } catch (error) {
@@ -84,6 +83,12 @@ const Stats = () => {
     getStatsAll();
   }, []);
 
+  useEffect(() => {
+    const genre = GenreList.find(it => it.EngName === popularGenre);
+    if (genre) setPopularGenreName(genre.name);
+    console.log(genre);
+  }, [popularGenre]);
+
   const hasFinalConsonant = char => {
     const charCode = char.charCodeAt(0); //이름 끝자의 유니코드 값
     const diff = charCode - 0xac00; //유니코드 값에서 한글 음절의 시작점인 0XAC00을 뺌
@@ -91,9 +96,9 @@ const Stats = () => {
     return jong !== 0; //나머지가 0이 아니면 받침 존재
   };
   const getPostPosition = popularGenreName => {
-    if (!popularGenreName) return "예요"; //닉네임이 없으면 기본 조사 '은'
+    if (!popularGenreName) return "예요."; //닉네임이 없으면 기본 조사 '은'
     const lastChar = popularGenreName[popularGenreName.length - 1];
-    return hasFinalConsonant(lastChar) ? "이에요" : "예요";
+    return hasFinalConsonant(lastChar) ? "이에요." : "예요.";
   };
 
   return (
@@ -130,7 +135,7 @@ const Stats = () => {
         </MostRegisterPlace>
         <MostRegisterGenre>
           <div>
-            가장 많이 등록된 장르는 {""}
+            가장 많이 등록된 장르는{" "}
             <GenreName>{popularGenreName && popularGenreName}</GenreName>
             {popularGenreName && getPostPosition(popularGenreName)}
           </div>
@@ -193,7 +198,7 @@ const Stats = () => {
               )}
               <div>장르 중 가장 인기가 많은 곡은</div>
             </div>
-            <span className="placeName">{genreSongeArtist}</span>
+            <span className="placeName">{genreSongeArtist} -</span>
             <br />
             <span className="placeName">"{genreSongTitle}"</span>
             <span> 이에요.</span>

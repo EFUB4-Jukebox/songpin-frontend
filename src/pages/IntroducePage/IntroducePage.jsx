@@ -1,5 +1,5 @@
 import NavBar from "../../components/IntroducePage/NavBar";
-import main_center from "../../assets/introduce/main_center.svg";
+import main_center from "../../assets/introduce/intro_center.svg";
 import styled from "styled-components";
 import Background from "../../components/IntroducePage/Background";
 import logo_bottom from "../../assets/introduce/logo_bottom.svg";

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -58,28 +57,27 @@ const UserSearchPage = () => {
         />
       </SearchBox>
       {!searched && <MainText>다른 사람을 팔로우해보세요</MainText>}
-      {/* <ContentBox>
-        <UserInfo />
-      </ContentBox> */}
       {searching ? (
         <div></div>
       ) : searchResults.length > 0 ? (
-        searchResults.map(user => (
-          <ContentBox key={user.memberId}>
-            <UserInfo
-              memberId={user.memberId}
-              nickname={user.nickname}
-              handle={user.handle}
-              profileImg={user.profileImg}
-              isMe={user.isMe}
-              onClick={() => handleUserClick(user.memberId)}
-            />
-          </ContentBox>
-        ))
+        <>
+          <Line />{" "}
+          {searchResults.map(user => (
+            <ContentBox key={user.memberId}>
+              <UserInfo
+                memberId={user.memberId}
+                nickname={user.nickname}
+                handle={user.handle}
+                profileImg={user.profileImg}
+                isMe={user.isMe}
+                onClick={() => handleUserClick(user.memberId)}
+              />
+            </ContentBox>
+          ))}
+        </>
       ) : searched ? (
         <NoUser>검색 결과가 없습니다.</NoUser>
       ) : null}
-
     </SideSection>
   );
 };
@@ -87,14 +85,12 @@ const UserSearchPage = () => {
 export default UserSearchPage;
 
 const ContentBox = styled.div`
-  padding: 34px;
-  padding-top: 40px;
+  padding: 32px 34px 32px 34px;
   border-bottom: 1px solid var(--gray, #bcbcbc);
 `;
 
 const SearchBox = styled.div`
   padding: 40px 34px 10px 34px;
-  border-bottom: 1px solid var(--gray, #bcbcbc);
 `;
 
 const MainText = styled.div`
@@ -119,3 +115,8 @@ const NoUser = styled.div`
   margin-top: 448px;
 `;
 
+const Line = styled.div`
+  width: 528px;
+  height: 1px;
+  background: var(--gray, #bcbcbc);
+`;

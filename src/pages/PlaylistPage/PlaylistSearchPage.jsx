@@ -138,7 +138,7 @@ const NoPlaylist = styled.div`
   line-height: 140%; /* 28px */
   display: flex;
   justify-content: center;
-  padding-top: 130px;
+  margin-top: 400px;
   padding-bottom: 130px;
 `;
 
