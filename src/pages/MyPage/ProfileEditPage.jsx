@@ -115,7 +115,7 @@ const ProfileEditPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       {email ? (
         <ProfileEditComponent>
           <ProfileImgSelect>
