@@ -87,6 +87,7 @@ const PinFeed = () => {
               listenedDate={it.listenedDate}
               placeName={it.placeName}
               pinId={it.pinId}
+              memo={it.memo}
             />
           ))}
       </PinsSection>

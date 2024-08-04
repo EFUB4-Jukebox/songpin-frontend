@@ -17,13 +17,13 @@ const PinMemoComponent = ({
   placeName,
   genre,
   pinId,
+  memo,
 }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const toggleTruncation = () => {
     setIsTruncated(!isTruncated);
   };
-  const text =
-    "사랑하긴 했었나요 스쳐가는 인연이었나요\n\n누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 \n사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네";
+  const text = memo;
   const maxLength = 59;
   const showMoreBtn = text.length > maxLength;
   const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
