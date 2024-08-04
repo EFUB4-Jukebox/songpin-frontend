@@ -15,6 +15,7 @@ const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
   const [playlistData, setPlaylistData] = useState(null);
+  const [showSideBar, setShowSideBar] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
 
@@ -47,7 +48,7 @@ const PlaylistDetailPage = () => {
   }
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <DetailContainer>
         <ContentBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />

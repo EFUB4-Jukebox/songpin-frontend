@@ -1,17 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const PlaceComponent = ({onPlaceClick}) => {
+const PlaceComponent = ({placeName, placeAddress, placeId, placeLng, placeLat, onPlaceClick}) => {
   const handleClick = () => {
-    const placeName = "신촌역";
-    onPlaceClick(placeName);
+    const placeInfo = {
+      place_name: placeName,
+      address_name: placeAddress,
+      id: placeId,
+      x: placeLng,
+      y: placeLat
+    };
+    onPlaceClick(placeInfo);
   };
 
   return (
     <PlaceBox onClick={handleClick}>
       <Content>
-        <PlaceName>신촌역</PlaceName>
-        <PlaceAddress>서울 서대문구 신촌로 90</PlaceAddress>
+        <PlaceName>{placeName}</PlaceName>
+        <PlaceAddress>{placeAddress}</PlaceAddress>
       </Content>
       <Line />
     </PlaceBox>

@@ -5,7 +5,7 @@ import Calendar from "react-calendar";
 import moment from "moment";
 import "react-calendar/dist/Calendar.css";
 import SideBar from "../../components/HomePage/SideBar";
-import CreateSection from "../../components/CreatePinPage/CreateSection";
+import CreateSection from "../../components/common/SideSection";
 import SearchSongContainer from "../../components/CreatePinPage/SearchSongContainer";
 import SearchPlaceContainer from "../../components/CreatePinPage/SearchPlaceContainer";
 import PinComponent from "../../components/CreatePinPage/PinComponent";
@@ -15,6 +15,7 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
+import { postNewPin } from "../../services/api/create";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -23,19 +24,22 @@ const CreatePinPage = () => {
   const [selectedPin, setSelectedPin] = useState(null);
   const [showSearchPlaceContainer, setShowSearchPlaceContainer] =
     useState(false);
-  const [selectedPlace, setSelectedPlace] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [isPublic, setIsPublic] = useState(true);
+  const [memo, setMemo] = useState("");
 
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate("/details-song");
+    navigate("/details-song"); // 곡 ID로 수정
   };
 
   const onInputHandler = e => {
     setInputCount(e.target.value.length);
+    setMemo(e.target.value);
   };
 
   const handlePinClick = () => {
@@ -49,11 +53,11 @@ const CreatePinPage = () => {
   };
 
   const handlePlaceClick = () => {
-    setShowSearchPlaceContainer(true);
+    setShowSearchPlaceContainer(!showSearchPlaceContainer);
   };
 
-  const handlePlaceSelect = placeName => {
-    setSelectedPlace(placeName);
+  const handlePlaceSelect = place => {
+    setSelectedPlace(place);
     setShowSearchPlaceContainer(false);
   };
 
@@ -61,8 +65,41 @@ const CreatePinPage = () => {
     setDate(date);
   };
 
-  const handleGenreClick = id => {
-    setSelectedGenre(id);
+  const handleGenreClick = (id, EngName) => {
+    setSelectedGenre({ id, EngName });
+  };
+
+  const handlePostPin = async e => {
+    e.preventDefault();
+    const request = {
+      song: {
+        title: selectedPin.title,
+        artist: selectedPin.singer,
+        imgPath: selectedPin.image,
+        providerTrackCode: selectedPin.key,
+      },
+      listenedDate: moment(date).format("YYYY-MM-DD"),
+      place: {
+        placeName: selectedPlace.place_name,
+        address: selectedPlace.address_name,
+        providerAddressId: Number(selectedPlace.id),
+        latitude: parseFloat(selectedPlace.y),
+        longitude: parseFloat(selectedPlace.x),
+      },
+      genreName: selectedGenre?.EngName,
+      memo: memo,
+      visibility: isPublic ? "PUBLIC" : "PRIVATE",
+    };
+    console.log(selectedPin);
+    console.log("Posting data:", request);
+    const response = await postNewPin(request);
+    console.log("PostPin response:", response);
+    if (response && response.status === 201) {
+      console.log("Pin Post Success");
+      handleNavigate();
+    } else {
+      console.error("Failed to post Pin:", response);
+    }
   };
 
   return (
@@ -106,7 +143,13 @@ const CreatePinPage = () => {
         )}
         <Title>어디서</Title>
         <Where onClick={handlePlaceClick}>
-          {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
+          {selectedPlace ? (
+            <div>
+              <div>{selectedPlace.place_name}</div>
+            </div>
+          ) : (
+            "이 노래를 들었던 장소는 어디였나요?"
+          )}
           <LocationImg />
         </Where>
         <Title>장르</Title>
@@ -116,10 +159,12 @@ const CreatePinPage = () => {
               key={genre.id}
               name={genre.name}
               img={
-                selectedGenre === genre.id ? genre.whiteImgSrc : genre.imgSrc
+                selectedGenre?.id === genre.id
+                  ? genre.whiteImgSrc
+                  : genre.imgSrc
               }
-              bgColor={selectedGenre === genre.id ? genre.bgColor : null}
-              onClick={() => handleGenreClick(genre.id)}
+              bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
+              onClick={() => handleGenreClick(genre.id, genre.EngName)}
               height="24px"
             />
           ))}
@@ -127,6 +172,7 @@ const CreatePinPage = () => {
         <Title>메모</Title>
         <MemoArea
           placeholder="이곳에 메모를 남겨주세요."
+          value={memo}
           maxLength={200}
           onChange={onInputHandler}
         ></MemoArea>
@@ -136,15 +182,19 @@ const CreatePinPage = () => {
         </TextNum>
         <IsPublic>
           <Title>공개 여부</Title>
-          <PublicToggle />
+          <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
         </IsPublic>
-        <CreateBtn onClick={handleNavigate}>핀 생성하기</CreateBtn>
+        <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
       </CreateSection>
       {showSearchSongContainer && (
-        <SearchSongContainer onPinSelect={handlePinSelect} />
+        <SearchSongContainerWrapper>
+          <SearchSongContainer onPinSelect={handlePinSelect} />
+        </SearchSongContainerWrapper>
       )}
       {showSearchPlaceContainer && (
-        <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
+        <SearchPlaceContainerWrapper>
+          <SearchPlaceContainer onPlaceSelect={handlePlaceSelect} />
+        </SearchPlaceContainerWrapper>
       )}
     </MainContainer>
   );
@@ -198,7 +248,7 @@ const Title = styled.div`
   display: flex;
   justify-content: flex-start;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   margin-left: 32px;
   color: var(--light_black, #232323);
   font-family: Pretendard;
@@ -215,6 +265,7 @@ const When = styled.div`
   align-content: center;
   margin-left: 32px;
   padding-bottom: 10px;
+  margin-bottom: 17px;
   width: 462px;
   border-bottom: 1px solid #747474;
   color: var(--gray02, #747474);
@@ -231,6 +282,7 @@ const Where = styled.div`
   justify-content: space-between;
   margin-left: 32px;
   padding-bottom: 10px;
+  margin-bottom: 17px;
   width: 462px;
   border-bottom: 1px solid #747474;
   color: var(--gray02, #747474);
@@ -244,9 +296,9 @@ const Where = styled.div`
 
 const MemoArea = styled.textarea`
   display: flex;
-  margin-left: 30px;
+  margin-left: 32px;
   padding: 20px;
-  width: 442px;
+  width: 422px;
   height: 134px;
   resize: none;
   border: none;
@@ -262,7 +314,8 @@ const MemoArea = styled.textarea`
 
 const TextNum = styled.p`
   color: var(--gray, #bcbcbc);
-  margin-right: 20px;
+  margin-right: 32px;
+  margin-top: 4px;
   text-align: right;
   font-family: Pretendard;
   font-size: 16px;
@@ -275,6 +328,8 @@ const IsPublic = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 26px;
+  margin-right: 32px;
 `;
 
 const CreateBtn = styled.button`
@@ -282,8 +337,8 @@ const CreateBtn = styled.button`
   width: 462px;
   padding: 16px 0px;
   margin-left: 30px;
-  margin-top: 53px;
-  margin-bottom: 42px;
+  margin-top: 37px;
+  margin-bottom: 45px;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -301,8 +356,8 @@ const CreateBtn = styled.button`
 
 const CalendarContainer = styled.div`
   position: absolute;
-  top: 25%;
-  left: 16%;
+  top: 25.4%;
+  left: 45%;
   z-index: 10;
   border: 1px solid var(--gray02, #747474);
   background: var(--offwhite_, #fcfcfc);
@@ -376,8 +431,28 @@ const GenreContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  width: 450px;
   margin-left: 30px;
+  margin-bottom: 35px;
   gap: 5px;
+`;
+
+const SearchSongContainerWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  left: 528px;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
+`;
+
+const SearchPlaceContainerWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  left: 528px;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
 `;
 
 export default CreatePinPage;

@@ -17,6 +17,7 @@ const UserFollowPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("followers");
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const [showSideBar, setShowSideBar] = useState(true);
 
   const { isError, data, error } = useQuery({
     queryKey: ["getMyProfile"],
@@ -69,7 +70,7 @@ const UserFollowPage = () => {
     navigate(-1);
   };
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <ContentBox>
         <TopBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />

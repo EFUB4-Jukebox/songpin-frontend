@@ -50,6 +50,8 @@ const TextBox = styled.div`
   flex-direction: column;
   margin: 16px 15px 10px 29px;
   width: 100%;
+  height: 78px;
+  overflow: hidden;
 `;
 
 const PinTitle = styled.div`
@@ -66,6 +68,12 @@ const TitleText = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  max-height: 48px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const PinSinger = styled.div`
@@ -75,4 +83,8 @@ const PinSinger = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
+  max-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
