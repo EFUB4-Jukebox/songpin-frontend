@@ -33,8 +33,10 @@ const CreatePinPage = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate("/details-song"); // 곡 ID로 수정
+  const handleNavigate = (location) => {
+    const params = location.split('/');
+    const songId = params[2];
+    navigate(`/details-song/${songId}`);
   };
 
   const onInputHandler = e => {
@@ -90,15 +92,13 @@ const CreatePinPage = () => {
       memo: memo,
       visibility: isPublic ? "PUBLIC" : "PRIVATE",
     };
-    console.log(selectedPin);
+    console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
     const response = await postNewPin(request);
-    console.log("PostPin response:", response);
-    if (response && response.status === 201) {
-      console.log("Pin Post Success");
-      handleNavigate();
-    } else {
-      console.error("Failed to post Pin:", response);
+    const location = response.headers.get('location');
+    if (location)
+    {
+      handleNavigate(location);
     }
   };
 

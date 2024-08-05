@@ -46,7 +46,7 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
 
   const navigate = useNavigate();
   const goPinEditPage = () => {
-    navigate("/pin-edit");
+    navigate(`/pin-edit/${pinId}`);
   };
 
   return (

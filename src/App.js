@@ -133,7 +133,7 @@ function App() {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
@@ -232,7 +232,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
