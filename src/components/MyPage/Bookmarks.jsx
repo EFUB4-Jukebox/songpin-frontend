@@ -6,32 +6,32 @@ import { getMyPlaylistBookmark } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
 const Bookmarks = () => {
-  // const [bookmarkCount, setBookmarkCount] = useState();
-  // const [bookmarkList, setBookmarkList] = useState([]);
+  const [bookmarkCount, setBookmarkCount] = useState();
+  const [bookmarkList, setBookmarkList] = useState([]);
 
-  const { data, refetch } = useQuery({
-    queryKey: ["getMyPlaylistBookmark"],
-    queryFn: getMyPlaylistBookmark,
-  });
+  // const { data } = useQuery({
+  //   queryKey: ["getMyPlaylistBookmark"],
+  //   queryFn: getMyPlaylistBookmark,
+  // });
 
-  const bookmarkCount = data?.bookmarkCount || 0;
-  const bookmarkList = data?.bookmarkList || [];
+  // const bookmarkCount = data?.bookmarkCount || 0;
+  // const bookmarkList = data?.bookmarkList || [];
 
-  // useEffect(() => {
-  //   const getBookmark = async () => {
-  //     try {
-  //       const res = await getMyPlaylistBookmark();
-  //       console.log(res);
-  //       if (res) {
-  //         setBookmarkCount(res.bookmarkCount);
-  //         setBookmarkList(res.bookmarkList);
-  //       }
-  //     } catch (error) {
-  //       console.log("데이터 불러오기에 실패했습니다.", error);
-  //     }
-  //   };
-  //   getBookmark();
-  // }, []);
+  useEffect(() => {
+    const getBookmark = async () => {
+      try {
+        const res = await getMyPlaylistBookmark();
+        console.log(res);
+        if (res) {
+          setBookmarkCount(res.bookmarkCount);
+          setBookmarkList(res.bookmarkList);
+        }
+      } catch (error) {
+        console.log("데이터 불러오기에 실패했습니다.", error);
+      }
+    };
+    getBookmark();
+  }, []);
   return (
     <BookmarkedContainer>
       <PlaylistOverview>

@@ -5,6 +5,7 @@ import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
 import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
 import PinModalBox from "../common/PinModalBox";
 import { useNavigate } from "react-router-dom";
+import { GenreList } from "../../constants/GenreList";
 
 const PinComponent = ({
   pin = {},
@@ -13,8 +14,7 @@ const PinComponent = ({
   onSelect,
   pinId,
 }) => {
-  const [image, setImage] = useState(mapIconBlack);
-  // const [isSelected, setIsSelected] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const { songInfo = {} } = pin;
   const navigate = useNavigate();
 
@@ -25,6 +25,15 @@ const PinComponent = ({
       navigate(`/details-song/${pin.songInfo.songId}`);
     }
   };
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
+      : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(pin.genreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -36,26 +45,25 @@ const PinComponent = ({
 
   return (
     <PinBox
-      onMouseEnter={() => setImage(mapIconBallad)}
-      onMouseLeave={() => setImage(mapIconBlack)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       bgColor={
         pin.isSelected
           ? "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--offwhite, #EFEFEF)"
           : "var(--offwhite, #efefef)"
       }
     >
-      <SongBox onClick={handleClick}>
+      <SongBox>
         <PinImg src={songInfo.imgPath} alt="앨범 이미지" />
         <TitleBox>
           <PinTitle>
-            {/* 장르에 따라 아이콘 변경해야함 */}
-            <MapIcon src={image} alt="장르 아이콘" />
-            <TitleText>{songInfo.title}</TitleText>
+            <MapIcon src={currentIconSrc} alt="장르 아이콘" />
+            <TitleText onClick={handleClick}>{songInfo.title}</TitleText>
             {buttonVisible && (
               <PinModalBox top="30px" right="0px" pinId={pinId} />
             )}
           </PinTitle>
-          <PinSinger>{songInfo.artist}</PinSinger>
+          <PinSinger onClick={handleClick}>{songInfo.artist}</PinSinger>
           <InfoBox>
             <InfoText>{formatDate(pin.listenedDate)}</InfoText>
             <PlaceText>{pin.placeName}</PlaceText>
@@ -72,15 +80,10 @@ export default PinComponent;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
-  /* align-items: center; */
   width: 462px;
   height: 100px;
   flex-shrink: 0;
   border-radius: 8px;
-  /* justify-content: space-around; */
-
-  /* background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--offwhite, #EFEFEF); */
-  /* background: var(--offwhite, #efefef); */
   background: ${({ bgColor }) => bgColor || "var(--offwhite, #efefef)"};
   cursor: pointer;
   margin-bottom: 12px;
@@ -157,6 +160,7 @@ const InfoBox = styled.div`
   white-space: nowrap;
   /* padding-right: 23px; */
   width: 350px;
+  padding-top: 5px;
 `;
 
 const InfoText = styled.div`

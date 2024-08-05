@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 import IntroducePage from "./pages/IntroducePage/IntroducePage";
@@ -133,11 +134,13 @@ function App() {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/user-follows" element={<UserFollowPage />} />
+          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
+          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -162,6 +165,7 @@ export default App;
 
 function MapLayout({ allPins, recentPins, handleFilterChange }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
 
   return (
@@ -230,11 +234,12 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/user-follows" element={<UserFollowPage />} />
+          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
+          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -252,16 +257,17 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
         </Routes>
       </div>
       <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          //width: "50px",
-          height: "100%",
-          zIndex: 1,
-        }}
-      >
-        <MapFilter onFilterChange={handleFilterChange} />
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100%",
+            zIndex: 1,
+          }}
+        >
+      {location.pathname === '/home' && (
+          <MapFilter onFilterChange={handleFilterChange} />
+      )}
       </div>
       <Notification />
     </div>

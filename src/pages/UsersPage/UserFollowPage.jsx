@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FollowList from "../../components/UsersPage/FollowList";
 import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import SideSection from "../../components/common/SideSection";
@@ -13,87 +13,97 @@ import {
 
 const UserFollowPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { memberId: urlMemberId } = useParams();
   const [selectedMenu, setSelectedMenu] = useState("followers");
   const [followerList, setFollowerList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const [profileData, setProfileData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
 
   const { isError, data, error } = useQuery({
     queryKey: ["getMyProfile"],
     queryFn: getMyProfile,
+    enabled: !urlMemberId, // URL memberId가 있을 때는 getMyProfile 호출 안함
   });
-  if (!data) {
-    return <div>데이터가 없습니다.</div>;
-  }
 
-  if (isError) {
-    console.error("Error fetching user info:", error);
-    return <div>오류 발생: {error.message}</div>;
-  }
-  const profileData = data;
+  useEffect(() => {
+    if (urlMemberId) {
+      // URL에서 memberId가 있으면 해당 사용자 프로필을 가져옴
+      setProfileData({ memberId: urlMemberId }); // 직접 설정하여 API 호출
+    } else if (data) {
+      // URL memberId가 없으면 getMyProfile 데이터 사용
+      setProfileData(data);
+    }
+    console.log("Profile Data:", profileData); // 디버깅
+  }, [urlMemberId, data]);
+
+  useEffect(() => {
+    const fetchFollowersOrFollowing = async () => {
+      if (profileData) {
+        try {
+          let res;
+          if (selectedMenu === "followers") {
+            res = await getFollowerList(profileData.memberId);
+            setFollowerList(res.followingList);
+          } else {
+            res = await getFollowingList(profileData.memberId);
+            setFollowingList(res.followingList);
+          }
+          if (!profileData.handle) {
+            setProfileData(prev => ({ ...prev, handle: res.handle }));
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+    fetchFollowersOrFollowing();
+  }, [profileData, selectedMenu]);
+
+  if (!profileData) return <div>데이터가 없습니다.</div>;
+  if (isError) return <div>오류 발생: {error.message}</div>;
+
   const handle = profileData.handle;
-  const memberId = data.memberId;
-
-  const handleFollowerList = async () => {
-    setSelectedMenu("followers");
-    try {
-      const res = await getFollowerList(memberId);
-      console.log(res);
-      setFollowerList(res.followingList);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
-  const handleFollowingList = async () => {
-    setSelectedMenu("following");
-    try {
-      const res = await getFollowingList(memberId);
-      console.log(res);
-      setFollowingList(res.followingList);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-  // useEffect(() => {
-  //   const params = new URLSearchParams(location.search);
-  //   const menu = params.get("menu");
-  //   if (menu === "following") {
-  //     setSelectedMenu("following");
-  //   } else {
-  //     setSelectedMenu("followers");
-  //   }
-  // }, [location.search]);
 
   const handleBackClick = () => {
     navigate(-1);
   };
+
   return (
     <SideSection showSideBar={showSideBar}>
       <ContentBox>
         <TopBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />
-          <UserId>@{handle}</UserId>
+          <UserId>{handle && `@${handle}`}</UserId>
         </TopBox>
         <MenuBox>
           <MenuText
             isSelected={selectedMenu === "followers"}
-            onClick={handleFollowerList}
+            onClick={() => setSelectedMenu("followers")}
           >
             팔로워
           </MenuText>
           <MenuText
             isSelected={selectedMenu === "following"}
-            onClick={handleFollowingList}
+            onClick={() => setSelectedMenu("following")}
           >
             팔로잉
           </MenuText>
         </MenuBox>
       </ContentBox>
+      {selectedMenu === "followers" &&
+        followerList &&
+        followerList.length === 0 && (
+          <NoDataMessage>팔로워가 없습니다.</NoDataMessage>
+        )}
+      {selectedMenu === "following" &&
+        followingList &&
+        followingList.length === 0 && (
+          <NoDataMessage>팔로잉이 없습니다.</NoDataMessage>
+        )}
       <FollowList
-        followerList={followerList}
-        followingList={followingList}
+        followerList={followerList && followerList}
+        followingList={followerList && followingList}
         selectedMenu={selectedMenu}
       />
     </SideSection>
@@ -152,4 +162,15 @@ const MenuBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+`;
+
+const NoDataMessage = styled.div`
+  color: var(--gray, #bcbcbc);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  margin-top: 374px;
 `;

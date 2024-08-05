@@ -1,5 +1,5 @@
-import statisticsIcon2 from '../../assets/introduce/statisticsIcon2.svg';
-import styled, { keyframes } from 'styled-components';
+import statisticsIcon2 from "../../assets/introduce/statisticsIcon2.svg";
+import styled, { keyframes } from "styled-components";
 const rotateImage = keyframes`
   100% {
     transform: rotate(360deg);

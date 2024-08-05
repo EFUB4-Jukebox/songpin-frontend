@@ -30,6 +30,14 @@ import jazzStroke from "../assets/images/UsersPage/stroke-icon-jazz.svg";
 import lofiStroke from "../assets/images/UsersPage/stroke-icon-lofi.svg";
 import danceStroke from "../assets/images/UsersPage/stroke-icon-dance.svg";
 import etcStroke from "../assets/images/UsersPage/stroke-icon-etc.svg";
+import popStats from "../assets/introduce/popStats.svg";
+import balladStats from "../assets/introduce/balladStats.svg";
+import hiphopStats from "../assets/introduce/hiphopStats.svg";
+import rockStats from "../assets/introduce/rockStats.svg";
+import lofiStats from "../assets/introduce/lofiStats.svg";
+import jazzStats from "../assets/introduce/jazzStats.svg";
+import danceStats from "../assets/introduce/danceStats.svg";
+import etcStats from "../assets/introduce/etcStats.svg";
 
 export const GenreList = [
   {
@@ -42,96 +50,90 @@ export const GenreList = [
     strokeIconSrc: popStroke,
     width: 78,
     bgColor: "#4EDE76",
+    statsIcon: popStats,
   },
   {
     id: 1,
     name: "락/메탈",
     EngName: "ROCK",
-
     imgSrc: smallRockIcon,
     whiteImgSrc: whiteRockIcon,
     iconSrc: rockIcon,
     strokeIconSrc: rockStroke,
-
     width: 119,
     bgColor: "#FF5862",
+    statsIcon: rockStats,
   },
   {
     id: 2,
     name: "발라드",
     EngName: "BALLAD",
-
     imgSrc: smallBalladeIcon,
     whiteImgSrc: whiteBalladeIcon,
     iconSrc: balladeIcon,
     strokeIconSrc: balladeStroke,
-
     width: 113,
     bgColor: "#17C1D8",
+    statsIcon: balladStats,
   },
   {
     id: 3,
     name: "재즈",
     EngName: "JAZZ",
-
     imgSrc: smallJazzIcon,
     whiteImgSrc: whiteJazzIcon,
     iconSrc: jazzIcon,
     strokeIconSrc: jazzStroke,
-
     width: 95,
     bgColor: "#E866BC",
+    statsIcon: jazzStats,
   },
   {
     id: 4,
     name: "힙합",
     EngName: "HIPHOP",
-
     imgSrc: smallHiphopIcon,
     whiteImgSrc: whiteHiphopIcon,
     iconSrc: hiphopIcon,
     strokeIconSrc: hiphopStroke,
-
     width: 95,
     bgColor: "#5452FF",
+    statsIcon: hiphopStats,
   },
   {
     id: 5,
     name: "Lo-Fi",
     EngName: "LOFI",
-
     imgSrc: smallLofiIcon,
     whiteImgSrc: whiteLoFiIcon,
     iconSrc: lofiIcon,
     strokeIconSrc: lofiStroke,
-
     width: 107,
     bgColor: "#FE60A2",
+    statsIcon: lofiStats,
   },
   {
     id: 6,
     name: "댄스",
     EngName: "DANCE",
-
     imgSrc: smallDanceIcon,
     whiteImgSrc: whiteDanceIcon,
     iconSrc: danceIcon,
     strokeIconSrc: danceStroke,
-
     width: 95,
     bgColor: "#A64EEC",
+    statsIcon: danceStats,
   },
   {
     id: 7,
     name: "기타",
     EngName: "EXTRA",
-
     imgSrc: smallEtcIcon,
     whiteImgSrc: whiteEtcIcon,
     iconSrc: etcIcon,
     strokeIconSrc: etcStroke,
-
     width: 95,
     bgColor: "#FFCD1D",
+    statsIcon: etcStats,
   },
 ];

@@ -1,6 +1,6 @@
-import statisticsIcon3 from '../../assets/introduce/statisticsIcon3.svg';
-import statisticsIcon4 from '../../assets/introduce/statisticsIcon4.svg';
-import styled from 'styled-components';
+import statisticsIcon3 from "../../assets/introduce/statisticsIcon3.svg";
+import statisticsIcon4 from "../../assets/introduce/statisticsIcon4.svg";
+import styled from "styled-components";
 
 const StatBackground3 = () => {
   return (
@@ -8,15 +8,15 @@ const StatBackground3 = () => {
       <Second>
         <First>
           <img src={statisticsIcon3} />
-          <img src={statisticsIcon3} style={{ transform: 'rotate(-180deg)' }} />
+          <img src={statisticsIcon3} style={{ transform: "rotate(-180deg)" }} />
         </First>
         <First>
           <img src={statisticsIcon3} />
-          <img src={statisticsIcon3} style={{ transform: 'rotate(-180deg)' }} />
+          <img src={statisticsIcon3} style={{ transform: "rotate(-180deg)" }} />
         </First>
         <First>
           <img src={statisticsIcon4} />
-          <img src={statisticsIcon4} style={{ transform: 'scaleX(-1)' }} />
+          <img src={statisticsIcon4} style={{ transform: "scaleX(-1)" }} />
         </First>
       </Second>
     </>

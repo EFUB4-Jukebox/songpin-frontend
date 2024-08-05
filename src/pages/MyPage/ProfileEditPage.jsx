@@ -17,8 +17,37 @@ const ProfileEditPage = () => {
   const [infoMsgNickname, setInfoMsgNickname] = useState("");
   const [infoMsgHandle, setInfoMsgHandle] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
-
+  const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const nicknameRegex = /^[가-힣a-zA-Z0-9]{1,8}$/;
+    const handleRegex = /^[a-z0-9_]{3,12}$/;
+
+    // 닉네임 검증
+    let nicknameMessage = "";
+    if (!nickname) {
+      nicknameMessage = "닉네임을 입력하세요.";
+    } else if (nickname.length > 8) {
+      nicknameMessage = "닉네임은 8자 이내여야 합니다.";
+    } else if (!nicknameRegex.test(nickname)) {
+      nicknameMessage = "닉네임은 한글, 영문 대소문자, 숫자만 사용 가능합니다.";
+    }
+
+    // 핸들 검증
+    let handleMessage = "";
+    if (!handle) {
+      handleMessage = "핸들을 입력하세요.";
+    } else if (handle.length > 12 || handle.length < 3) {
+      handleMessage = "핸들은 최소 3자 이상, 12자 이내여야 합니다.";
+    } else if (!handleRegex.test(handle)) {
+      handleMessage = "핸들은 영문 소문자, 숫자, 언더바(_)만 사용 가능합니다.";
+    }
+    setInfoMsgNickname(nicknameMessage);
+    setInfoMsgHandle(handleMessage);
+
+    setIsFormValid(nicknameMessage === "" && handleMessage === "");
+  };
 
   const completeEditProfile = async () => {
     const selectedGenre = GenreList.find(it => it.id === selected);
@@ -30,6 +59,7 @@ const ProfileEditPage = () => {
     console.log(editProfile);
     const res = await editMyProfile(editProfile);
     console.log(res);
+
     if (res.data && res.data.message) {
       const message = res.data.message;
       if (message.startsWith("nickname")) {
@@ -63,6 +93,10 @@ const ProfileEditPage = () => {
     getProfile();
   }, []);
 
+  useEffect(() => {
+    validateForm();
+  }, [nickname, handle]);
+
   const changeNickname = event => {
     setNickname(event.target.value);
   };
@@ -82,54 +116,60 @@ const ProfileEditPage = () => {
 
   return (
     <SideSection showSideBar={showSideBar}>
-      <ProfileEditComponent>
-        <ProfileImgSelect>
-          <UserLogo src={profileImg} />
-          {GenreList.map((it, index) => (
-            <SelectList
-              onClick={() => handleProfileImg(index)}
-              src={`${selected === index ? it.strokeIconSrc : it.iconSrc}`}
-            />
-          ))}
-        </ProfileImgSelect>
-        <EditSection>
-          <NickName>
-            <Title>닉네임</Title>
-            <Edit>
-              <EditText
-                type="text"
-                value={nickname}
-                onChange={changeNickname}
-                placeholder="닉네임을 입력하세요"
+      {email ? (
+        <ProfileEditComponent>
+          <ProfileImgSelect>
+            <UserLogo src={profileImg} />
+            {GenreList.map((it, index) => (
+              <SelectList
+                onClick={() => handleProfileImg(index)}
+                src={`${selected === index ? it.strokeIconSrc : it.iconSrc}`}
               />
-              <Line />
-              <AlarmMessage>{infoMsgNickname}</AlarmMessage>
-            </Edit>
-          </NickName>
-          <Handle>
-            <Title>핸들</Title>
-            <Edit>
-              <EditText
-                type="text"
-                value={handle}
-                onChange={changeHandle}
-                placeholder="핸들을 입력하세요"
-              />
-              <Line />
-              <AlarmMessage>{infoMsgHandle}</AlarmMessage>
-            </Edit>
-          </Handle>
-          <Email>
-            <Title>이메일</Title>
-            <MailText>{email}</MailText>
-          </Email>
-        </EditSection>
-        <Spacer />
-        <GoOutBtns>
-          <Button onClick={goBackPage}>취소</Button>
-          <Button onClick={completeEditProfile}>완료</Button>
-        </GoOutBtns>
-      </ProfileEditComponent>
+            ))}
+          </ProfileImgSelect>
+          <EditSection>
+            <NickName>
+              <Title>닉네임</Title>
+              <Edit>
+                <EditText
+                  type="text"
+                  value={nickname}
+                  onChange={changeNickname}
+                  placeholder="닉네임을 입력하세요"
+                />
+                <Line hasError={!!infoMsgNickname} />
+                <AlarmMessage>{infoMsgNickname}</AlarmMessage>
+              </Edit>
+            </NickName>
+            <Handle>
+              <Title>핸들</Title>
+              <Edit>
+                <EditText
+                  type="text"
+                  value={handle}
+                  onChange={changeHandle}
+                  placeholder="핸들을 입력하세요"
+                />
+                <Line hasError={!!infoMsgHandle} />{" "}
+                <AlarmMessage>{infoMsgHandle}</AlarmMessage>
+              </Edit>
+            </Handle>
+            <Email>
+              <Title>이메일</Title>
+              <MailText>{email}</MailText>
+            </Email>
+          </EditSection>
+          <Spacer />
+          <GoOutBtns>
+            <Button onClick={goBackPage}>취소</Button>
+            <Button isDisabled={!isFormValid} onClick={completeEditProfile}>
+              완료
+            </Button>
+          </GoOutBtns>
+        </ProfileEditComponent>
+      ) : (
+        <></>
+      )}
     </SideSection>
   );
 };
@@ -165,6 +205,7 @@ const SelectList = styled.img`
 const EditSection = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 30px;
   padding-top: 56px;
 `;
 
@@ -186,6 +227,7 @@ const Title = styled.div`
 const Edit = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const EditText = styled.input`
@@ -200,12 +242,16 @@ const EditText = styled.input`
 `;
 
 const Line = styled.div`
-  width: 340px;
+  width: 345px;
   height: 1px;
-  background: var(--gray02, #747474);
+  background: ${({ hasError }) =>
+    hasError ? "red" : "var(--gray02, #747474)"};
 `;
 
 const AlarmMessage = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 0px;
   color: var(--gray02, #747474);
   text-align: right;
   font-family: Pretendard;
@@ -253,11 +299,14 @@ const GoOutBtns = styled.div`
 `;
 
 const Button = styled.div`
-  color: var(--light_black, #232323);
+  color: ${({ isDisabled }) =>
+    isDisabled ? "var(--gray, #BCBCBC)" : "var(--light_black, #232323)"};
+  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
+
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 140%; /* 28px */
   cursor: pointer;
 `;

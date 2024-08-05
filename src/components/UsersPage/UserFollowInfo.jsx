@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UserInfo from "./UserInfo";
+import { useNavigate } from "react-router-dom";
 import { addFollowing, deleteFollowing } from "../../services/api/myPage";
+import { getUserDetail } from "../../services/api/user";
+import { getMyProfile } from "../../services/api/myPage";
 
 // myFollowId props 전달 받아야 함
 const UserFollowInfo = ({
@@ -10,9 +13,10 @@ const UserFollowInfo = ({
   handle,
   isFollowing: initialIsFollowing,
   followId,
+  memberId,
 }) => {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
-
+  const navigate = useNavigate();
   const handleFollow = async () => {
     try {
       if (isFollowing) {
@@ -32,6 +36,22 @@ const UserFollowInfo = ({
     }
   };
 
+  const handleUserClick = async memberId => {
+    try {
+      // 로그인된 사용자 ID 가져오기
+      const myProfile = await getMyProfile();
+      const isMe = myProfile.memberId === memberId;
+
+      // 프로필 정보를 가져오는 API 호출
+      const userDetail = isMe ? myProfile : await getUserDetail(memberId);
+
+      // 해당 유저 페이지로 이동
+      navigate(`/users/${memberId}`, { state: { isMe } });
+    } catch (err) {
+      console.error("Error fetching user detail:", err);
+    }
+  };
+
   return (
     <UserFollowInfoBox>
       <UserInfo
@@ -39,10 +59,13 @@ const UserFollowInfo = ({
         profileImg={profileImg}
         nickname={nickname}
         handle={handle}
+        onClick={() => handleUserClick(memberId)}
       />
-      <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>
-        {isFollowing ? "팔로잉" : "팔로우"}
-      </FollowBtn>
+      {isFollowing !== null && (
+        <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>
+          {isFollowing ? "팔로잉" : "팔로우"}
+        </FollowBtn>
+      )}
     </UserFollowInfoBox>
   );
 };

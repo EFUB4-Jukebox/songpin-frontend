@@ -12,24 +12,34 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   const [initState, setInitState] = useState(placeholder);
   const { setPlaylistId } = usePlaylistIdStore();
   const { playlistInfoMsg, setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
-
+  const [playlistList, setPlaylistList] = useState([]);
   useEffect(() => {
     setPlaylistInfoMsg("");
   }, []);
-  const { isError, data, error } = useQuery({
-    queryKey: ["getMyPlaylist"],
-    queryFn: getMyPlaylist,
-  });
-  if (!data) {
-    return <div>데이터가 없습니다.</div>;
-  }
+  // const { isError, data, error } = useQuery({
+  //   queryKey: ["getMyPlaylist"],
+  //   queryFn: getMyPlaylist,
+  // });
+  // if (!data) {
+  //   return <div>데이터가 없습니다.</div>;
+  // }
 
-  if (isError) {
-    console.error("Error fetching user info:", error);
-    return <div>오류 발생: {error.message}</div>;
-  }
-  const playlistData = data;
-  const playlistList = playlistData.playlistList;
+  // if (isError) {
+  //   console.error("Error fetching user info:", error);
+  //   return <div>오류 발생: {error.message}</div>;
+  // }
+  // const playlistData = data;
+  // const playlistList = playlistData.playlistList;
+
+  useEffect(() => {
+    const getPlaylist = async () => {
+      const res = await getMyPlaylist();
+      if (res) {
+        setPlaylistList(res.playlistList);
+      }
+    };
+    getPlaylist();
+  }, []);
 
   const handleClickDropdown = () => {
     setDropdownView(!DropdownView);

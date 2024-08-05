@@ -44,7 +44,7 @@ const PlaylistDetailPage = () => {
     navigate(-1);
   };
   if (!playlistData) {
-    return <div></div>; // 데이터 로딩 중임을 표시
+    return <SideSection />; // 데이터 로딩 중임을 표시
   }
 
   return (
@@ -90,15 +90,19 @@ const PlaylistDetailPage = () => {
           </UpdatedDate>
         </InfoBox>
         <PinContainer>
-          {playlistData.pinList.map(pin => (
-            <PinComponent
-              key={pin.playlistPinId}
-              pin={pin}
-              selectable={false}
-              buttonVisible={true}
-              pinId={pin.pinId}
-            />
-          ))}
+          {playlistData.pinList.length > 0 ? (
+            playlistData.pinList.map(pin => (
+              <PinComponent
+                key={pin.playlistPinId}
+                pin={pin}
+                selectable={false}
+                buttonVisible={true}
+                pinId={pin.pinId}
+              />
+            ))
+          ) : (
+            <NoPin>아직 담긴 핀이 없습니다.</NoPin>
+          )}
         </PinContainer>
       </DetailContainer>
     </SideSection>
@@ -137,8 +141,8 @@ const PlaylistBox = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 309px;
-  height: 309px;
+  width: 310px;
+  height: 310px;
   border-radius: 18px 0px 0px 18px;
   border-right: 1px solid var(--f8f8f8, #fcfcfc);
   background: ${({ imageUrl }) =>
@@ -153,20 +157,22 @@ const SmallBoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1px;
+  height: 310px;
 `;
 
 const SmallBox = styled.div`
   width: 155px;
+  height: 155px;
   background: ${({ imageUrl }) =>
     imageUrl ? `url(${imageUrl}) no-repeat center center` : "#E7E7E7"};
   background-size: cover;
 
   &:first-child {
-    height: 154px;
+    /* height: 154px; */
     border-radius: 0px 18px 0px 0px;
   }
   &:last-child {
-    height: 155px;
+    /* height: 155px; */
     border-radius: 0px 0px 18px 0px;
   }
 `;
@@ -191,7 +197,7 @@ const NameBox = styled.div`
   margin-top: 18px;
 `;
 const UserName = styled.div`
-  color: var(--gray03, #5f5f5f);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
@@ -264,4 +270,15 @@ const LockImg = styled.img`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+`;
+
+const NoPin = styled.div`
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  margin-top: 145px;
 `;

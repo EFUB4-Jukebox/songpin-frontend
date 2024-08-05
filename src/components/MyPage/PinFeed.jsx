@@ -9,13 +9,13 @@ import { getMyPinFeed } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
 const PinFeed = () => {
-  // const [totalPinNum, setTotalPinNum] = useState();
-  // const [pinFeedList, setPinFeedList] = useState([]);
-  // const [feedElementTitle, setFeedElementTitle] = useState();
-  // const [feedElementArtist, setFeedElementArtist] = useState();
-  // const [feedElementImgPath, setFeedElementImgPath] = useState();
-  // const [listenedDate, setListenedDate] = useState();
-  // const [placeName, setPlaceName] = useState();
+  const [totalPinNum, setTotalPinNum] = useState();
+  const [pinFeedList, setPinFeedList] = useState([]);
+  const [feedElementTitle, setFeedElementTitle] = useState();
+  const [feedElementArtist, setFeedElementArtist] = useState();
+  const [feedElementImgPath, setFeedElementImgPath] = useState();
+  const [listenedDate, setListenedDate] = useState();
+  const [placeName, setPlaceName] = useState();
 
   const navigate = useNavigate();
   const goCalendar = () => {
@@ -24,13 +24,13 @@ const PinFeed = () => {
   const goMySearch = () => {
     navigate("/mypin-search");
   };
-  const { data } = useQuery({
-    queryKey: ["pinfeed"],
-    queryFn: getMyPinFeed,
-  });
+  // const { data } = useQuery({
+  //   queryKey: ["pinfeed"],
+  //   queryFn: getMyPinFeed,
+  // });
 
-  const totalPinNum = data?.totalElements || 0;
-  const pinFeedList = data?.pinFeedList || [];
+  // const totalPinNum = data?.totalElements || 0;
+  // const pinFeedList = data?.pinFeedList || [];
 
   useEffect(() => {
     console.log(pinFeedList);
@@ -43,26 +43,26 @@ const PinFeed = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const getMyFeed = async () => {
-  //     try {
-  //       const res = await getMyPinFeed();
-  //       console.log(res);
-  //       if (res) {
-  //         setTotalPinNum(res.totalElements);
-  //         setPinFeedList(res.pinFeedList);
-  //         // pinFeedList && setFeedElementTitle(pinFeedList.songInfo.title);
-  //         // pinFeedList && setFeedElementArtist(pinFeedList.songInfo.artist);
-  //         // pinFeedList && setFeedElementImgPath(pinFeedList.songInfo.imgPath);
-  //         // pinFeedList && setListenedDate(pinFeedList.listenedDate);
-  //         // pinFeedList && setPlaceName(pinFeedList.placeName);
-  //       }
-  //     } catch (error) {
-  //       console.log("데이터 불러오기에 실패했습니다.", error);
-  //     }
-  //   };
-  //   getMyFeed();
-  // }, []);
+  useEffect(() => {
+    const getMyFeed = async () => {
+      try {
+        const res = await getMyPinFeed();
+        console.log(res);
+        if (res) {
+          setTotalPinNum(res.totalElements);
+          setPinFeedList(res.pinFeedList);
+          // pinFeedList && setFeedElementTitle(pinFeedList.songInfo.title);
+          // pinFeedList && setFeedElementArtist(pinFeedList.songInfo.artist);
+          // pinFeedList && setFeedElementImgPath(pinFeedList.songInfo.imgPath);
+          // pinFeedList && setListenedDate(pinFeedList.listenedDate);
+          // pinFeedList && setPlaceName(pinFeedList.placeName);
+        }
+      } catch (error) {
+        console.log("데이터 불러오기에 실패했습니다.", error);
+      }
+    };
+    getMyFeed();
+  }, []);
 
   return (
     <PinFeedContainer>
@@ -80,13 +80,18 @@ const PinFeed = () => {
         {pinFeedList &&
           pinFeedList.map(it => (
             <PinMemoComponent
+              songId={it.songInfo.songId}
               title={it.songInfo.title}
               artist={it.songInfo.artist}
               imgPath={it.songInfo.imgPath}
-              genre={it.genreName}
+              genreName={it.genreName}
               listenedDate={it.listenedDate}
               placeName={it.placeName}
               pinId={it.pinId}
+              memo={it.memo}
+              visibility={it.visibility}
+              latitude={it.latitude}
+              longitude={it.longitude}
             />
           ))}
       </PinsSection>

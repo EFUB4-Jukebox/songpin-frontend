@@ -27,11 +27,15 @@ const DynamicSvg = ({ imageUrl, lat, lng, id }) => {
 
     const initializeMap = () => {
       const container = document.getElementById(`map-${id}`);
-      const options = {
-        center: new window.kakao.maps.LatLng(lat, lng),
-        level: 3,
-      };
-      const map = new window.kakao.maps.Map(container, options);
+      if (container) {
+        const options = {
+          center: new window.kakao.maps.LatLng(lat, lng),
+          level: 5,
+        };
+        new window.kakao.maps.Map(container, options);
+      } else {
+        console.error("Map 컨테이너를 찾을 수 없습니다.");
+      }
     };
 
     loadMapScript();

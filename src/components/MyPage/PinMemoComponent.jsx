@@ -10,20 +10,27 @@ import { GenreList } from "../../constants/GenreList";
 import { useNavigate } from "react-router-dom";
 
 const PinMemoComponent = ({
+  songId,
   title,
   artist,
   imgPath,
   listenedDate,
   placeName,
-  genre,
+  latitude,
+  longitude,
+  genreName,
   pinId,
+  memo,
+  visibility,
 }) => {
   const [isTruncated, setIsTruncated] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
   const toggleTruncation = () => {
     setIsTruncated(!isTruncated);
   };
-  const text =
-    "사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네 \n사랑하긴 했었나요 스쳐가는 인연이었나요 누가 내 가슴에다 불을 질렀나 누가 내 심장에다 못을 박았나 그대의 눈빛은 날 얼어붙게 하네";
+
+  const text = memo || "메모가 비어 있습니다";
   const maxLength = 59;
   const showMoreBtn = text.length > maxLength;
   const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
@@ -34,28 +41,47 @@ const PinMemoComponent = ({
 
   const navigate = useNavigate();
   const goMusicInfoPage = () => {
-    navigate("/details-song");
+    navigate(`/details-song/${songId}`);
   };
   const goLocation = () => {
     // 지도 위치 이동 코드 추가
   };
 
-  const formattedDate = format(new Date(listenedDate), "yy.MM.dd", {
+  const formattedDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
 
-  const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
+  // const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
+
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? {
+          imgSrc: genre.imgSrc,
+          iconSrc: genre.iconSrc,
+        }
+      : null;
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(genreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
+
   return (
-    <PinBox>
+    <PinBox
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <TitleSection>
-        <AlbumImg src={imgPath} />
-        <SongInfo>
-          <SongTitle>
-            <SongIcon src={genreIcon} />
-            <TitleText>{title}</TitleText>
-          </SongTitle>
-          <Singer>{artist}</Singer>
-        </SongInfo>
+        <MusicInfo>
+          <AlbumImg src={imgPath} />
+          <SongInfo onClick={goMusicInfoPage}>
+            <SongTitle>
+              <SongIcon src={currentIconSrc} />
+              <TitleText>{title}</TitleText>
+            </SongTitle>
+            <Singer>{artist}</Singer>
+          </SongInfo>
+        </MusicInfo>
         <PinModalBox top="48px" right="12px" pinId={pinId} />
       </TitleSection>
       <DetailsSection>
@@ -63,10 +89,12 @@ const PinMemoComponent = ({
           <Text
             onClick={isTruncated ? () => {} : toggleTruncation}
             isTruncated={isTruncated}
+            visibility={visibility}
+            isEmpty={!memo}
             style={{ whiteSpace: "pre-wrap" }}
             // onTextLayout={getLineLength}
           >
-            <SecretPin src={lockIcon} />
+            {visibility === "PRIVATE" && <SecretPin src={lockIcon} />}
             {displayText}
             {showMoreBtn && isTruncated && (
               <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
@@ -98,6 +126,13 @@ const PinBox = styled.div`
 const TitleSection = styled.div`
   display: flex;
   flex-direction: row;
+  width: 433px;
+  justify-content: space-between;
+`;
+
+const MusicInfo = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const AlbumImg = styled.img`
@@ -113,7 +148,7 @@ const SongInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 250px;
+  cursor: pointer;
 `;
 
 const SongTitle = styled.div`
@@ -173,12 +208,13 @@ const Text = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  align-items: center;
+  cursor: ${props => (props.isTruncated ? "auto" : "pointer")};
+  width: 426px;
+  min-height: 27px;
+  color: ${props =>
+    props.visibility === "PRIVATE" || props.isEmpty
+      ? "var(--gray02, #747474)"
+      : "#000"};
 `;
 
 const SecretPin = styled.img`
@@ -206,6 +242,7 @@ const Info = styled.div`
   justify-content: flex-end;
   padding-top: 4px;
   white-space: nowrap;
+  cursor: pointer;
 `;
 
 const PinDate = styled.div`
