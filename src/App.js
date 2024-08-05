@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import {
   BrowserRouter as Router,
   Route,
@@ -186,7 +187,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
       >
         {pinsToDisplay.length > 0 &&
           pinsToDisplay.map(pin => (
-            <div key={pin.id} style={{ position: "relative" }}>
+            <MarkerContainer key={pin.id}>
               <MapMarker
                 position={{ lat: pin.latitude, lng: pin.longitude }}
                 image={{
@@ -209,35 +210,13 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
                     navigate(`/details-song/${pin.latestSongId}`);
                   }
                 }}
-              >
+              />
               {pin.placePinCount > 1 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "73px",
-                    left: "59px",
-                    // transform: "translate(-50%, -150%)", // 마커 위로 이동
-                    background: "transparent",
-                    color: "#FCFCFC",
-                    borderRadius: "50%",
-                    width: 30,
-                    height: 30,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    zIndex: 10,
-                    WebkitTextStrokeWidth: "1.2100000381469727",
-                    WebkitTextStrokeColor: "#232323",
-                    //pointerEvents: "none",
-                  }}
-                >
+                <PinNum>
                   {pin.placePinCount}
-                </div>
+                </PinNum>
               )}
-              </MapMarker>
-            </div>
+            </MarkerContainer>
           ))}
       </Map>
       <div
@@ -292,3 +271,27 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
     </div>
   );
 }
+
+const MarkerContainer = styled.div`
+  position: relative;
+`;
+
+const PinNum = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--f8f8f8, #FCFCFC);
+  text-align: center;
+  text-shadow: -1.5px 0px #232323, 0px 1.5px #232323, 1.5px 0px #232323, 0px -1.5px #232323;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+`;
