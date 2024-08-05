@@ -15,19 +15,9 @@ const put = async (url, data) => {
   return res?.data;
 };
 
-// export const postNewPin = async (request) => {
-//     try {
-//         const data = await post(`/pins`, request);
-//         return data;
-//     } catch (error) {
-//         throw new Error("핀 생성 실패");
-//     }
-// };
-
-//테스트 코드
 export const postNewPin = async request => {
   try {
-    const response = await client.post("/pins", request);
+    const response = await post("/pins", request);
 
     return response;
   } catch (error) {
@@ -43,6 +33,16 @@ export const deletePin = async pinId => {
     console.log("핀 삭제 성공!");
   } catch (error) {
     console.error("핀 삭제 실패", error);
+    throw error;
+  }
+};
+
+export const getPin = async pinId => {
+  try {
+    const response = await get(`/pins/${pinId}`);
+    return response;
+  } catch (error) {
+    console.error("핀 정보 로드 실패:", error);
     throw error;
   }
 };
