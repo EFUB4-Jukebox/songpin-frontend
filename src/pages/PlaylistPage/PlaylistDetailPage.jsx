@@ -44,7 +44,7 @@ const PlaylistDetailPage = () => {
     navigate(-1);
   };
   if (!playlistData) {
-    return <div></div>; // 데이터 로딩 중임을 표시
+    return <SideSection />; // 데이터 로딩 중임을 표시
   }
 
   return (
