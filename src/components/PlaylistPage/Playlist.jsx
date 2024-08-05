@@ -175,7 +175,7 @@ const NameBox = styled.div`
   justify-content: space-between;
 `;
 const UserName = styled.div`
-  color: var(--gray03, #5f5f5f);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;

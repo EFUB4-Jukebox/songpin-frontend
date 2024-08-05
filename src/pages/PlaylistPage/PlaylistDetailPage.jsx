@@ -197,7 +197,7 @@ const NameBox = styled.div`
   margin-top: 18px;
 `;
 const UserName = styled.div`
-  color: var(--gray03, #5f5f5f);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
