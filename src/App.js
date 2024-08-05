@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import {
   BrowserRouter as Router,
   Route,
@@ -188,6 +189,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
       >
         {pinsToDisplay.length > 0 &&
           pinsToDisplay.map(pin => (
+            <div key={pin.id} style={{ position: "relative" }}>
             <MapMarker
               key={pin.id}
               position={{ lat: pin.latitude, lng: pin.longitude }}
@@ -212,8 +214,31 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
                 }
               }}
             >
-              {/* <div style={{color:"#000"}}>{pin.name}</div> */}
-            </MapMarker>
+            {pin.placePinCount > 1 && (
+                  <PinNum
+                    style={{
+                      position: "absolute",
+                      //top: "-20px", // Adjust to position above marker
+                      //left: "50%",
+                      //transform: "translateX(-50%)",
+                      background: "transparent",
+                      color: "black",
+                      borderRadius: "50%",
+                      width: 30,
+                      height: 30,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      zIndex: 1,
+                    }}
+                  >
+                    {pin.placePinCount}
+                  </PinNum>
+                )}
+              </MapMarker>
+            </div>
           ))}
       </Map>
       <div
@@ -270,3 +295,20 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
     </div>
   );
 }
+
+// const PinNum = styled.div`
+//     display: flex;
+//     justify-content: flex-start;
+//     margin-top: 40px;
+//     margin-bottom: 64px;
+//     margin-left: 38px;
+//     color: var(--light_black, #232323);
+//     /* title_bold */
+//     font-family: Pretendard;
+//     font-size: 32px;
+//     font-style: normal;
+//     font-weight: 700;
+//     line-height: 40px;
+//     white-space: pre-wrap;
+//     line-height: 1.5em;
+// `;
