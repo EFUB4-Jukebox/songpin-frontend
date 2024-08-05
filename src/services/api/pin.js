@@ -47,19 +47,12 @@ export const getPin = async pinId => {
   }
 };
 
-export const editPin = async pinId => {
-  const url = `/pins/${pinId}`;
-  const data = {
-    listenedDate: "2023-12-31",
-    genreName: "POP",
-    memo: "제주도 여행 중에 가장 많이 들은 곡 ...",
-    visibility: "PUBLIC",
-  };
+export const editPin = async (pinId, request) => {
   try {
-    const result = await put(url, data);
-    return result;
+    const response = await put(`/pins/${pinId}`, request);
+    return response;
   } catch (error) {
-    console.error("Error updating pin:", error);
+    console.error("핀 수정 실패:", error);
     throw error;
   }
 };

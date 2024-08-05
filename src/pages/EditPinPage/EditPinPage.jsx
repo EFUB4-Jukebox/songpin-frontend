@@ -14,7 +14,7 @@ import { ReactComponent as LocationImg} from '../../assets/images/CreatePin/loca
 import PublicToggle from '../../components/common/PublicToggle';
 import calendar_selected from '../../assets/images/CreatePin/calendar_selected.svg'
 import arrowIcon from '../../assets/images/CreatePin/arrow_back_ios.svg';
-import { getPin } from '../../services/api/pin';
+import { getPin, editPin } from '../../services/api/pin';
 
 const EditPinPage = () => {
     const [inputCount, setInputCount] = useState(0);
@@ -68,6 +68,19 @@ const EditPinPage = () => {
         };
         fetchPinData();
     }, []);
+
+    const handleEditPin = async e => {
+        e.preventDefault();
+        const request = {
+            "listenedDate": moment(pinData.listenedDate).format("YYYY-MM-DD"),
+            "genreName": selectedGenre?.EngName,
+            "memo": pinData.memo,
+            "visibility": isPublic ? "PUBLIC" : "PRIVATE",
+        };
+        console.log("수정된 핀 정보:", request);
+        const res = await editPin(params.pinId, request);
+        console.log("수정됐나?", res);
+    };
 
     return (
         <MainContainer>
@@ -132,7 +145,7 @@ const EditPinPage = () => {
                         <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
                     </IsPublic>
                     <CreateBtn
-                        onClick={handleNavigate}
+                        onClick={handleEditPin}
                     >수정 완료</CreateBtn> 
             </EditSection>
         </MainContainer>
