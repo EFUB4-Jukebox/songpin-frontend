@@ -90,15 +90,19 @@ const PlaylistDetailPage = () => {
           </UpdatedDate>
         </InfoBox>
         <PinContainer>
-          {playlistData.pinList.map(pin => (
-            <PinComponent
-              key={pin.playlistPinId}
-              pin={pin}
-              selectable={false}
-              buttonVisible={true}
-              pinId={pin.pinId}
-            />
-          ))}
+          {playlistData.pinList.length > 0 ? (
+            playlistData.pinList.map(pin => (
+              <PinComponent
+                key={pin.playlistPinId}
+                pin={pin}
+                selectable={false}
+                buttonVisible={true}
+                pinId={pin.pinId}
+              />
+            ))
+          ) : (
+            <NoPin>아직 담긴 핀이 없습니다.</NoPin>
+          )}
         </PinContainer>
       </DetailContainer>
     </SideSection>
@@ -266,4 +270,15 @@ const LockImg = styled.img`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+`;
+
+const NoPin = styled.div`
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  margin-top: 145px;
 `;
