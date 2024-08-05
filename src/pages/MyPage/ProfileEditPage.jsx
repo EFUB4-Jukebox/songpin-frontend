@@ -137,7 +137,7 @@ const ProfileEditPage = () => {
                   onChange={changeNickname}
                   placeholder="닉네임을 입력하세요"
                 />
-                <Line />
+                <Line hasError={!!infoMsgNickname} />
                 <AlarmMessage>{infoMsgNickname}</AlarmMessage>
               </Edit>
             </NickName>
@@ -150,7 +150,7 @@ const ProfileEditPage = () => {
                   onChange={changeHandle}
                   placeholder="핸들을 입력하세요"
                 />
-                <Line />
+                <Line hasError={!!infoMsgHandle} />{" "}
                 <AlarmMessage>{infoMsgHandle}</AlarmMessage>
               </Edit>
             </Handle>
@@ -244,7 +244,8 @@ const EditText = styled.input`
 const Line = styled.div`
   width: 345px;
   height: 1px;
-  background: var(--gray02, #747474);
+  background: ${({ hasError }) =>
+    hasError ? "red" : "var(--gray02, #747474)"};
 `;
 
 const AlarmMessage = styled.div`
