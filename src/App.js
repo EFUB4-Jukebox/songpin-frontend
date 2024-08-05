@@ -30,7 +30,7 @@ import Main from "./pages/IntroducePage/Main";
 import MyPinSearchPage from "./pages/MyPage/MyPinSearchPage";
 import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
 import {
   postAllMarkers,
@@ -163,7 +163,53 @@ export default App;
 
 function MapLayout({ allPins, recentPins, handleFilterChange }) {
   const navigate = useNavigate();
+  const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
+  const [lat, setLat] = useState(defaultCenter.lat);
+  const [lng, setLng] = useState(defaultCenter.lng);
+
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
+  const groupPinsByLocation = (pins) => {
+    const groupedPins = pins.reduce((acc, pin) => {
+      const key = `${pin.latitude},${pin.longitude}`;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(pin);
+      return acc;
+    }, {});
+    return groupedPins;
+  };
+
+  const groupedPins = groupPinsByLocation(pinsToDisplay);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const { latitude, longitude } = position.coords;
+          const isValidLocation =
+            latitude >= 33.0 && latitude <= 38.0 && longitude >= 124.0 && longitude <= 132.0;
+
+          if (isValidLocation) {
+            setLat(latitude);
+            setLng(longitude);
+          } else {
+            setLat(defaultCenter.lat);
+            setLng(defaultCenter.lng);
+          }
+        },
+        function () {
+          setLat(defaultCenter.lat);
+          setLng(defaultCenter.lng);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
+    }
+  }, []);
 
   return (
     <div
@@ -174,7 +220,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
       }}
     >
       <Map
-        center={{ lat: 37.56011030387691, lng: 126.94585449321849 }}
+        center={{ lat, lng }}
         style={{
           position: "absolute",
           top: 0,
@@ -185,39 +231,39 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           pointerEvents: "auto",
         }}
       >
-        {pinsToDisplay.length > 0 &&
-          pinsToDisplay.map(pin => (
-            <MarkerContainer key={pin.id}>
+        {Object.entries(groupedPins).map(([key, pins]) => {
+          const pin = pins[0]; // 대표로 사용할 핀 데이터
+          const pinCount = pins.length;
+
+          return (
+            <MarkerContainer key={key}>
               <MapMarker
                 position={{ lat: pin.latitude, lng: pin.longitude }}
                 image={{
                   src: genreImages[pin.latestGenreName] || extra,
-                  size: {
-                    width: 114,
-                    height: 114,
-                  },
-                  options: {
-                    offset: {
-                      x: 57,
-                      y: 57,
-                    },
-                  },
+                  size: { width: 114, height: 114 },
+                  options: { offset: { x: 57, y: 57 } },
                 }}
                 onClick={() => {
-                  if (pin.placePinCount >= 2) {
+                  if (pinCount >= 2) {
                     navigate(`/details-place/${pin.placeId}`);
                   } else {
                     navigate(`/details-song/${pin.latestSongId}`);
                   }
                 }}
               />
-              {pin.placePinCount > 1 && (
-                <PinNum>
-                  {pin.placePinCount}
+              {pinCount > 1 && (
+                <PinNum
+                  style={{
+                    fontSize: pinCount >= 10 ? 16 : 20,
+                  }}
+                >
+                  {pinCount}
                 </PinNum>
               )}
             </MarkerContainer>
-          ))}
+          );
+        })}
       </Map>
       <div
         style={{
