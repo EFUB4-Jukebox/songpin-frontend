@@ -137,8 +137,8 @@ const PlaylistBox = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 309px;
-  height: 309px;
+  width: 310px;
+  height: 310px;
   border-radius: 18px 0px 0px 18px;
   border-right: 1px solid var(--f8f8f8, #fcfcfc);
   background: ${({ imageUrl }) =>
@@ -153,20 +153,22 @@ const SmallBoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1px;
+  height: 310px;
 `;
 
 const SmallBox = styled.div`
   width: 155px;
+  height: 155px;
   background: ${({ imageUrl }) =>
     imageUrl ? `url(${imageUrl}) no-repeat center center` : "#E7E7E7"};
   background-size: cover;
 
   &:first-child {
-    height: 154px;
+    /* height: 154px; */
     border-radius: 0px 18px 0px 0px;
   }
   &:last-child {
-    height: 155px;
+    /* height: 155px; */
     border-radius: 0px 0px 18px 0px;
   }
 `;
