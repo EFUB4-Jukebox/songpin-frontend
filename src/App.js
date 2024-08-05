@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled from 'styled-components';
 import {
   BrowserRouter as Router,
   Route,
@@ -138,9 +137,7 @@ function App() {
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
-
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -190,53 +187,55 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
         {pinsToDisplay.length > 0 &&
           pinsToDisplay.map(pin => (
             <div key={pin.id} style={{ position: "relative" }}>
-            <MapMarker
-              key={pin.id}
-              position={{ lat: pin.latitude, lng: pin.longitude }}
-              image={{
-                src: genreImages[pin.latestGenreName] || extra,
-                size: {
-                  width: 114,
-                  height: 114,
-                },
-                options: {
-                  offset: {
-                    x: 57,
-                    y: 57,
+              <MapMarker
+                position={{ lat: pin.latitude, lng: pin.longitude }}
+                image={{
+                  src: genreImages[pin.latestGenreName] || extra,
+                  size: {
+                    width: 114,
+                    height: 114,
                   },
-                },
-              }}
-              onClick={() => {
-                if (pin.placePinCount >= 2) {
-                  navigate(`/details-place/${pin.placeId}`);
-                } else {
-                  navigate(`/details-song/${pin.latestSongId}`);
-                }
-              }}
-            >
-            {pin.placePinCount > 1 && (
-                  <PinNum
-                    style={{
-                      position: "absolute",
-                      //top: "-20px", // Adjust to position above marker
-                      //left: "50%",
-                      //transform: "translateX(-50%)",
-                      background: "transparent",
-                      color: "black",
-                      borderRadius: "50%",
-                      width: 30,
-                      height: 30,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      zIndex: 1,
-                    }}
-                  >
-                    {pin.placePinCount}
-                  </PinNum>
-                )}
+                  options: {
+                    offset: {
+                      x: 57,
+                      y: 57,
+                    },
+                  },
+                }}
+                onClick={() => {
+                  if (pin.placePinCount >= 2) {
+                    navigate(`/details-place/${pin.placeId}`);
+                  } else {
+                    navigate(`/details-song/${pin.latestSongId}`);
+                  }
+                }}
+              >
+              {pin.placePinCount > 1 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "73px",
+                    left: "59px",
+                    // transform: "translate(-50%, -150%)", // 마커 위로 이동
+                    background: "transparent",
+                    color: "#FCFCFC",
+                    borderRadius: "50%",
+                    width: 30,
+                    height: 30,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    zIndex: 10,
+                    WebkitTextStrokeWidth: "1.2100000381469727",
+                    WebkitTextStrokeColor: "#232323",
+                    //pointerEvents: "none",
+                  }}
+                >
+                  {pin.placePinCount}
+                </div>
+              )}
               </MapMarker>
             </div>
           ))}
@@ -261,7 +260,6 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
@@ -284,7 +282,6 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           position: "absolute",
           top: 0,
           left: 0,
-          //width: "50px",
           height: "100%",
           zIndex: 1,
         }}
@@ -295,20 +292,3 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
     </div>
   );
 }
-
-// const PinNum = styled.div`
-//     display: flex;
-//     justify-content: flex-start;
-//     margin-top: 40px;
-//     margin-bottom: 64px;
-//     margin-left: 38px;
-//     color: var(--light_black, #232323);
-//     /* title_bold */
-//     font-family: Pretendard;
-//     font-size: 32px;
-//     font-style: normal;
-//     font-weight: 700;
-//     line-height: 40px;
-//     white-space: pre-wrap;
-//     line-height: 1.5em;
-// `;
