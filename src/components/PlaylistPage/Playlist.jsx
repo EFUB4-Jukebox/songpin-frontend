@@ -181,7 +181,7 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  margin-left: 8px;
+  margin-left: 2px;
 `;
 
 const PinBox = styled.div`
@@ -214,7 +214,7 @@ const UpdatedDate = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   height: 24px;
-  padding: 8px;
+  padding: 8px 8px 8px 2px;
 `;
 
 const LockImg = styled.img`
