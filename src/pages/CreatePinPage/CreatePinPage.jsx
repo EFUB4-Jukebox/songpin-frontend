@@ -33,8 +33,8 @@ const CreatePinPage = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (location) => {
-    const params = location.split('/');
+  const handleNavigate = location => {
+    const params = location.split("/");
     const songId = params[2];
     navigate(`/details-song/${songId}`);
   };
@@ -94,11 +94,13 @@ const CreatePinPage = () => {
     };
     console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
-    const response = await postNewPin(request);
-    const location = response.headers.get('location');
-    if (location)
-    {
-      handleNavigate(location);
+    const res = await postNewPin(request);
+    console.log(res.headers.location.slice(7));
+    const songInfo = res.headers.location.slice(7);
+    if (songInfo) {
+      const songId = Number(songInfo);
+      console.log(songId);
+      navigate(`/details-song/${songId}`);
     }
   };
 
@@ -381,9 +383,10 @@ const StyledCalendar = styled(Calendar)`
       font-weight: bold;
     }
   }
-  
+
   .react-calendar__month-view__days__day--weekend {
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: #00bfff;
     }
   }
@@ -411,7 +414,8 @@ const StyledCalendar = styled(Calendar)`
     background-size: 15%;
     color: white;
 
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: white;
     }
   }
