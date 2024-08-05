@@ -15,7 +15,7 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
-import { postNewPin } from "../../services/api/create";
+import { postNewPin } from "../../services/api/pin";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);

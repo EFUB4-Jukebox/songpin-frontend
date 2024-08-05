@@ -18,3 +18,14 @@ export const postNewPin = async (request) => {
         throw new Error("핀 생성 실패");
     }
 };
+
+export const deletePin = async (pinId) => {
+    const url = `/pins/${pinId}`;
+    try {
+        await client.delete(url);
+        console.log("핀 삭제 성공!");
+    } catch (error) {
+        console.error("핀 삭제 실패", error);
+        throw error;
+    }
+};
