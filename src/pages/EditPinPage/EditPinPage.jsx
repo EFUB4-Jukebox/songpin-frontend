@@ -268,12 +268,16 @@ const MemoArea = styled.textarea`
     border: none;
     border-radius: 8px;
     background: var(--offwhite, #EFEFEF);
-    color: var(--gray02, #747474);
+    color: var(--light_black, #232323);
     font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
+
+    &::placeholder {
+    color: var(--gray02, #747474);
+    }
 `;
 
 const TextNum = styled.p`
