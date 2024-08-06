@@ -61,18 +61,21 @@ const Center = styled.div`
   transform: translateX(-50%);
 `;
 const Bottom = styled.div`
-  position: fixed;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  cursor: pointer;
+  img {
+    width: 810.9px;
+    height: 366.3px;
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
 `;
 const BottomText = styled.div`
   position: fixed;
   left: 50%;
   bottom: 80px;
   transform: translateX(-50%);
-
   z-index: 2;
   cursor: pointer;
 `;
