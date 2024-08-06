@@ -39,7 +39,9 @@ const MyPlaylists = ({ myPlaylistData }) => {
         <>
           <PlaylistOverview>
             <PlaylistTimes>
-              <PlaylistIcon src={musicLibraryIcon} />
+              <Img>
+                <PlaylistIcon src={musicLibraryIcon} />
+              </Img>
               <Num>{myPlaylistCount}</Num>
             </PlaylistTimes>
             <CreateNewPlaylist onClick={openCreatePlaylist}>
@@ -80,7 +82,7 @@ export default MyPlaylists;
 const PlaylistsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 30px;
   margin-bottom: 30px;
 `;
 
@@ -88,20 +90,26 @@ const PlaylistOverview = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 38px;
+  margin-left: 34px;
   margin-right: 40px;
 `;
 
 const PlaylistTimes = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 10px;
+`;
+const Img = styled.div`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const PlaylistIcon = styled.img`
-  width: 30px;
-  height: 30px;
   flex-shrink: 0;
-  padding-right: 8px;
 `;
 
 const Num = styled.div`
@@ -111,7 +119,6 @@ const Num = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding-top: 2px;
 `;
 
 const CreateNewPlaylist = styled.div`

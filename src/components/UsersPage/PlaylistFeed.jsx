@@ -14,7 +14,6 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
     <PlaylistFeedContainer>
       <PinBox>
         <Img>
-          {" "}
           <PinImg src={pinImage} alt="핀이미지" />
         </Img>
         <PinNum>{playlistCount}</PinNum>
@@ -48,8 +47,11 @@ const PinBox = styled.div`
   gap: 10px;
 `;
 const Img = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const PinImg = styled.img`
   flex-shrink: 0;
