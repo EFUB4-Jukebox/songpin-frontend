@@ -31,9 +31,10 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
   };
 
   const handleDeletePlaylist = () => {
+    navigate(-1);
     setIsDeleteModalOpen(false);
     deletePlaylist(playlistId);
-    navigate(-1);
+
     // window.location.reload();
   };
 
