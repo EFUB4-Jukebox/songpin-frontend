@@ -141,7 +141,7 @@ const EditPinPage = () => {
                         <span>/200</span>
                     </TextNum>
                     <IsPublic>
-                        <Title>공개 여부</Title>
+                        <Title>메모 공개 여부</Title>
                         <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
                     </IsPublic>
                     <CreateBtn
