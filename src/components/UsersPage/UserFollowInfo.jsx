@@ -25,7 +25,7 @@ const UserFollowInfo = ({
         setIsFollowing(!isFollowing);
       } else {
         const addFollowingId = {
-          targetMemberId: followId,
+          targetMemberId: memberId,
         };
         const res = await addFollowing(addFollowingId);
         console.log(res, "팔로잉 추가");

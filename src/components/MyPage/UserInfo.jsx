@@ -59,8 +59,8 @@ const UserInfoBox = styled.div`
 `;
 
 const UserLogo = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
 `;
 
 const UserNameBox = styled.div`
@@ -72,7 +72,7 @@ const UserName = styled.div`
   color: var(--light_black, #232323);
   font-size: 20px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: normal;
   height: 24px;
   margin-top: 5px;

@@ -67,6 +67,7 @@ export const addFollowing = async followId => {
 export const getFollowerList = async memberId => {
   try {
     const data = await get(`/members/${memberId}/followers`);
+    console.log(data);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
