@@ -117,15 +117,15 @@ const UserInformation = styled.div`
 `;
 
 const UserLogo = styled.img`
-  width: 60px;
-  height: 60px;
-  padding-right: 32px;
+  width: 70px;
+  height: 70px;
 `;
 
 const UserNameBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin-left: 28px;
+  margin-top: 8px;
 `;
 
 const UserName = styled.div`
@@ -138,6 +138,7 @@ const UserName = styled.div`
 `;
 
 const UserMail = styled.div`
+  margin-top: 6px;
   color: var(--gray02, #747474);
   font-family: Pretendard;
   font-size: 16px;
@@ -154,6 +155,7 @@ const ProfileEditBtn = styled.div`
   font-weight: 400;
   line-height: 140%; /* 28px */
   cursor: pointer;
+  margin-top: 8px;
 `;
 
 const ClickBtnsSection = styled.div`

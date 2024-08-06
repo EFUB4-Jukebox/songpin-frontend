@@ -66,24 +66,24 @@ const UserLogo = styled.img`
 const UserNameBox = styled.div`
   flex-direction: column;
   margin-left: 28px;
+  margin-top: 8px;
 `;
 
 const UserName = styled.div`
   color: var(--light_black, #232323);
-  font-size: 20px;
+  font-family: Pretendard;
+  font-size: 24px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  height: 24px;
-  margin-top: 5px;
 `;
 
 const UserId = styled.div`
+  margin-top: 6px;
   color: var(--gray02, #747474);
-
+  font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  height: 24px;
 `;
