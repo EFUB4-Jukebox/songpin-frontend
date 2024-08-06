@@ -4,7 +4,7 @@ import moreButton from "../../assets/images/MyPage/more-icon.svg";
 import SmallModal from "./Modal/SmallModal";
 import AddPlaylistModal from "./Modal/AddPlaylistModal";
 import { useNavigate } from "react-router-dom";
-import { deletePin } from '../../services/api/pin';
+import { deletePin } from "../../services/api/pin";
 
 const options = ["담기", "수정", "삭제"];
 
@@ -115,4 +115,7 @@ const ListItem = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   cursor: pointer;
+  &:hover {
+    color: #24ee81;
+  }
 `;

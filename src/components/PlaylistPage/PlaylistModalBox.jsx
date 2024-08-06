@@ -102,4 +102,7 @@ const ListItem = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   cursor: pointer;
+  &:hover {
+    color: #24ee81;
+  }
 `;
