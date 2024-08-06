@@ -77,5 +77,5 @@ const PlaylistSection = styled.div`
   padding: 32px 40px 0 40px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 28px 28px;
+  grid-gap: 28px 8px;
 `;
