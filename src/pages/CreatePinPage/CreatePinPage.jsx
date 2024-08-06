@@ -162,7 +162,7 @@ const CreatePinPage = () => {
           onClick={() => setShowCalendar(!showCalendar)}
         >
           {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
-          <CalendarImg />
+          <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
         </When>
         {showCalendar && (
           <CalendarContainer ref={calendarRef}>
@@ -512,7 +512,8 @@ const GenreContainer = styled.div`
 const SearchSongContainerWrapper = styled.div`
   display: flex;
   position: absolute;
-  left: 528px;
+  border-left: 0.5px solid lightgray;
+  left: 609px;
   width: 50%;
   height: 100%;
   z-index: 10;
@@ -521,7 +522,8 @@ const SearchSongContainerWrapper = styled.div`
 const SearchPlaceContainerWrapper = styled.div`
   display: flex;
   position: absolute;
-  left: 528px;
+  border-left: 0.5px solid lightgray;
+  left: 609px;
   width: 50%;
   height: 100%;
   z-index: 10;
