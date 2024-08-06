@@ -5,7 +5,7 @@ import { getMyProfile } from "../../services/api/myPage";
 import { ProfileImg } from "../../constants/ProfileImg";
 import { useQuery } from "@tanstack/react-query";
 
-const UserInfo = () => {
+const UserInfo = ({ myProfileData }) => {
   const [profileImg, setProfileImg] = useState();
   const [nickname, setNickname] = useState();
   const [handle, setHandle] = useState();
@@ -28,16 +28,14 @@ const UserInfo = () => {
   // const handle = profileData.handle;
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await getMyProfile();
-
-      console.log(res);
-      const img = ProfileImg.find(it => it.EngName === res.profileImg);
+    if (myProfileData) {
+      const img = ProfileImg.find(
+        it => it.EngName === myProfileData.profileImg,
+      );
       setProfileImg(img.imgSrc);
-      setNickname(res.nickname);
-      setHandle(res.handle);
-    };
-    getData();
+      setNickname(myProfileData.nickname);
+      setHandle(myProfileData.handle);
+    }
   }, []);
   return (
     <UserInfoBox>

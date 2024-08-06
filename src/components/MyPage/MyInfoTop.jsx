@@ -5,7 +5,7 @@ import Followers from "./Followers";
 import settingIcon from "../../assets/images/MyPage/settings.svg";
 import { useNavigate } from "react-router-dom";
 
-const MyInfoTop = () => {
+const MyInfoTop = ({ myProfileData }) => {
   const navigate = useNavigate();
   const goSettingsPage = () => {
     navigate("/settings");
@@ -15,7 +15,7 @@ const MyInfoTop = () => {
     <MyInfo>
       <Settings src={settingIcon} onClick={goSettingsPage}></Settings>
       <User>
-        <UserInfo />
+        <UserInfo myProfileData={myProfileData} />
         <Followers />
       </User>
     </MyInfo>

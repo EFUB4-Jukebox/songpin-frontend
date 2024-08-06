@@ -5,7 +5,7 @@ import Playlist from "./Playlist";
 import { getMyPlaylistBookmark } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const Bookmarks = () => {
+const Bookmarks = ({ myBookmarkData }) => {
   const [bookmarkCount, setBookmarkCount] = useState();
   const [bookmarkList, setBookmarkList] = useState([]);
 
@@ -18,29 +18,25 @@ const Bookmarks = () => {
   // const bookmarkList = data?.bookmarkList || [];
 
   useEffect(() => {
-    const getBookmark = async () => {
-      try {
-        const res = await getMyPlaylistBookmark();
-        console.log(res);
-        if (res) {
-          setBookmarkCount(res.bookmarkCount);
-          setBookmarkList(res.bookmarkList);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getBookmark();
-  }, []);
+    if (myBookmarkData) {
+      setBookmarkCount(myBookmarkData.bookmarkCount);
+      setBookmarkList(myBookmarkData.bookmarkList);
+    }
+  }, [myBookmarkData]);
+
   return (
     <BookmarkedContainer>
-      <PlaylistOverview>
-        <PlaylistIcon src={bookmark} />
-        <Num>{bookmarkCount}</Num>
-      </PlaylistOverview>
-      <PlaylistSection>
-        {bookmarkList && bookmarkList.map(it => <Playlist playlist={it} />)}
-      </PlaylistSection>
+      {myBookmarkData && (
+        <>
+          <PlaylistOverview>
+            <PlaylistIcon src={bookmark} />
+            <Num>{bookmarkCount}</Num>
+          </PlaylistOverview>
+          <PlaylistSection>
+            {bookmarkList && bookmarkList.map(it => <Playlist playlist={it} />)}
+          </PlaylistSection>
+        </>
+      )}
     </BookmarkedContainer>
   );
 };
