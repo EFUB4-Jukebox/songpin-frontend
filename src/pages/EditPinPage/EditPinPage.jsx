@@ -25,7 +25,7 @@ const EditPinPage = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
   const [pinData, setPinData] = useState("");
-
+  const [errorMsg, setErrorMsg] = useState("");
   const calendarRef = useRef(null);
   const navigate = useNavigate();
   const params = useParams();
@@ -71,16 +71,22 @@ const EditPinPage = () => {
   }, []);
 
   const handleEditPin = async e => {
-    e.preventDefault();
-    const request = {
-      listenedDate: moment(pinData.listenedDate).format("YYYY-MM-DD"),
-      genreName: selectedGenre?.EngName,
-      memo: pinData.memo,
-      visibility: isPublic ? "PUBLIC" : "PRIVATE",
-    };
-    console.log("수정된 핀 정보:", request);
-    const res = await editPin(params.pinId, request);
-    console.log("수정됐나?", res);
+    try {
+      e.preventDefault();
+      const request = {
+        listenedDate: moment(pinData.listenedDate).format("YYYY-MM-DD"),
+        genreName: selectedGenre?.EngName,
+        memo: pinData.memo,
+        visibility: isPublic ? "PUBLIC" : "PRIVATE",
+      };
+
+      console.log("수정된 핀 정보:", request);
+      const res = await editPin(params.pinId, request);
+      console.log("수정됐나?", res);
+      navigate(-1);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   useEffect(() => {
@@ -104,6 +110,24 @@ const EditPinPage = () => {
   const onClose = () => {
     setShowModal(false);
     navigate(-1);
+  };
+
+  const onDecide = async () => {
+    try {
+      const request = {
+        listenedDate: moment(pinData.listenedDate).format("YYYY-MM-DD"),
+        genreName: selectedGenre?.EngName,
+        memo: pinData.memo,
+        visibility: isPublic ? "PUBLIC" : "PRIVATE",
+      };
+
+      console.log("수정된 핀 정보:", request);
+      const res = await editPin(params.pinId, request);
+      console.log("수정됐나?", res);
+      navigate(-1);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
   return (
     <>
@@ -182,7 +206,11 @@ const EditPinPage = () => {
         </EditSection>
       </MainContainer>
       {showModal && (
-        <SmallModal text="편집한 내용을 저장할까요?" onClose={onClose} />
+        <SmallModal
+          text="편집한 내용을 저장할까요?"
+          onClose={onClose}
+          onDecide={onDecide}
+        />
       )}
     </>
   );
