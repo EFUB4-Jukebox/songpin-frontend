@@ -36,6 +36,8 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
       setShowSetTerm(false);
     }
     onFilterChange(term, selectedGenres);
+    setStartDate(null);
+    setEndDate(null);
   };
 
   const handleDateChange = date => {
@@ -137,6 +139,8 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
     const newPeriod = e.target.value;
     setSelectedPeriod(newPeriod);
     onFilterChange(newPeriod, selectedGenres);
+    setStartDate(null);
+    setEndDate(null);
   };
 
   return (
