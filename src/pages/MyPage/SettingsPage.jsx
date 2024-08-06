@@ -56,7 +56,7 @@ const SettingsPage = () => {
   const img = ProfileImg.find(it => it.EngName === profileData.profileImg);
   const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
   const nickname = profileData.nickname;
-  const email = profileData.email;
+  const handle = profileData.handle;
 
   return (
     <SideSection showSideBar={showSideBar}>
@@ -67,7 +67,7 @@ const SettingsPage = () => {
             <UserLogo src={profileImg} alt="User logo pop" />
             <UserNameBox>
               <UserName>{nickname}</UserName>
-              <UserMail>{email}</UserMail>
+              <UserMail>@{handle}</UserMail>
             </UserNameBox>
           </UserInformation>
           <ProfileEditBtn onClick={goEditPage}>프로필 편집</ProfileEditBtn>
