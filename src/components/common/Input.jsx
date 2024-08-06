@@ -23,7 +23,7 @@ const InputWrapper = styled.div`
   gap: 5px;
 
   input {
-    width: 475px;
+    width: 477.87px;
     height: 40px;
     font-size: 20px;
     padding: 10px;
