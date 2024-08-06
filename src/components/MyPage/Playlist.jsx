@@ -42,10 +42,10 @@ const Playlist = ({ playlist }) => {
       } else {
         await addBookmarkOne({ playlistId });
       }
-      setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error("북마크 변경에 실패했습니다.", error);
     }
+    setIsBookmarked(!isBookmarked);
   };
 
   const handlePlaylistClick = () => {
