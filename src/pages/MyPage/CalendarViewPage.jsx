@@ -9,10 +9,10 @@ import { getCalendarPin } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const startYear = 1980;
-const endYear = 2024;
-const years = [...Array(endYear - startYear + 1).keys()].map(
-  i => i + startYear,
+const startYear = 2024;
+const endYear = 1950;
+const years = [...Array(startYear - endYear + 1).keys()].map(
+  i => startYear - i,
 );
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
