@@ -33,13 +33,13 @@ const PinBox = styled.div`
   margin-bottom: 34px;
   margin-left: 34px;
   align-items: center;
+  gap: 10px;
 `;
 
 const PinImg = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   flex-shrink: 0;
-  margin-left: 9px;
 `;
 
 const PinNum = styled.div`
@@ -49,7 +49,6 @@ const PinNum = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  margin-left: 8px;
 `;
 
 const PinContainer = styled.div`
