@@ -7,7 +7,7 @@ import usePlaylistIdStore from "../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../store/usePlaylistInfoMsgStore";
 
 const AddPlaylistModal = ({ setModalCommon, pinId }) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const { playlistId } = usePlaylistIdStore();
   const { setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
 

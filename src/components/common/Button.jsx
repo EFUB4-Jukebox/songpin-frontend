@@ -11,6 +11,7 @@ const Button = ({ name, onClick, active }) => {
         <button
           className={active ? "activeButton" : "inactiveButton"}
           onClick={active ? onClick : null}
+          disabled={!active}
         >
           {name}
         </button>
@@ -35,7 +36,6 @@ const Wrapper = styled.div`
     line-height: 40px;
   }
   .inactiveButton {
-    cursor: pointer;
     width: 500px;
     height: 60px;
     flex-shrink: 0;
