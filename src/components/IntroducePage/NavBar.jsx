@@ -65,6 +65,7 @@ const NavBar = () => {
 };
 
 const Navbar = styled.nav`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   margin-top: 48px;

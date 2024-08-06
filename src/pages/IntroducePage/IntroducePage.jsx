@@ -91,9 +91,11 @@ const IntroducePage = () => {
 
   return (
     <div>
-      <BackgroundWrapper>
-        <Background2 />
-      </BackgroundWrapper>
+      <Background>
+        <BackgroundWrapper>
+          <Background2 />
+        </BackgroundWrapper>
+      </Background>
       <Wrapper>
         <NavBar />
         <Center>
@@ -136,40 +138,48 @@ const IntroducePage = () => {
 };
 
 export default IntroducePage;
-
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
+  min-width: 1920px;
+`;
 const BackgroundWrapper = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  min-width: 1920px;
+
   top: 0;
-  left: 0;
+  margin: auto;
   z-index: 0;
 `;
 
 const Wrapper = styled.div`
+  min-width: 1920px;
   position: relative;
   z-index: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
 `;
 
 const Center = styled.div`
+  min-width: 1920px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
   z-index: 1;
-  top: -30px;
 `;
 
 const CenterText = styled.div`
+  min-width: 1920px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: absolute;
   width: 100vw;
-  top: 8%;
-  margin: auto;
+  top: 10.5%;
   z-index: 2;
   .mainImg {
     animation: ${fadeInUp2} 1.5s ease-in-out forwards;
@@ -183,6 +193,7 @@ const Mid = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 115px;
+  position: relative;
 
   .second {
     display: flex;
@@ -237,9 +248,10 @@ const Mid = styled.div`
 `;
 
 const Bottom = styled.div`
-  position: relative;
-  bottom: 0;
-  left: 0;
   display: flex;
   justify-content: center;
+
+  img {
+    margin: auto;
+  }
 `;
