@@ -54,9 +54,12 @@ const PinFeed = ({ myPinFeedData }) => {
               <Search src={searchIcon} onClick={goMySearch} />
             </ShowIcons>
           </PinShow>
-          <PinsSection>
-            {pinFeedList &&
-              pinFeedList.map(it => (
+
+          {pinFeedList.length === 0 ? (
+            <PinfeedEmpty>아직 추가한 핀이 없습니다.</PinfeedEmpty>
+          ) : (
+            <PinsSection>
+              {pinFeedList.map(it => (
                 <PinMemoComponent
                   songId={it.songInfo.songId}
                   title={it.songInfo.title}
@@ -72,7 +75,8 @@ const PinFeed = ({ myPinFeedData }) => {
                   longitude={it.longitude}
                 />
               ))}
-          </PinsSection>
+            </PinsSection>
+          )}
         </>
       )}
     </PinFeedContainer>
@@ -141,4 +145,17 @@ const PinsSection = styled.div`
   align-items: center;
   padding-top: 32px;
   margin-bottom: 13px;
+`;
+
+const PinfeedEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

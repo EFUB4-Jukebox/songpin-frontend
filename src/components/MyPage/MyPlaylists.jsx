@@ -49,9 +49,11 @@ const MyPlaylists = ({ myPlaylistData }) => {
               <CreatePlaylistModal setModalCommon={openCreatePlaylist} />
             )}
           </PlaylistOverview>
-          <PlaylistSection>
-            {myPlaylist &&
-              myPlaylist.map(playlist => (
+          {myPlaylist.length === 0 ? (
+            <PlaylistListEmpty>플레이리스트가 비어있습니다.</PlaylistListEmpty>
+          ) : (
+            <PlaylistSection>
+              {myPlaylist.map(playlist => (
                 <Playlist
                   // key={it.playlistId}
                   // playlistId={it.playlistId}
@@ -65,7 +67,8 @@ const MyPlaylists = ({ myPlaylistData }) => {
                   onClick={() => handlePlaylistClick(playlist.playlistId)}
                 />
               ))}
-          </PlaylistSection>
+            </PlaylistSection>
+          )}
         </>
       )}
     </PlaylistsContainer>
@@ -128,4 +131,16 @@ const PlaylistSection = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 28px 8px;
+`;
+const PlaylistListEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

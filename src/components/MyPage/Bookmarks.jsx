@@ -32,9 +32,17 @@ const Bookmarks = ({ myBookmarkData }) => {
             <PlaylistIcon src={bookmark} />
             <Num>{bookmarkCount}</Num>
           </PlaylistOverview>
-          <PlaylistSection>
-            {bookmarkList && bookmarkList.map(it => <Playlist playlist={it} />)}
-          </PlaylistSection>
+          {bookmarkList ? (
+            <BookmarkListEmpty>
+              아직 북마크한 플레이리스트가 없습니다.
+            </BookmarkListEmpty>
+          ) : (
+            <PlaylistSection>
+              {bookmarkList.map(it => (
+                <Playlist playlist={it} />
+              ))}
+            </PlaylistSection>
+          )}
         </>
       )}
     </BookmarkedContainer>
@@ -78,4 +86,17 @@ const PlaylistSection = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 28px 8px;
+`;
+
+const BookmarkListEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;
