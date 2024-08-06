@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { resetPassword } from "../../services/api/myPage";
 import { patchResetPw } from "../../services/api/auth";
 
@@ -12,9 +12,37 @@ const PwResetPage = () => {
   const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
   const { uuid } = useParams();
+  const [confirmPasswordMsg, setConfirmPasswordMsg] = useState("");
+  const [passwordValid, setPasswordValid] = useState(false);
+
+  const validatePassword = password => {
+    const regex = /^[a-zA-Z0-9!@#$%^&*()]+$/;
+    return regex.test(password);
+  };
+
+  useEffect(() => {
+    if (newPassword === "")
+      setConfirmPasswordMsg(
+        "8~20자 이내, 영문 대소문자, 숫자, 특수문자 !@#$%^&*() 사용 가능",
+      );
+    else if (newPassword.length > 20 || newPassword.length < 8) {
+      setConfirmPasswordMsg("비밀번호는 최소 8자 이상, 20자 이내여야 합니다.");
+      setPasswordValid(false);
+    } else if (!validatePassword(newPassword)) {
+      setConfirmPasswordMsg(
+        "비밀번호는 영문 대소문자, 숫자, 특수문자 !@#$%^&*()만 사용 가능합니다.",
+      );
+      setPasswordValid(false);
+    } else if (confirmPassword !== "" && confirmPassword !== newPassword) {
+      setConfirmPasswordMsg("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmPasswordMsg("");
+      setPasswordValid(true);
+    }
+  }, [newPassword, confirmPassword]);
 
   const resetComplete = async () => {
-    if (newPassword === confirmPassword) {
+    if (passwordValid) {
       const resetPw = {
         password: newPassword,
         confirmPassword: confirmPassword,
@@ -66,11 +94,11 @@ const PwResetPage = () => {
         value={confirmPassword}
         onChange={handleConfirmPasswordChange}
         hasError={hasError}
-        infoMsg={hasError ? "비밀번호가 일치하지 않습니다." : ""}
+        infoMsg={confirmPasswordMsg ? confirmPasswordMsg : ""}
       />
       <ButtonWrapper>
         <Button
-          active={newPassword && confirmPassword && !hasError}
+          active={newPassword && confirmPassword && passwordValid}
           onClick={resetComplete}
           name="완료"
         />

@@ -1,6 +1,14 @@
 import styled from "styled-components";
 
-const Input = ({ placeholder, infoMsg, type, value, onChange, hasError }) => {
+const Input = ({
+  position,
+  placeholder,
+  infoMsg,
+  type,
+  value,
+  onChange,
+  hasError,
+}) => {
   return (
     <>
       <InputWrapper hasError={hasError}>
@@ -10,7 +18,9 @@ const Input = ({ placeholder, infoMsg, type, value, onChange, hasError }) => {
           value={value}
           onChange={onChange}
         />
-        {infoMsg && <div className="infoMsg">{infoMsg}</div>}
+        <div className="input">
+          {infoMsg && <div className="infoMsg">{infoMsg}</div>}
+        </div>{" "}
       </InputWrapper>
     </>
   );
