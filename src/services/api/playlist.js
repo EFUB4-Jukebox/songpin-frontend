@@ -120,6 +120,7 @@ export const editPlaylist = async (
   };
   try {
     const result = await patch(url, data);
+    console.log(result);
     return result;
   } catch (error) {
     console.error("Error updating playlist:", error);
