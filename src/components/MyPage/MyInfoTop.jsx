@@ -43,6 +43,6 @@ const Settings = styled.img`
 const User = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 32px 42px 58px 42px;
+  padding: 32px 42px 50px 42px;
   justify-content: space-between;
 `;
