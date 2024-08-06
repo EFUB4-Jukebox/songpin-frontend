@@ -330,7 +330,7 @@ const IsPublic = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 26px;
+  margin-top: 6px;
   margin-right: 32px;
 `;
 
@@ -339,7 +339,7 @@ const CreateBtn = styled.button`
   width: 462px;
   padding: 16px 0px;
   margin-left: 30px;
-  margin-top: 37px;
+  margin-top: 25px;
   margin-bottom: 45px;
   justify-content: center;
   align-items: center;
