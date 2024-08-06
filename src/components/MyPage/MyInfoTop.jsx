@@ -41,7 +41,6 @@ const Settings = styled.img`
 `;
 
 const User = styled.div`
-  margin-top: 17px;
   display: flex;
   flex-direction: row;
   padding: 30px 42px 20px 42px;

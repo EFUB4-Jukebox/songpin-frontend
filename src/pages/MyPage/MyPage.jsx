@@ -163,6 +163,7 @@ export default MyPage;
 const TopBar = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 17px;
 `;
 
 const PageSelect = styled.div`

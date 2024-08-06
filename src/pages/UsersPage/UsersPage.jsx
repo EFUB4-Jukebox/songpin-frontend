@@ -114,7 +114,7 @@ const ContentBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
-  padding-left: 34px;
+  padding-left: 41px;
   padding-right: 34px;
   padding-top: 40px;
 
@@ -125,7 +125,7 @@ const ContentBox2 = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
-  padding-left: 34px;
+  padding-left: 42px;
   padding-right: 34px;
   padding-top: 15px;
 
