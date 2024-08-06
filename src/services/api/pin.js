@@ -17,8 +17,8 @@ const put = async (url, data) => {
 
 export const postNewPin = async request => {
   try {
-    const response = await post("/pins", request);
-
+    const response = await client.post("/pins", request);
+    console.log(response);
     return response;
   } catch (error) {
     console.error("핀 생성 실패:", error);

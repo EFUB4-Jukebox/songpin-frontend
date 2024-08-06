@@ -19,8 +19,8 @@ const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const CalendarViewPage = () => {
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isMonthOpen, setIsMonthOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(2024); // 현재 날짜 반영
-  const [selectedMonth, setSelectedMonth] = useState(7); // 현재 날짜 반영
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // 현재 날짜 반영
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // 현재 날짜 반영
   const [showSideBar, setShowSideBar] = useState(true);
   // const [pinList, setPinList]=useState([]);
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ const CalendarViewPage = () => {
           <Calendar>
             <DateChoice>
               <DateSet onClick={togglingYear}>
-                <Date>{selectedYear}년</Date>
+                <DateWrapper>{selectedYear}년</DateWrapper>
                 <Dropdown src={dropdownIcon} isOpen={isYearOpen} />
               </DateSet>
               {isYearOpen && (
@@ -101,7 +101,7 @@ const CalendarViewPage = () => {
             </DateChoice>
             <DateChoice>
               <DateSet onClick={togglingMonth}>
-                <Date>{selectedMonth}월</Date>
+                <DateWrapper>{selectedMonth}월</DateWrapper>
                 <Dropdown src={dropdownIcon} isOpen={isMonthOpen} />
               </DateSet>
               {isMonthOpen && (
@@ -142,6 +142,7 @@ const CalendarViewPage = () => {
                 genre={it.genreName}
                 listenedDate={it.listenedDate}
                 placeName={it.placeName}
+                songId={it.songInfo.songId}
               />
             ))
           )}
@@ -192,7 +193,7 @@ const DateSet = styled.div`
   cursor: pointer;
 `;
 
-const Date = styled.div`
+const DateWrapper = styled.div`
   color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 24px;

@@ -163,9 +163,11 @@ export default MyPage;
 const TopBar = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 17px;
 `;
 
 const PageSelect = styled.div`
+  margin-top: 5px;
   display: flex;
   flex-direction: row;
   gap: 36px;

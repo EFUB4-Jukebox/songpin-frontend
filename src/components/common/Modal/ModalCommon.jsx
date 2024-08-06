@@ -46,7 +46,12 @@ const ModalCommon = ({
       <ModalWrapper ref={modalRef}>
         <div className="modalText">{modalText}</div>
         <InputButton>
-          {addPlaylist && <PlaylistDropdown placeholder={inputPlaceholder} />}
+          {addPlaylist && (
+            <PlaylistDropdown
+              setActive={setActive}
+              placeholder={inputPlaceholder}
+            />
+          )}
           {createPlaylist && (
             <CreatePlaylistBox>
               <Edit>

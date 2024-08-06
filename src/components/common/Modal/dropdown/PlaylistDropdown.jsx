@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import down from "../../../../assets/common/dropdown.svg";
 import styled from "styled-components";
 import Dropdown from "./Dropdown";
@@ -7,6 +7,7 @@ import { getMyPlaylist } from "../../../../services/api/myPage";
 import usePlaylistIdStore from "../../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../../store/usePlaylistInfoMsgStore";
 import pinIcon from "../../../../assets/images/MusicSearchPage/spark_122.svg";
+
 const PlaylistDropdown = ({ placeholder, setActive }) => {
   const [DropdownView, setDropdownView] = useState(false);
   const [initState, setInitState] = useState(placeholder);
@@ -14,6 +15,7 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   const { playlistInfoMsg, setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
   const [playlistList, setPlaylistList] = useState([]);
   const [selectPlaylist, setSelectPlaylist] = useState();
+  const hasSelected = useRef(false);
   useEffect(() => {
     setPlaylistInfoMsg("");
   }, []);
@@ -50,6 +52,13 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   const handleSelect = (playlistName, playlistId) => {
     setPlaylistId(playlistId);
     setSelectPlaylist(playlistName); // 선택된 항목으로 초기 상태 설정
+
+    // 처음 선택되었을 때만 setActive(true)를 호출
+    if (!hasSelected.current) {
+      setActive(true);
+      hasSelected.current = true;
+    }
+
     setDropdownView(false); // 드롭다운 숨기기
   };
 

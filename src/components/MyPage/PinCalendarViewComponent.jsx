@@ -15,14 +15,15 @@ const PinCalendarViewComponent = ({
   listenedDate,
   placeName,
   genre,
+  songId,
 }) => {
   const formattedCalendarDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
 
   const navigate = useNavigate();
-  const goMusicInfoPage = () => {
-    navigate("/details-song");
+  const goMusicInfoPage = songId => {
+    navigate(`/details-song/${songId}`);
   };
   const goLocation = () => {
     // 지도 위치 이동 코드 추가
@@ -38,7 +39,7 @@ const PinCalendarViewComponent = ({
       <AlbumImg src={imgPath} />
       <Content>
         <TitleSection>
-          <SongInfo onClick={goMusicInfoPage}>
+          <SongInfo onClick={() => goMusicInfoPage(songId)}>
             <SongTitle>
               {genreIcon && <SongIcon src={genreIcon} />}
               <TitleText>{title}</TitleText>

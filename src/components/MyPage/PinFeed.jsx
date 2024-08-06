@@ -54,9 +54,12 @@ const PinFeed = ({ myPinFeedData }) => {
               <Search src={searchIcon} onClick={goMySearch} />
             </ShowIcons>
           </PinShow>
-          <PinsSection>
-            {pinFeedList &&
-              pinFeedList.map(it => (
+
+          {pinFeedList.length === 0 ? (
+            <PinfeedEmpty>아직 추가한 핀이 없습니다.</PinfeedEmpty>
+          ) : (
+            <PinsSection>
+              {pinFeedList.map(it => (
                 <PinMemoComponent
                   songId={it.songInfo.songId}
                   title={it.songInfo.title}
@@ -72,7 +75,8 @@ const PinFeed = ({ myPinFeedData }) => {
                   longitude={it.longitude}
                 />
               ))}
-          </PinsSection>
+            </PinsSection>
+          )}
         </>
       )}
     </PinFeedContainer>
@@ -84,7 +88,7 @@ export default PinFeed;
 const PinFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 25px;
+  margin-top: 30px;
   /* width: 528px; */
 `;
 
@@ -92,22 +96,21 @@ const PinShow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 40px;
-  margin-right: 35px;
+  margin-left: 34px;
+  margin-right: 40px;
 `;
 
 const PinTimes = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
 `;
 
 const PinIcon = styled.img`
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  //opacity: 0.8;
-  padding-right: 8px;
 `;
 
 const Num = styled.div`
@@ -139,6 +142,19 @@ const PinsSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 32px;
+  padding-top: 34px;
   margin-bottom: 13px;
+`;
+
+const PinfeedEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

@@ -103,6 +103,7 @@ export default Followers;
 const FollowerComponent = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   /* margin: 32px 34px; */
 `;
 
@@ -145,11 +146,8 @@ const FollowBtn = styled.div`
   color: ${({ isFollowing }) =>
     isFollowing ? "var(--light_black, #232323)" : "var(--f8f8f8, #FCFCFC)"};
   display: flex;
-  width: 142px;
-  height: 30px;
   flex-direction: column;
   justify-content: center;
-  flex-shrink: 0;
   text-align: center;
   cursor: pointer;
   font-size: 20px;

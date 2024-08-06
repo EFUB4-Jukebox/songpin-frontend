@@ -156,15 +156,18 @@ const UserId = styled.div`
 `;
 
 const MenuText = styled.div`
-  color: var(--light_black, #232323);
+  color: ${props =>
+    props.isSelected ? "var(--light_black, #232323)" : "var(--gray, #BCBCBC)"};
+  /* color: var(--light_black, #232323); */
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  width: 212px;
+  width: 263px;
+  height: 27px;
   padding-top: 22px;
-  padding-bottom: 24px;
+  padding-bottom: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
