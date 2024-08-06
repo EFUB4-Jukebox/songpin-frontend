@@ -6,6 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import open_dropdown from "../../assets/filter/open_dropdown.svg";
 import close_dropdown from "../../assets/filter/close_dropdown.svg";
 import calendar_selected from "../../assets/filter/calendar_selected.svg";
+import more from "../../assets/filter/more_horiz.svg";
 import Genre from "../common/Genre";
 import { GenreList } from "../../constants/GenreList";
 
@@ -212,7 +213,22 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
         </SetTermWrapper>
       )}
       <SetGenre onClick={handleShowGenre}>
-        장르별
+        {selectedGenres.length > 0 ? (
+          <SelectedGenres>
+            <Genre
+              name={GenreList.find(genre => genre.id === selectedGenres[0]).name}
+              img={
+                GenreList.find(genre => genre.id === selectedGenres[0]).whiteImgSrc
+              }
+              bgColor={
+                GenreList.find(genre => genre.id === selectedGenres[0]).bgColor
+              }
+            />
+            {selectedGenres.length > 1 && <MoreIcon src={more} alt="more icon" />}
+          </SelectedGenres>
+        ) : (
+          "장르별"
+        )}
         <DropdownIcon
           src={showGenre ? close_dropdown : open_dropdown}
           alt="dropdown icon"
@@ -226,9 +242,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
                 key={genre.id}
                 name={genre.name}
                 img={
-                  selectedGenres.includes(genre.id)
-                    ? genre.whiteImgSrc
-                    : genre.imgSrc
+                  selectedGenres.includes(genre.id) ? genre.whiteImgSrc : genre.imgSrc
                 }
                 bgColor={
                   selectedGenres.includes(genre.id) ? genre.bgColor : null
@@ -341,12 +355,23 @@ const SelectedDateText = styled.div`
   font-size: 18px;
   font-weight: 500;
 `;
+const SelectedGenres = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -10px;
+`;
+
+const MoreIcon = styled.img`
+  //margin-left: 4px;
+`;
 
 const SetGenre = styled.div`
   position: relative;
   display: flex;
   padding: 10px 16px 10px 20px;
-  width: 86px;
+  width: auto;
   height: 24px;
   justify-content: center;
   align-items: center;
