@@ -212,7 +212,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
           )}
         </SetTermWrapper>
       )}
-      <SetGenre onClick={handleShowGenre}>
+      <SetGenre hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
         {selectedGenres.length > 0 ? (
           <SelectedGenres>
             <Genre
@@ -335,7 +335,7 @@ const SetTerm = styled.div`
   position: relative;
   display: flex;
   padding: 10px 14px;
-  /* width: 142px; */
+  width: 142px;
   height: 24px;
   justify-content: space-between;
   align-items: center;
@@ -360,7 +360,7 @@ const SelectedGenres = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin-left: -10px;
+  //margin-left: -4px;
 `;
 
 const MoreIcon = styled.img`
@@ -370,13 +370,18 @@ const MoreIcon = styled.img`
 const SetGenre = styled.div`
   position: relative;
   display: flex;
-  padding: 10px 16px 10px 20px;
+  /* padding: 10px 16px 10px 20px;
   width: auto;
-  height: 24px;
+  height: 24px; */
+  padding: ${props => (props.hasGenres ? "10px 16px 10px 16px" : "10px 16px 10px 20px")};
+  height: ${props => (props.hasGenres ? "auto" : "24px")};
+  width: ${props => (props.hasGenres ? "auto" : "142px")};
   justify-content: center;
   align-items: center;
   margin-left: 20px;
-  border-radius: 24px;
+  margin-top: ${props => (props.hasGenres ? "16px" : "0px")};
+  /* border-radius: 24px; */
+  border-radius: ${props => (props.hasGenres ? "51px" : "24px")};
   border: 1px solid var(--gray02, #747474);
   background: var(--offwhite_, #fcfcfc);
   font-family: Pretendard;
