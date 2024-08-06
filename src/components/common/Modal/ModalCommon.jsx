@@ -80,7 +80,7 @@ const Wrapper = styled.div`
   background: rgba(0, 0, 0, 0.2);
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;

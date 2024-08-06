@@ -179,16 +179,15 @@ const Background2 = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <canvas
         id="ballanimation"
         ref={canvasRef}
-        width="1920"
-        height="1080"
+        width="1920px"
+        height="1080px"
         style={{
           border: "none",
-          display: "flex",
-          justifyContent: "center",
+
           margin: "auto",
         }}
       />
@@ -200,7 +199,7 @@ const Background2 = () => {
           style={{ display: "none" }}
         />
       ))}
-    </>
+    </div>
   );
 };
 

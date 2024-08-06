@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import nobookmark from "../../assets/images/MyPage/bookmark-no.svg";
 import yesbookmark from "../../assets/images/MyPage/bookmark-yes.svg";
@@ -19,10 +19,21 @@ const Playlist = ({ playlist }) => {
     bookmarkId,
     playlistId,
   } = playlist;
+
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(bookmarkId ? true : false);
   const isPrivate = playlist.visibility === "PRIVATE";
+  const [title, setTitle] = useState(playlistName);
+  const [titleWidth, setTitleWidth] = useState(0);
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      const width = titleRef.current.offsetWidth;
+      setTitleWidth(width);
+    }
+  }, [title]);
 
   const toggleBookmark = async () => {
     try {
@@ -31,17 +42,17 @@ const Playlist = ({ playlist }) => {
       } else {
         await addBookmarkOne({ playlistId });
       }
-      setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error("북마크 변경에 실패했습니다.", error);
     }
+    setIsBookmarked(!isBookmarked);
   };
 
   const handlePlaylistClick = () => {
     navigate(`/playlists/${playlistId}`);
   };
 
-  const formattedUpdateDate = format(new Date(updatedDate), "yy.MM.dd", {
+  const formattedUpdateDate = format(new Date(updatedDate), "20yy.MM.dd", {
     locale: ko,
   });
 
@@ -63,14 +74,22 @@ const Playlist = ({ playlist }) => {
       <PlaylistNameBox>
         {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
         <PlaylistNameContainer
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={() => {
+            if (titleWidth > 210) setIsHovered(true);
+          }}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handlePlaylistClick}
         >
-          <PlaylistName onClick={handlePlaylistClick} isHovered={isHovered}>
-            {playlistName}
+          <PlaylistName
+            ref={titleRef}
+            onClick={handlePlaylistClick}
+            isHovered={isHovered}
+          >
+            {titleWidth > 210
+              ? `${title} ${String.fromCharCode(8195)} ${String.fromCharCode(8195)} ${title}`
+              : title}
           </PlaylistName>
-          <FadeOut />
+          {titleWidth > 210 && <FadeOut />}
         </PlaylistNameContainer>
       </PlaylistNameBox>
       <NameBox>
@@ -139,11 +158,6 @@ const BookmarkBtn = styled.img`
   padding: 10px;
   cursor: pointer;
   fill: #f8f8f8;
-  /* fill: ${props => (props.onClick ? "#f8f8f8" : "none")}; */
-  /* fill: ${props => (props.onClick ? "#f8f8f8" : "none")}; */
-  /* &:hover {
-    fill: #f8f8f8;
-  } */
 `;
 
 const PlaylistNameContainer = styled.div`
@@ -174,8 +188,6 @@ const PlaylistName = styled.div`
   white-space: nowrap;
   animation: ${props => (props.isHovered ? scrollText : "none")} 9s linear
     infinite;
-  animation: ${props => (props.isHovered ? scrollText : "none")} 9s linear
-    infinite;
 `;
 
 const FadeOut = styled.div`
@@ -204,7 +216,6 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  margin-left: 8px;
 `;
 
 const PinBox = styled.div`
@@ -237,7 +248,6 @@ const UpdatedDate = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   height: 24px;
-  padding-left: 8px;
 `;
 
 const LockImg = styled.img`

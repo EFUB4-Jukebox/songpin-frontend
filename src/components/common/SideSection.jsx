@@ -12,18 +12,14 @@ const SideSection = ({ children, showSideBar }) => {
 
   return (
     <SideComponent>
-      <SideBarContainer>
-      {showSideBar && (
-        <SideBar />
-      )}
-      </SideBarContainer>
+      <SideBarContainer>{showSideBar && <SideBar />}</SideBarContainer>
       <SideBox isOpen={isOpen}>
         <Content>{children}</Content>
       </SideBox>
       <BoxHandle>
-          <CloseBar onClick={handleSideBox}>
-            <Arrow src={arrowIcon} isOpen={isOpen} />
-          </CloseBar>
+        <CloseBar onClick={handleSideBox}>
+          <Arrow src={arrowIcon} isOpen={isOpen} />
+        </CloseBar>
       </BoxHandle>
     </SideComponent>
   );

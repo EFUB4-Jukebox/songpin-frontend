@@ -16,7 +16,7 @@ const PinCalendarViewComponent = ({
   placeName,
   genre,
 }) => {
-  const formattedCalendarDate = format(new Date(listenedDate), "yy.MM.dd", {
+  const formattedCalendarDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
 
@@ -61,9 +61,9 @@ export default PinCalendarViewComponent;
 
 const PinBox = styled.div`
   width: 436px;
-  height: 74px;
+  height: 80px;
   margin: 0 33px 12px 33px;
-  padding: 11px 12px 15px 14px;
+  padding: 11px 12px 9px 12px;
   flex-shrink: 0;
   border-radius: 8px;
   background: var(--offwhite, #efefef);
@@ -85,20 +85,22 @@ const AlbumImg = styled.img`
   height: 78px;
   flex-shrink: 0;
   border-radius: 4px;
-  padding-right: 25px;
+  margin-right: 25px;
+  margin-bottom: 2px;
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 333px;
 `;
 
 const TitleSection = styled.div`
   display: flex;
   flex-direction: row;
   padding-top: 4px;
-  gap: 170px;
+  justify-content: space-between;
 `;
 
 const SongInfo = styled.div`
@@ -149,6 +151,7 @@ const Info = styled.div`
   justify-content: flex-end;
   white-space: nowrap;
   cursor: pointer;
+  padding-right: 11px;
 `;
 
 const CalendarDate = styled.div`

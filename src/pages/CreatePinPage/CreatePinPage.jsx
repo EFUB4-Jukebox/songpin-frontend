@@ -15,7 +15,7 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
-import { postNewPin } from "../../services/api/create";
+import { postNewPin } from "../../services/api/pin";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -33,8 +33,10 @@ const CreatePinPage = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate("/details-song"); // 곡 ID로 수정
+  const handleNavigate = location => {
+    const params = location.split("/");
+    const songId = params[2];
+    navigate(`/details-song/${songId}`);
   };
 
   const onInputHandler = e => {
@@ -90,15 +92,15 @@ const CreatePinPage = () => {
       memo: memo,
       visibility: isPublic ? "PUBLIC" : "PRIVATE",
     };
-    console.log(selectedPin);
+    console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
-    const response = await postNewPin(request);
-    console.log("PostPin response:", response);
-    if (response && response.status === 201) {
-      console.log("Pin Post Success");
-      handleNavigate();
-    } else {
-      console.error("Failed to post Pin:", response);
+    const res = await postNewPin(request);
+    console.log(res.headers.location.slice(7));
+    const songInfo = res.headers.location.slice(7);
+    if (songInfo) {
+      const songId = Number(songInfo);
+      console.log(songId);
+      navigate(`/details-song/${songId}`);
     }
   };
 
@@ -181,7 +183,7 @@ const CreatePinPage = () => {
           <span>/200</span>
         </TextNum>
         <IsPublic>
-          <Title>공개 여부</Title>
+          <Title>메모 공개 여부</Title>
           <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
         </IsPublic>
         <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
@@ -304,12 +306,16 @@ const MemoArea = styled.textarea`
   border: none;
   border-radius: 8px;
   background: var(--offwhite, #efefef);
-  color: var(--gray02, #747474);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+
+  &::placeholder {
+    color: var(--gray02, #747474);
+  }
 `;
 
 const TextNum = styled.p`
@@ -328,7 +334,7 @@ const IsPublic = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 26px;
+  margin-top: 6px;
   margin-right: 32px;
 `;
 
@@ -337,7 +343,7 @@ const CreateBtn = styled.button`
   width: 462px;
   padding: 16px 0px;
   margin-left: 30px;
-  margin-top: 37px;
+  margin-top: 25px;
   margin-bottom: 45px;
   justify-content: center;
   align-items: center;
@@ -381,9 +387,10 @@ const StyledCalendar = styled(Calendar)`
       font-weight: bold;
     }
   }
-  
+
   .react-calendar__month-view__days__day--weekend {
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: #00bfff;
     }
   }
@@ -411,7 +418,8 @@ const StyledCalendar = styled(Calendar)`
     background-size: 15%;
     color: white;
 
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: white;
     }
   }

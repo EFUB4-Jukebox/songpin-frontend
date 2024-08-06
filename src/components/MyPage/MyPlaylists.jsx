@@ -7,7 +7,7 @@ import { getMyPlaylist } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-const MyPlaylists = () => {
+const MyPlaylists = ({ myPlaylistData }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [myPlaylistCount, setMyPlaylistCount] = useState();
@@ -27,50 +27,47 @@ const MyPlaylists = () => {
   // const myPlaylist = data.playlistList;
 
   useEffect(() => {
-    const getPlaylist = async () => {
-      try {
-        const res = await getMyPlaylist();
-        console.log(res);
-        if (res) {
-          setMyPlaylistCount(res.playlistCount);
-          setMyPlaylist(res.playlistList);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getPlaylist();
-  }, []);
+    if (myPlaylistData) {
+      setMyPlaylistCount(myPlaylistData.playlistCount);
+      setMyPlaylist(myPlaylistData.playlistList);
+    }
+  }, [myPlaylistData]);
 
   return (
     <PlaylistsContainer>
-      <PlaylistOverview>
-        <PlaylistTimes>
-          <PlaylistIcon src={musicLibraryIcon} />
-          <Num>{myPlaylistCount}</Num>
-        </PlaylistTimes>
-        <CreateNewPlaylist onClick={openCreatePlaylist}>
-          새 플레이리스트 만들기
-        </CreateNewPlaylist>
-        {isOpen && <CreatePlaylistModal setModalCommon={openCreatePlaylist} />}
-      </PlaylistOverview>
-      <PlaylistSection>
-        {myPlaylist &&
-          myPlaylist.map(playlist => (
-            <Playlist
-              // key={it.playlistId}
-              // playlistId={it.playlistId}
-              // playlistName={it.playlistName}
-              // creatorNickname={it.creatorNickname}
-              // pinCount={it.pinCount}
-              // updateDate={it.updatedDate}
-              // bookmarkId={it.bookmarkId}
-              key={playlist.playlistId}
-              playlist={playlist}
-              onClick={() => handlePlaylistClick(playlist.playlistId)}
-            />
-          ))}
-      </PlaylistSection>
+      {myPlaylistData && (
+        <>
+          <PlaylistOverview>
+            <PlaylistTimes>
+              <PlaylistIcon src={musicLibraryIcon} />
+              <Num>{myPlaylistCount}</Num>
+            </PlaylistTimes>
+            <CreateNewPlaylist onClick={openCreatePlaylist}>
+              새 플레이리스트 만들기
+            </CreateNewPlaylist>
+            {isOpen && (
+              <CreatePlaylistModal setModalCommon={openCreatePlaylist} />
+            )}
+          </PlaylistOverview>
+          <PlaylistSection>
+            {myPlaylist &&
+              myPlaylist.map(playlist => (
+                <Playlist
+                  // key={it.playlistId}
+                  // playlistId={it.playlistId}
+                  // playlistName={it.playlistName}
+                  // creatorNickname={it.creatorNickname}
+                  // pinCount={it.pinCount}
+                  // updateDate={it.updatedDate}
+                  // bookmarkId={it.bookmarkId}
+                  key={playlist.playlistId}
+                  playlist={playlist}
+                  onClick={() => handlePlaylistClick(playlist.playlistId)}
+                />
+              ))}
+          </PlaylistSection>
+        </>
+      )}
     </PlaylistsContainer>
   );
 };
@@ -95,7 +92,6 @@ const PlaylistOverview = styled.div`
 const PlaylistTimes = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
 `;
 
 const PlaylistIcon = styled.img`
@@ -112,6 +108,7 @@ const Num = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  padding-top: 2px;
 `;
 
 const CreateNewPlaylist = styled.div`
@@ -130,5 +127,5 @@ const PlaylistSection = styled.div`
   padding: 32px 40px 0 40px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 28px 28px;
+  grid-gap: 28px 8px;
 `;

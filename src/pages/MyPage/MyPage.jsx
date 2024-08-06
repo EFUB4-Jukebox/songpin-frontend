@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import MyInfoTop from "../../components/MyPage/MyInfoTop";
 import PinFeed from "../../components/MyPage/PinFeed";
 import MyPlaylists from "../../components/MyPage/MyPlaylists";
 import Bookmarks from "../../components/MyPage/Bookmarks";
 import SideSection from "../../components/common/SideSection";
+import spinner from "../../assets/common/spinner.svg";
+import {
+  getMyPinFeed,
+  getMyPlaylist,
+  getMyPlaylistBookmark,
+  getMyProfile,
+} from "../../services/api/myPage";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { useQuery } from "@tanstack/react-query";
 
 const MyPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  // const [myPinFeedData, setMypinFeedData] = useState();
+  // const [myPlaylistData, setMyPlaylistData] = useState();
+  // const [myBookmarkData, setMyBookmarkData] = useState();
+  // const [myProfileData, setMyProfileData] = useState();
 
   const handlePageClick = page => {
     setClickedPage(page);
@@ -29,35 +41,102 @@ const MyPage = () => {
     }
   }, []);
 
+  const { data: myPlaylistData, refetch: refetchPlaylist } = useQuery({
+    queryKey: ["getMyPlaylist"],
+    queryFn: getMyPlaylist,
+  });
+
+  const { data: myPinFeedData, refetch: refetchPinFeed } = useQuery({
+    queryKey: ["getMyPinFeed"],
+    queryFn: getMyPinFeed,
+  });
+
+  const { data: myBookmarkData, refetch: refetchBookmark } = useQuery({
+    queryKey: ["getMyPlaylistBookmark"],
+    queryFn: getMyPlaylistBookmark,
+  });
+
+  const { data: myProfileData, refetch: refetchProfile } = useQuery({
+    queryKey: ["getMyProfile"],
+    queryFn: getMyProfile,
+  });
+
+  // useEffect(() => {
+  //   const getMyFeed = async () => {
+  //     try {
+  //       const res = await getMyPinFeed();
+  //       const res2 = await getMyPlaylist();
+  //       const res3 = await getMyPlaylistBookmark();
+  //       const profileData = await getMyProfile();
+  //       console.log(res);
+  //       console.log(res2);
+  //       console.log(res3);
+  //       console.log(profileData);
+
+  //       if (res && res2 && res3 && profileData) {
+  //         setMypinFeedData(res);
+  //         setMyPlaylistData(res2);
+  //         setMyBookmarkData(res3);
+  //         setMyProfileData(profileData);
+  //       }
+  //     } catch (error) {
+  //       console.log("데이터 불러오기에 실패했습니다.", error);
+  //     }
+  //   };
+  //   getMyFeed();
+  // }, []);
+
+  useEffect(() => {
+    if (clickedPage === "playlist") {
+      refetchPlaylist();
+    } else if (clickedPage === "pinfeed") {
+      refetchPinFeed();
+    } else if (clickedPage === "bookmark") {
+      refetchBookmark();
+    }
+  }, [clickedPage, refetchPlaylist, refetchPinFeed, refetchBookmark]);
+
   return (
     <SideSection showSideBar={showSideBar}>
-      <MyInfoTop />
-      <TopBar>
-        <PageSelect>
-          <PageItem
-            onClick={() => handlePageClick("pinfeed")}
-            isActive={clickedPage === "pinfeed"}
-          >
-            핀 피드
-          </PageItem>
-          <PageItem
-            onClick={() => handlePageClick("playlist")}
-            isActive={clickedPage === "playlist"}
-          >
-            플레이리스트
-          </PageItem>
-          <PageItem
-            onClick={() => handlePageClick("bookmark")}
-            isActive={clickedPage === "bookmark"}
-          >
-            북마크
-          </PageItem>
-        </PageSelect>
-        <Line />
-      </TopBar>
-      {clickedPage === "playlist" && <MyPlaylists />}
-      {clickedPage === "bookmark" && <Bookmarks />}
-      {clickedPage === "pinfeed" && <PinFeed />}
+      {myPinFeedData && myProfileData ? (
+        <>
+          <MyInfoTop myProfileData={myProfileData} />
+          <TopBar>
+            <PageSelect>
+              <PageItem
+                onClick={() => handlePageClick("pinfeed")}
+                isActive={clickedPage === "pinfeed"}
+              >
+                핀 피드
+              </PageItem>
+              <PageItem
+                onClick={() => handlePageClick("playlist")}
+                isActive={clickedPage === "playlist"}
+              >
+                플레이리스트
+              </PageItem>
+              <PageItem
+                onClick={() => handlePageClick("bookmark")}
+                isActive={clickedPage === "bookmark"}
+              >
+                북마크
+              </PageItem>
+            </PageSelect>
+            <Line />
+          </TopBar>
+          {clickedPage === "playlist" && (
+            <MyPlaylists myPlaylistData={myPlaylistData && myPlaylistData} />
+          )}
+          {clickedPage === "bookmark" && (
+            <Bookmarks myBookmarkData={myBookmarkData && myBookmarkData} />
+          )}
+          {clickedPage === "pinfeed" && (
+            <PinFeed myPinFeedData={myPinFeedData && myPinFeedData} />
+          )}
+        </>
+      ) : (
+        <LoadingSpinner />
+      )}
     </SideSection>
   );
 };
@@ -111,21 +190,4 @@ const Line = styled.div`
   width: 528px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--gray, #bcbcbc);
-`;
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-size: 24px;
-  color: #333;
-`;
-
-const ErrorContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-size: 24px;
-  color: red;
 `;

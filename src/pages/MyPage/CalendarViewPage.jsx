@@ -7,11 +7,12 @@ import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import dropdownIcon from "../../assets/images/MyPage/arrow-down.svg";
 import { getCalendarPin } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const startYear = 1980;
-const endYear = 2024;
-const years = [...Array(endYear - startYear + 1).keys()].map(
-  i => i + startYear,
+const startYear = 2024;
+const endYear = 1950;
+const years = [...Array(startYear - endYear + 1).keys()].map(
+  i => startYear - i,
 );
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -21,6 +22,7 @@ const CalendarViewPage = () => {
   const [selectedYear, setSelectedYear] = useState(2024); // 현재 날짜 반영
   const [selectedMonth, setSelectedMonth] = useState(7); // 현재 날짜 반영
   const [showSideBar, setShowSideBar] = useState(true);
+  // const [pinList, setPinList]=useState([]);
   const navigate = useNavigate();
 
   const { isError, data, error } = useQuery({
@@ -29,17 +31,20 @@ const CalendarViewPage = () => {
     keepPreviousData: true, // 데이터가 로딩 중에도 이전 데이터를 유지
   });
 
-  if (!data) {
-    return <div>데이터가 없습니다.</div>;
-  }
+  // useEffect(()=>{
+  //   const getCalendarData = async()=>{
+  //     const res = await getCalendarPin({year: selectedYear, month: selectedMonth});
+  //     setPinList(res.pinList);
+  //   }; getCalendarData();
+  // },[])
 
   if (isError) {
     console.error("Error fetching user info:", error);
     return <div>오류 발생: {error.message}</div>;
   }
 
-  const calendarData = data;
-  const pinList = calendarData.pinList;
+  const calendarData = data && data;
+  const pinList = calendarData && calendarData.pinList;
 
   const togglingYear = () => {
     setIsYearOpen(!isYearOpen);
@@ -120,9 +125,13 @@ const CalendarViewPage = () => {
               )}
             </DateChoice>
           </Calendar>
-          {pinList.length === 0 ? (
+          {!pinList ? (
             <Empty>
-              <EmptyMessage>"해당 월에 들은 송핀이 없습니다"</EmptyMessage>
+              <LoadingSpinner />
+            </Empty>
+          ) : pinList.length === 0 ? (
+            <Empty>
+              <EmptyMessage>해당 월에 들은 송핀이 없습니다.</EmptyMessage>
             </Empty>
           ) : (
             pinList.map(it => (

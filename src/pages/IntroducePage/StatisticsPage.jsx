@@ -10,7 +10,6 @@ const StatisticsPage = () => {
     <div>
       <Wrapper>
         <NavBar />
-
         <BackgroundWrapper1>
           <StatBackground1 />
         </BackgroundWrapper1>
@@ -29,6 +28,7 @@ const StatisticsPage = () => {
 };
 const Wrapper = styled.div`
   position: relative;
+  min-width: 1920px;
 `;
 const BackgroundWrapper1 = styled.div`
   position: absolute;

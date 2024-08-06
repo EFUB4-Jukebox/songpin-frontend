@@ -14,56 +14,73 @@ import {
 const UserFollowPage = () => {
   const navigate = useNavigate();
   const { memberId: urlMemberId } = useParams();
-  const [selectedMenu, setSelectedMenu] = useState("followers");
-  const [followerList, setFollowerList] = useState([]);
-  const [followingList, setFollowingList] = useState([]);
-  const [profileData, setProfileData] = useState(null);
-  const [showSideBar, setShowSideBar] = useState(true);
 
-  const { isError, data, error } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-    enabled: !urlMemberId, // URL memberId가 있을 때는 getMyProfile 호출 안함
+  const [selectedMenu, setSelectedMenu] = useState(
+    new URL(window.location.href).searchParams.get("menu"),
+  );
+
+  // const [followerList, setFollowerList] = useState([]);
+  // const [followingList, setFollowingList] = useState([]);
+  // const [profileData, setProfileData] = useState(null);
+  const [showSideBar] = useState(true);
+
+  // useEffect(() => {
+  //   setProfileData(urlMemberId);
+  //   if (urlMemberId) {
+  //     // URL에서 memberId가 있으면 해당 사용자 프로필을 가져옴
+  //     setProfileData({ memberId: urlMemberId }); // 직접 설정하여 API 호출
+  //   } else if (data) {
+  //     // URL memberId가 없으면 getMyProfile 데이터 사용
+  //     setProfileData(data);
+  //   }
+  //   console.log("Profile Data:", profileData); // 디버깅
+  // }, [urlMemberId]);
+
+  const { data: followerData } = useQuery({
+    queryKey: ["getFollowerList", urlMemberId],
+    queryFn: () => getFollowerList(urlMemberId),
+    enabled: selectedMenu === "followers",
   });
 
-  useEffect(() => {
-    if (urlMemberId) {
-      // URL에서 memberId가 있으면 해당 사용자 프로필을 가져옴
-      setProfileData({ memberId: urlMemberId }); // 직접 설정하여 API 호출
-    } else if (data) {
-      // URL memberId가 없으면 getMyProfile 데이터 사용
-      setProfileData(data);
-    }
-    console.log("Profile Data:", profileData); // 디버깅
-  }, [urlMemberId, data]);
+  const { data: followingData } = useQuery({
+    queryKey: ["getFollowingList", urlMemberId],
+    queryFn: () => getFollowingList(urlMemberId),
+    enabled: selectedMenu === "following",
+  });
 
-  useEffect(() => {
-    const fetchFollowersOrFollowing = async () => {
-      if (profileData) {
-        try {
-          let res;
-          if (selectedMenu === "followers") {
-            res = await getFollowerList(profileData.memberId);
-            setFollowerList(res.followingList);
-          } else {
-            res = await getFollowingList(profileData.memberId);
-            setFollowingList(res.followingList);
-          }
-          if (!profileData.handle) {
-            setProfileData(prev => ({ ...prev, handle: res.handle }));
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    };
-    fetchFollowersOrFollowing();
-  }, [profileData, selectedMenu]);
+  const followerList = followerData?.followingList || [];
+  const followingList = followingData?.followingList || [];
+  const handle = new URL(window.location.href).searchParams.get("handle");
 
-  if (!profileData) return <div>데이터가 없습니다.</div>;
-  if (isError) return <div>오류 발생: {error.message}</div>;
+  // useEffect(() => {
+  //   const fetchFollowersOrFollowing =  () => {
+  //     if (profileData) {
+  //         if (selectedMenu === "followers") {
+  //           const {  data: getFollower } = useQuery({
+  //             queryKey: ["getFollowerList"],
+  //             queryFn: getFollowerList,
+  //           });
+  //           const followerList = getFollower.followerList;
+  //         }
+  //          else {
+  //           const {  data: getFollowing } = useQuery({
+  //             queryKey: ["getFollowerList"],
+  //             queryFn: getFollowerList,
+  //           });
+  //           const followingList = getFollowing.followingList;
 
-  const handle = profileData.handle;
+  //         }
+  //         if (!profileData.handle) {
+  //           setProfileData(prev => ({ ...prev, handle: res.handle }));
+  //         }
+  //       }
+
+  //   };
+  //   fetchFollowersOrFollowing();
+  // }, [profileData, selectedMenu]);
+
+  // if (!profileData) return <div>데이터가 없습니다.</div>;
+  // if (isError) return <div>오류 발생: {error.message}</div>;
 
   const handleBackClick = () => {
     navigate(-1);
@@ -91,11 +108,9 @@ const UserFollowPage = () => {
           </MenuText>
         </MenuBox>
       </ContentBox>
-      {selectedMenu === "followers" &&
-        followerList &&
-        followerList.length === 0 && (
-          <NoDataMessage>팔로워가 없습니다.</NoDataMessage>
-        )}
+      {selectedMenu === "followers" && followerList.length === 0 && (
+        <NoDataMessage>팔로워가 없습니다.</NoDataMessage>
+      )}
       {selectedMenu === "following" &&
         followingList &&
         followingList.length === 0 && (
