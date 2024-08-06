@@ -43,6 +43,7 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   }, []);
 
   const handleClickDropdown = () => {
+    setPlaylistInfoMsg("");
     setDropdownView(!DropdownView);
   };
 
@@ -99,9 +100,13 @@ const InfoWrapper = styled.div`
     line-height: 150%; /* 24px */
     margin-top: 12px;
     margin-bottom: 5px;
+    position: absolute;
+    right: 120px;
+    bottom: 200px;
   }
 `;
 const DropDownWrapper = styled.div`
+  margin-bottom: 30px;
   .dropdownButton {
     width: 500px;
     height: 60px;
@@ -145,6 +150,7 @@ const Wrapper = styled.div`
     padding-bottom: 30px;
     box-sizing: border-box;
     overflow-y: auto;
+
     .pinDetail {
       display: flex;
       gap: 100px;
@@ -154,6 +160,8 @@ const Wrapper = styled.div`
     .pinCount {
       display: flex;
       gap: 10px;
+      width: 60px;
+      justify-content: space-between;
     }
     &::-webkit-scrollbar {
       width: 7px;
