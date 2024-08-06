@@ -7,7 +7,7 @@ import { getMyPlaylist } from "../../../../services/api/myPage";
 import usePlaylistIdStore from "../../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../../store/usePlaylistInfoMsgStore";
 import pinIcon from "../../../../assets/images/MusicSearchPage/spark_122.svg";
-
+import lock from "../../../../assets/common/playlist_lock.svg";
 const PlaylistDropdown = ({ placeholder, setActive }) => {
   const [DropdownView, setDropdownView] = useState(false);
   const [initState, setInitState] = useState(placeholder);
@@ -79,8 +79,12 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
               {playlistList.map(it => (
                 <div className="pinDetail">
                   <li
+                    className="list"
                     onClick={() => handleSelect(it.playlistName, it.playlistId)}
                   >
+                    {it.visibility === "PRIVATE" && (
+                      <img className="lockImg" src={lock} />
+                    )}
                     {it.playlistName}
                   </li>
 
@@ -148,7 +152,7 @@ const DropDownWrapper = styled.div`
 const Wrapper = styled.div`
   ul {
     width: 500px;
-    max-height: 200px;
+    max-height: 160px;
     list-style: none;
     flex-shrink: 0;
     border: 1px solid var(--light_black, #232323);
@@ -159,7 +163,14 @@ const Wrapper = styled.div`
     padding-bottom: 30px;
     box-sizing: border-box;
     overflow-y: auto;
-
+    .lockImg {
+      margin-left: -5px;
+    }
+    .list {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
     .pinDetail {
       display: flex;
       gap: 100px;
