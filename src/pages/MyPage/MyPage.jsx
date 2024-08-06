@@ -41,22 +41,22 @@ const MyPage = () => {
     }
   }, []);
 
-  const { data: myPlaylistData } = useQuery({
+  const { data: myPlaylistData, refetch: refetchPlaylist } = useQuery({
     queryKey: ["getMyPlaylist"],
     queryFn: getMyPlaylist,
   });
 
-  const { data: myPinFeedData } = useQuery({
+  const { data: myPinFeedData, refetch: refetchPinFeed } = useQuery({
     queryKey: ["getMyPinFeed"],
     queryFn: getMyPinFeed,
   });
 
-  const { data: myBookmarkData } = useQuery({
+  const { data: myBookmarkData, refetch: refetchBookmark } = useQuery({
     queryKey: ["getMyPlaylistBookmark"],
     queryFn: getMyPlaylistBookmark,
   });
 
-  const { data: myProfileData } = useQuery({
+  const { data: myProfileData, refetch: refetchProfile } = useQuery({
     queryKey: ["getMyProfile"],
     queryFn: getMyProfile,
   });
@@ -85,6 +85,16 @@ const MyPage = () => {
   //   };
   //   getMyFeed();
   // }, []);
+
+  useEffect(() => {
+    if (clickedPage === "playlist") {
+      refetchPlaylist();
+    } else if (clickedPage === "pinfeed") {
+      refetchPinFeed();
+    } else if (clickedPage === "bookmark") {
+      refetchBookmark();
+    }
+  }, [clickedPage, refetchPlaylist, refetchPinFeed, refetchBookmark]);
 
   return (
     <SideSection showSideBar={showSideBar}>
