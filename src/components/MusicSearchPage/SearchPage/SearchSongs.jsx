@@ -138,7 +138,7 @@ const EmptySearchResult = styled.div`
 `;
 
 const BeforeMessage = styled.div`
-  color: var(--gray, #bcbcbc);
+  color: var(--gray, #747474);
   text-align: center;
   font-family: Pretendard;
   font-size: 20px;
@@ -147,6 +147,4 @@ const BeforeMessage = styled.div`
   line-height: 140%; /* 28px */
 `;
 
-const EmptyMessage = styled(BeforeMessage)`
-  color: var(--gray02, #747474);
-`;
+const EmptyMessage = styled(BeforeMessage)``;

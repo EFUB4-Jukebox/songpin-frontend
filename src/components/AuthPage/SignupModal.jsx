@@ -39,15 +39,15 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordMsg, setConfirmPasswordMsg] = useState(
-    "비밀번호는 20자 이내여야 합니다.",
+    "비밀번호는 8-20자 이내, 영문 대소문자, 숫자, 특수문자 !@#$%^&*()만 사용 가능합니다.",
   );
-  const [emailMsg, setEmailMsg] = useState("이메일은 50자 이내여야 합니다.");
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [emailMsg, setEmailMsg] = useState("");
   const [emailValid, setEmailValid] = useState(false);
   const [nicknameMsg, setNicknameMsg] = useState(
-    "닉네임은 8자 이내, 한글 문자, 영어 대소문자, 숫자 조합만 허용됩니다.",
+    "닉네임은 8자 이내, 한글, 영어 대소문자, 숫자만 사용 가능합니다.",
   );
   const [nicknameValid, setNicknameValid] = useState(false);
-  //const [hasError, setHasError] = useState(false);
 
   const validateEmail = email => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,12 +55,18 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
   };
 
   const validateNickname = nickname => {
-    const regex = /^[가-힣a-zA-Z0-9]{1,8}$/;
+    const regex = /^[가-힣a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ]{1,8}$/;
     return regex.test(nickname);
   };
 
+  const validatePassword = password => {
+    const regex = /^[a-zA-Z0-9!@#$%^&*()]+$/;
+    return regex.test(password);
+  };
+
   useEffect(() => {
-    if (email === "" || email.length > 50) {
+    if (email === "") setEmailMsg(<br />);
+    else if (email.length > 50) {
       setEmailMsg("이메일은 50자 이내여야 합니다.");
     } else if (!validateEmail(email)) {
       setEmailMsg("유효한 이메일 형식이 아닙니다.");
@@ -72,10 +78,13 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
   }, [email]);
 
   useEffect(() => {
-    if (nickname === "" || !validateNickname(nickname)) {
-      setNicknameMsg(
-        "닉네임은 8자 이내, 한글 문자, 영어 대소문자, 숫자 조합만 허용됩니다.",
-      );
+    if (nickname === "")
+      setNicknameMsg("8자 이내, 한글, 영문 대소문자, 숫자 사용 가능");
+    else if (nickname.length > 8) {
+      setNicknameMsg("닉네임은 8자 이내여야 합니다.");
+      setNicknameValid(false);
+    } else if (!validateNickname(nickname)) {
+      setNicknameMsg("닉네임은 한글, 영어 대소문자, 숫자만 사용 가능합니다.");
       setNicknameValid(false);
     } else {
       setNicknameMsg("사용 가능한 닉네임입니다.");
@@ -84,18 +93,41 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
   }, [nickname]);
 
   useEffect(() => {
-    if (password === "" || password.length > 20) {
-      setConfirmPasswordMsg("비밀번호는 20자 이내여야 합니다.");
-    } else if (password.length < 8) {
-      setConfirmPasswordMsg("비밀번호는 최소 8자 이상이어야 합니다.");
+    if (password === "")
+      setConfirmPasswordMsg(
+        "8~20자 이내, 영문 대소문자, 숫자, 특수문자 !@#$%^&*() 사용 가능",
+      );
+    else if (password.length > 20 || password.length < 8) {
+      setConfirmPasswordMsg("비밀번호는 최소 8자 이상, 20자 이내여야 합니다.");
+      setPasswordValid(false);
+    } else if (!validatePassword(password)) {
+      setConfirmPasswordMsg(
+        "비밀번호는 영문 대소문자, 숫자, 특수문자 !@#$%^&*()만 사용 가능합니다.",
+      );
+      setPasswordValid(false);
     } else if (confirmPassword !== "" && confirmPassword !== password) {
       setConfirmPasswordMsg("비밀번호가 일치하지 않습니다.");
-    } else setConfirmPasswordMsg("");
+    } else {
+      setConfirmPasswordMsg("");
+      setPasswordValid(true);
+    }
   }, [password, confirmPassword]);
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (!personalInfoConsent) {
+    if (
+      email === "" ||
+      nickname === "" ||
+      password === "" ||
+      confirmPassword === ""
+    ) {
+      if (email === "") setEmailMsg("이메일을 입력하세요.");
+      if (nickname === "") setNicknameMsg("닉네임을 입력하세요.");
+      if (password === "") setConfirmPasswordMsg("비밀번호를 입력하세요.");
+      if (confirmPassword === "")
+        setConfirmPasswordMsg("비밀번호 확인을 입력하세요.");
+      return;
+    } else if (!personalInfoConsent) {
       setRedConsent(true);
       return;
     }
@@ -107,33 +139,18 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
       confirmPassword,
     };
 
-    // let hasErrors = false;
-    // if (email === "" || nickname === "" || password === "") {
-    //   setHasError(true);
-    // }
-    // setHasError(hasErrors);
-    // if (hasErrors) {
-    //   return;
-    // }
-
-    // postSignup(userData)
-    //   .then(data => {
-    //     handleComplete();
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
-
     try {
       const res = await postSignup(userData);
 
-      const token = await postLogin({ email, password });
+      if (res !== null) {
+        const token = await postLogin({ email, password });
 
-      if (token.error || res === null) {
-        console.error(token.error, "로그인 실패");
-      } else {
-        handleComplete();
-        console.log("로그인 성공");
+        if (token.error) {
+          console.error(token.error, "로그인 실패");
+        } else {
+          handleComplete();
+          console.log("로그인 성공");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -169,7 +186,10 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
               value={password}
               onChange={e => setPassword(e.target.value)}
               hasError={
-                (password.length < 8 || password.length > 20) && password !== ""
+                (password.length < 8 ||
+                  password.length > 20 ||
+                  !passwordValid) &&
+                password !== ""
               }
             />
             <Input

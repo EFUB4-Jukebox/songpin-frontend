@@ -160,6 +160,7 @@ const InfoBox = styled.div`
   white-space: nowrap;
   /* padding-right: 23px; */
   width: 350px;
+  padding-top: 5px;
 `;
 
 const InfoText = styled.div`

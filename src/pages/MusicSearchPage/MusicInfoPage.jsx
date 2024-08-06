@@ -45,8 +45,8 @@ const MusicInfoPage = () => {
   };
 
   const navigate = useNavigate();
-  const goSearchPage = () => {
-    navigate("/search");
+  const goPreviousPage = () => {
+    window.history.back();
   };
 
   useEffect(() => {
@@ -117,7 +117,7 @@ const MusicInfoPage = () => {
     <SideSection showSideBar={showSideBar}>
       <MusicInfo>
         <SongInfo>
-          <BackIcon src={backIcon} onClick={goSearchPage} />
+          <BackIcon src={backIcon} onClick={goPreviousPage} />
           <AlbumImg src={songInfo.imgPath} alt="앨범 이미지" />
           <SongDetail>
             <SongTitle>

@@ -31,7 +31,11 @@ const InputWrapper = styled.div`
       props.hasError
         ? "1px solid #FF3844"
         : "1px solid var(--gray02, #747474)"};
+    input:focus {
+      border-color: #007bff; /* 원하는 색상으로 변경 */
+    }
   }
+
   .infoMsg {
     color: var(--gray02, #747474);
     text-align: right;

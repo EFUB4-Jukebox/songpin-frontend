@@ -20,6 +20,7 @@ const CalendarViewPage = () => {
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2024); // 현재 날짜 반영
   const [selectedMonth, setSelectedMonth] = useState(7); // 현재 날짜 반영
+  const [showSideBar, setShowSideBar] = useState(true);
   const navigate = useNavigate();
 
   const { isError, data, error } = useQuery({
@@ -61,7 +62,7 @@ const CalendarViewPage = () => {
   };
 
   return (
-    <SideSection>
+    <SideSection showSideBar={showSideBar}>
       <CalendarView>
         <BackIcon src={backIcon} onClick={goMyPage} />
         <Content>

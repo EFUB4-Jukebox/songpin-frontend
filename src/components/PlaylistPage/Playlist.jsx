@@ -175,13 +175,13 @@ const NameBox = styled.div`
   justify-content: space-between;
 `;
 const UserName = styled.div`
-  color: var(--gray03, #5f5f5f);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  margin-left: 8px;
+  margin-left: 2px;
 `;
 
 const PinBox = styled.div`
@@ -214,7 +214,7 @@ const UpdatedDate = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   height: 24px;
-  padding: 8px;
+  padding: 8px 8px 8px 2px;
 `;
 
 const LockImg = styled.img`

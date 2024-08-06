@@ -58,14 +58,18 @@ const PinFeed = ({ myPinFeedData }) => {
             {pinFeedList &&
               pinFeedList.map(it => (
                 <PinMemoComponent
+                  songId={it.songInfo.songId}
                   title={it.songInfo.title}
                   artist={it.songInfo.artist}
                   imgPath={it.songInfo.imgPath}
-                  genre={it.genreName}
+                  genreName={it.genreName}
                   listenedDate={it.listenedDate}
                   placeName={it.placeName}
                   pinId={it.pinId}
                   memo={it.memo}
+                  visibility={it.visibility}
+                  latitude={it.latitude}
+                  longitude={it.longitude}
                 />
               ))}
           </PinsSection>
