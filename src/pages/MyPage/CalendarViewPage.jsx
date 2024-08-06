@@ -122,7 +122,7 @@ const CalendarViewPage = () => {
           </Calendar>
           {pinList.length === 0 ? (
             <Empty>
-              <EmptyMessage>"해당 월에 들은 송핀이 없습니다"</EmptyMessage>
+              <EmptyMessage>해당 월에 들은 송핀이 없습니다</EmptyMessage>
             </Empty>
           ) : (
             pinList.map(it => (
