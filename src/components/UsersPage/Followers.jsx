@@ -18,7 +18,9 @@ const Followers = ({ userData }) => {
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
   const handleNavigation = menu => {
-    navigate(`/users/${memberId}/follows?menu=${menu}`);
+    navigate(
+      `/users/${memberId}/follows?menu=${menu}&handle=${userData.handle}`,
+    );
   };
 
   useEffect(() => {
@@ -64,6 +66,7 @@ const Followers = ({ userData }) => {
         const addFollowingId = {
           targetMemberId: memberId,
         };
+        console.log(addFollowingId);
         const res = await addFollowing(addFollowingId);
         console.log(res, "팔로잉 추가");
         setIsFollowing(!isFollowing);

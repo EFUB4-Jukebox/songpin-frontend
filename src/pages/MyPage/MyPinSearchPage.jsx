@@ -12,6 +12,7 @@ const MyPinSearchPage = () => {
   const [inputValue, setInputValue] = useState();
   const [showSideBar, setShowSideBar] = useState(true);
   const [pinList, setPinList] = useState();
+  const [init, setInit] = useState(true);
   // const [searchTriggered, setSearchTriggered] = useState(false);
 
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const MyPinSearchPage = () => {
   // }
 
   const completeSearch = async () => {
+    setInit(false);
     const res = await searchPin({ keyword: inputValue });
     console.log(res);
     setPinList(res.myPinList);
@@ -54,7 +56,7 @@ const MyPinSearchPage = () => {
           setInputValue={setInputValue}
           completeSearch={completeSearch}
         />
-        {pinList &&
+        {pinList ? (
           pinList.map(it => (
             <PinCalendarViewComponent
               title={it.songInfo.title}
@@ -64,11 +66,13 @@ const MyPinSearchPage = () => {
               listenedDate={it.listenedDate}
               placeName={it.placeName}
             />
-          ))}
+          ))
+        ) : (
+          <Empty>
+            <EmptyMessage>{init ? "" : "검색 결과가 없습니다."}</EmptyMessage>
+          </Empty>
+        )}
       </Content>
-      {/* <Empty>
-        <EmptyMessage>검색 결과가 없습니다.</EmptyMessage>
-      </Empty> */}
     </SideSection>
   );
 };

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyPinFeed } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const PinFeed = () => {
+const PinFeed = ({ myPinFeedData }) => {
   const [totalPinNum, setTotalPinNum] = useState();
   const [pinFeedList, setPinFeedList] = useState([]);
   const [feedElementTitle, setFeedElementTitle] = useState();
@@ -33,68 +33,48 @@ const PinFeed = () => {
   // const pinFeedList = data?.pinFeedList || [];
 
   useEffect(() => {
-    console.log(pinFeedList);
-    {
-      pinFeedList &&
-        pinFeedList.map(it => {
-          console.log(it.songInfo.title);
-          console.log(it.listenedDate);
-        });
+    if (myPinFeedData) {
+      console.log(myPinFeedData);
+      setTotalPinNum(myPinFeedData.totalElements);
+      setPinFeedList(myPinFeedData.pinFeedList);
     }
-  }, []);
-
-  useEffect(() => {
-    const getMyFeed = async () => {
-      try {
-        const res = await getMyPinFeed();
-        console.log(res);
-        if (res) {
-          setTotalPinNum(res.totalElements);
-          setPinFeedList(res.pinFeedList);
-          // pinFeedList && setFeedElementTitle(pinFeedList.songInfo.title);
-          // pinFeedList && setFeedElementArtist(pinFeedList.songInfo.artist);
-          // pinFeedList && setFeedElementImgPath(pinFeedList.songInfo.imgPath);
-          // pinFeedList && setListenedDate(pinFeedList.listenedDate);
-          // pinFeedList && setPlaceName(pinFeedList.placeName);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getMyFeed();
-  }, []);
+  }, [myPinFeedData]);
 
   return (
     <PinFeedContainer>
-      <PinShow>
-        <PinTimes>
-          <PinIcon src={pinIconSpark} />
-          <Num>{totalPinNum}</Num>
-        </PinTimes>
-        <ShowIcons>
-          <Calendar src={calendarIcon} onClick={goCalendar} />
-          <Search src={searchIcon} onClick={goMySearch} />
-        </ShowIcons>
-      </PinShow>
-      <PinsSection>
-        {pinFeedList &&
-          pinFeedList.map(it => (
-            <PinMemoComponent
-              songId={it.songInfo.songId}
-              title={it.songInfo.title}
-              artist={it.songInfo.artist}
-              imgPath={it.songInfo.imgPath}
-              genreName={it.genreName}
-              listenedDate={it.listenedDate}
-              placeName={it.placeName}
-              pinId={it.pinId}
-              memo={it.memo}
-              visibility={it.visibility}
-              latitude={it.latitude}
-              longitude={it.longitude}
-            />
-          ))}
-      </PinsSection>
+      {myPinFeedData && (
+        <>
+          <PinShow>
+            <PinTimes>
+              <PinIcon src={pinIconSpark} />
+              <Num>{totalPinNum}</Num>
+            </PinTimes>
+            <ShowIcons>
+              <Calendar src={calendarIcon} onClick={goCalendar} />
+              <Search src={searchIcon} onClick={goMySearch} />
+            </ShowIcons>
+          </PinShow>
+          <PinsSection>
+            {pinFeedList &&
+              pinFeedList.map(it => (
+                <PinMemoComponent
+                  songId={it.songInfo.songId}
+                  title={it.songInfo.title}
+                  artist={it.songInfo.artist}
+                  imgPath={it.songInfo.imgPath}
+                  genreName={it.genreName}
+                  listenedDate={it.listenedDate}
+                  placeName={it.placeName}
+                  pinId={it.pinId}
+                  memo={it.memo}
+                  visibility={it.visibility}
+                  latitude={it.latitude}
+                  longitude={it.longitude}
+                />
+              ))}
+          </PinsSection>
+        </>
+      )}
     </PinFeedContainer>
   );
 };

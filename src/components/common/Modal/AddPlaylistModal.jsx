@@ -30,7 +30,7 @@ const AddPlaylistModal = ({ setModalCommon, pinId }) => {
   };
   return (
     <ModalCommon
-      modalText="핀을 플레이리스트에 추가"
+      modalText="핀을 플레이리스트에 담기"
       inputPlaceholder="플레이리스트를 선택"
       buttonName="완료"
       handleButton={addPlaylist}

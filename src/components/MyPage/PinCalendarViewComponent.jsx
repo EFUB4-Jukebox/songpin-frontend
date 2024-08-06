@@ -16,7 +16,7 @@ const PinCalendarViewComponent = ({
   placeName,
   genre,
 }) => {
-  const formattedCalendarDate = format(new Date(listenedDate), "20yy.MM.dd", {
+  const formattedCalendarDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
 

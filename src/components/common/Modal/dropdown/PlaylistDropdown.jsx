@@ -6,13 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyPlaylist } from "../../../../services/api/myPage";
 import usePlaylistIdStore from "../../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../../store/usePlaylistInfoMsgStore";
-
+import pinIcon from "../../../../assets/images/MusicSearchPage/spark_122.svg";
 const PlaylistDropdown = ({ placeholder, setActive }) => {
   const [DropdownView, setDropdownView] = useState(false);
   const [initState, setInitState] = useState(placeholder);
   const { setPlaylistId } = usePlaylistIdStore();
   const { playlistInfoMsg, setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
   const [playlistList, setPlaylistList] = useState([]);
+  const [selectPlaylist, setSelectPlaylist] = useState();
   useEffect(() => {
     setPlaylistInfoMsg("");
   }, []);
@@ -42,12 +43,13 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   }, []);
 
   const handleClickDropdown = () => {
+    setPlaylistInfoMsg("");
     setDropdownView(!DropdownView);
   };
 
   const handleSelect = (playlistName, playlistId) => {
     setPlaylistId(playlistId);
-    setInitState(playlistName); // 선택된 항목으로 초기 상태 설정
+    setSelectPlaylist(playlistName); // 선택된 항목으로 초기 상태 설정
     setDropdownView(false); // 드롭다운 숨기기
   };
 
@@ -55,18 +57,29 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
     <InfoWrapper>
       <DropDownWrapper>
         <button className="dropdownButton" onClick={handleClickDropdown}>
-          <div className="placeholder">{initState}</div>
+          {selectPlaylist ? (
+            <div className="selectedPlaylist">{selectPlaylist} </div>
+          ) : (
+            <div className="placeholder">{initState}</div>
+          )}
           <img src={down} alt="dropdown_icon" />
         </button>
         <Wrapper>
           <Dropdown visiblity={DropdownView}>
             <ul>
               {playlistList.map(it => (
-                <li
-                  onClick={() => handleSelect(it.playlistName, it.playlistId)}
-                >
-                  {it.playlistName}
-                </li>
+                <div className="pinDetail">
+                  <li
+                    onClick={() => handleSelect(it.playlistName, it.playlistId)}
+                  >
+                    {it.playlistName}
+                  </li>
+
+                  <p className="pinCount">
+                    <img src={pinIcon} />
+                    {it.pinCount}
+                  </p>
+                </div>
               ))}
             </ul>
           </Dropdown>
@@ -87,9 +100,13 @@ const InfoWrapper = styled.div`
     line-height: 150%; /* 24px */
     margin-top: 12px;
     margin-bottom: 5px;
+    position: absolute;
+    right: 120px;
+    bottom: 200px;
   }
 `;
 const DropDownWrapper = styled.div`
+  margin-bottom: 30px;
   .dropdownButton {
     width: 500px;
     height: 60px;
@@ -101,7 +118,18 @@ const DropDownWrapper = styled.div`
     align-items: center;
   }
   .placeholder {
+    color: var(--gray02, #747474);
+
     font-size: 20px;
+    font-family: Pretendard;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 28px */
+    margin-left: 20px;
+  }
+  .selectedPlaylist {
+    font-size: 20px;
+    font-family: Pretendard;
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 28px */
@@ -123,6 +151,18 @@ const Wrapper = styled.div`
     box-sizing: border-box;
     overflow-y: auto;
 
+    .pinDetail {
+      display: flex;
+      gap: 100px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .pinCount {
+      display: flex;
+      gap: 10px;
+      width: 60px;
+      justify-content: space-between;
+    }
     &::-webkit-scrollbar {
       width: 7px;
     }
@@ -144,11 +184,10 @@ const Wrapper = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 28px */
-    margin-top: 30px;
     cursor: pointer;
   }
   li:hover {
-    color: red;
+    color: #24ee81;
   }
 `;
 export default PlaylistDropdown;

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
@@ -14,19 +14,19 @@ import { ReactComponent as LocationImg} from '../../assets/images/CreatePin/loca
 import PublicToggle from '../../components/common/PublicToggle';
 import calendar_selected from '../../assets/images/CreatePin/calendar_selected.svg'
 import arrowIcon from '../../assets/images/CreatePin/arrow_back_ios.svg';
+import { getPin, editPin } from '../../services/api/pin';
 
 const EditPinPage = () => {
     const [inputCount, setInputCount] = useState(0);
-    const [isSongSelected, setIsSongSelected] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [selectedPin, setSelectedPin] = useState(null);
-    const [selectedPlace, setSelectedPlace] = useState("");
     const [showCalendar, setShowCalendar] = useState(false);
     const [date, setDate] = useState(new Date());
     const [selectedGenre, setSelectedGenre] = useState(null);
     const [isPublic, setIsPublic] = useState(true);
+    const [pinData, setPinData] = useState("");
 
     const navigate = useNavigate();
+    const params = useParams();
 
     const handleNavigate = () => {
         navigate('/details-song');// 곡 ID로 수정
@@ -38,14 +38,48 @@ const EditPinPage = () => {
 
     const onInputHandler = (e) => {
         setInputCount(e.target.value.length);
+        setPinData({...pinData, memo: e.target.value});
     };
 
     const handleDateChange = (date) => {
         setDate(date);
+        setPinData({...pinData, listenedDate: date});
     };
 
     const handleGenreClick = (id, EngName) => {
-        setSelectedGenre(id, EngName);
+        setSelectedGenre(prevState => ({ ...prevState, id, EngName }));
+        setPinData(prevData => ({ ...prevData, genreName: EngName }));
+    };
+    
+
+    useEffect(() => {
+        const fetchPinData = async () => {
+            try {
+                const Data = await getPin(params.pinId);
+                setPinData(Data);
+                setDate(new Date(Data.listenedDate));
+                const genre = GenreList.find(genre => genre.EngName === Data.genreName);
+                setSelectedGenre(genre);
+                setIsPublic(Data.visibility === "PUBLIC");
+                setInputCount(Data.memo.length);
+            } catch (error) {
+                console.error("Error fetching pin data:", error);
+            }
+        };
+        fetchPinData();
+    }, []);
+
+    const handleEditPin = async e => {
+        e.preventDefault();
+        const request = {
+            "listenedDate": moment(pinData.listenedDate).format("YYYY-MM-DD"),
+            "genreName": selectedGenre?.EngName,
+            "memo": pinData.memo,
+            "visibility": isPublic ? "PUBLIC" : "PRIVATE",
+        };
+        console.log("수정된 핀 정보:", request);
+        const res = await editPin(params.pinId, request);
+        console.log("수정됐나?", res);
     };
 
     return (
@@ -53,24 +87,16 @@ const EditPinPage = () => {
             <SideBar></SideBar>
             <EditSection>
                 <Arrow src={arrowIcon} onClick={handleModal}/>
-                {/* {showModal && (<EditModal></EditModal>)} */}
                 <Content>
-                    {!isSongSelected ? (
-                        <PinBox>
-                            <PinImg></PinImg>
-                            <PinText>노래를 선택해주세요.</PinText>
-                        </PinBox>
-                    ) : (
-                        <PinComponent
-                            imgPath={selectedPin.image}
-                            title={selectedPin.title}
-                            artist={selectedPin.singer}
-                        />
-                    )}
+                    <PinComponent
+                        imgPath={pinData.songImgPath}
+                        title={pinData.songTitle}
+                        artist={pinData.songArtist}
+                    />
                 </Content>
                     <Title>언제</Title>
                     <When>
-                        {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
+                        {moment(pinData.listenedDate).format("YYYY.MM.DD")}
                         <CalendarImg onClick={() => setShowCalendar(!showCalendar)}/></When>
                     {showCalendar && (
                         <CalendarContainer>
@@ -87,7 +113,7 @@ const EditPinPage = () => {
                     )}
                     <Title>어디서</Title>
                     <Where>
-                        {selectedPlace || "이 노래를 들었던 장소는 어디였나요?"}
+                        {pinData.placeName}
                         <LocationImg />
                     </Where>
                     <Title>장르</Title>
@@ -107,6 +133,7 @@ const EditPinPage = () => {
                     <MemoArea
                         placeholder="이곳에 메모를 남겨주세요."
                         maxLength={200}
+                        value={pinData.memo}
                         onChange={onInputHandler}
                     ></MemoArea> 
                     <TextNum>
@@ -114,12 +141,11 @@ const EditPinPage = () => {
                         <span>/200</span>
                     </TextNum>
                     <IsPublic>
-                        <Title>공개 여부</Title>
+                        <Title>메모 공개 여부</Title>
                         <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic}/>
                     </IsPublic>
-                    {/* 아래 생성 버튼에 핀 위치 주소 연결하기 */}
                     <CreateBtn
-                        onClick={handleNavigate}
+                        onClick={handleEditPin}
                     >수정 완료</CreateBtn> 
             </EditSection>
         </MainContainer>
@@ -129,15 +155,6 @@ const MainContainer = styled.div`
     display: flex;
     flex-direction: row;
 `;
-
-// const EditModal = styled.div`
-//     width: 600px;
-//     height: 300px;
-//     flex-shrink: 0;
-//     border-radius: 19px;
-//     background: var(--f8f8f8, #FCFCFC);
-// `; 
-// 공용 컴포넌트 사용
 
 const Arrow = styled.img`
     fill: #000000;
@@ -251,12 +268,16 @@ const MemoArea = styled.textarea`
     border: none;
     border-radius: 8px;
     background: var(--offwhite, #EFEFEF);
-    color: var(--gray02, #747474);
+    color: var(--light_black, #232323);
     font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
+
+    &::placeholder {
+    color: var(--gray02, #747474);
+    }
 `;
 
 const TextNum = styled.p`
@@ -275,7 +296,7 @@ const IsPublic = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 26px;
+    margin-top: 6px;
     margin-right: 32px;
 `;
 
@@ -284,7 +305,7 @@ const CreateBtn = styled.button`
     width: 462px;
     padding: 16px 0px;
     margin-left: 30px;
-    margin-top: 37px;
+    margin-top: 25px;
     margin-bottom: 45px;
     justify-content: center;
     align-items: center;
