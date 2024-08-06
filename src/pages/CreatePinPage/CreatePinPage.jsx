@@ -30,7 +30,8 @@ const CreatePinPage = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
   const [memo, setMemo] = useState("");
-
+  const [active, setActive] = useState(false);
+  const [infoMsg, setInfoMsg] = useState("");
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
@@ -109,16 +110,30 @@ const CreatePinPage = () => {
   };
 
   useEffect(() => {
+    if (!selectedPin || !selectedPlace || !date || !selectedGenre) {
+      setActive(false);
+      setInfoMsg("입력하지 않은 정보가 있습니다.");
+    } else {
+      setActive(true);
+      setInfoMsg("");
+    }
+  }, [selectedPin, selectedPlace, date, selectedGenre]);
+
+  useEffect(() => {
     const handleClickOutside = e => {
-      if (calendarRef.current && !calendarRef.current.contains(e.target) && !e.target.closest('.calendar-area')) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target) &&
+        !e.target.closest(".calendar-area")
+      ) {
         setShowCalendar(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -142,7 +157,10 @@ const CreatePinPage = () => {
           )}
         </Content>
         <Title>언제</Title>
-        <When className="calendar-area" onClick={() => setShowCalendar(!showCalendar)}>
+        <When
+          className="calendar-area"
+          onClick={() => setShowCalendar(!showCalendar)}
+        >
           {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
           <CalendarImg />
         </When>
@@ -204,7 +222,14 @@ const CreatePinPage = () => {
           <Title>메모 공개 여부</Title>
           <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
         </IsPublic>
-        <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
+        <Info>{infoMsg}</Info>
+        <CreateBtn
+          className={active ? "activeButton" : "inactiveButton"}
+          disabled={!active}
+          onClick={handlePostPin}
+        >
+          핀 생성하기
+        </CreateBtn>
       </CreateSection>
       {showSearchSongContainer && (
         <SearchSongContainerWrapper>
@@ -219,7 +244,6 @@ const CreatePinPage = () => {
     </MainContainer>
   );
 };
-
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -357,25 +381,47 @@ const IsPublic = styled.div`
 `;
 
 const CreateBtn = styled.button`
-  display: flex;
-  width: 462px;
-  padding: 16px 0px;
-  margin-left: 30px;
-  margin-top: 25px;
-  margin-bottom: 45px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  border-radius: 8px;
-  background: var(--black, #000000);
-  color: var(--white, #ffffff);
-  font-family: Pretendard;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 150%;
-  cursor: pointer;
+  &.activeButton {
+    background: var(--black, #000000);
+    display: flex;
+    width: 462px;
+    padding: 16px 0px;
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 8px;
+    color: var(--white, #ffffff);
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    cursor: pointer;
+  }
+  &.inactiveButton {
+    display: flex;
+    width: 462px;
+    padding: 16px 0px;
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 8px;
+    background: var(--gray, #bcbcbc);
+    color: var(--white, #ffffff);
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
 `;
 
 const CalendarContainer = styled.div`
@@ -479,6 +525,18 @@ const SearchPlaceContainerWrapper = styled.div`
   width: 50%;
   height: 100%;
   z-index: 10;
+`;
+
+const Info = styled.div`
+  color: var(--gray02, #747474);
+  text-align: right;
+  margin-right: 35px;
+  margin-top: 10px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
 `;
 
 export default CreatePinPage;
