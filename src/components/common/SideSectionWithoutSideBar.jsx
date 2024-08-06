@@ -3,7 +3,7 @@ import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, showSideBar }) => {
+const SideSectionWithoutSideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleSideBox = () => {
@@ -13,7 +13,7 @@ const SideSection = ({ children, showSideBar }) => {
   return (
     <SideComponent>
       <SideBarContainer>
-        <SideBar />
+        <></>
       </SideBarContainer>
       <SideBox isOpen={isOpen}>
         <Content>{children}</Content>
@@ -27,7 +27,7 @@ const SideSection = ({ children, showSideBar }) => {
   );
 };
 
-export default SideSection;
+export default SideSectionWithoutSideBar;
 
 const SideComponent = styled.div`
   display: flex;

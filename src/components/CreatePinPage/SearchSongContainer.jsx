@@ -4,6 +4,7 @@ import SideSection from "../common/SideSection";
 import PlainSearchBar from "./PlainSearchBar";
 import PinComponent from "./PinComponent";
 import { getExSpotify } from "../../services/api/spotify";
+import SideSectionWithoutSideBar from "../common/SideSectionWithoutSideBar";
 
 const SearchSongContainer = ({ onPinSelect }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -92,7 +93,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
   }, [offset, keyword, hasMore, isLoading]);
 
   return (
-    <SideSection>
+    <SideSectionWithoutSideBar>
       <Content>
         <PlainSearchBar onSearch={handleSearch} />
         <SearchResult>
@@ -120,7 +121,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
           <div ref={loaderRef} style={{ height: "20px" }}></div>
         </SearchResult>
       </Content>
-    </SideSection>
+    </SideSectionWithoutSideBar>
   );
 };
 
