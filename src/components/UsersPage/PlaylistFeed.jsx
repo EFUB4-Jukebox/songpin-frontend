@@ -18,15 +18,20 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
         </Img>
         <PinNum>{playlistCount}</PinNum>
       </PinBox>
-      <PlaylistContainer>
-        {playlists.map(playlist => (
-          <Playlist
-            key={playlist.playlistId}
-            onClick={() => handlePlaylistClick(playlist.playlistId)}
-            playlist={playlist} // 플레이리스트 정보를 전달
-          />
-        ))}
-      </PlaylistContainer>
+
+      {playlists.length === 0 ? (
+        <PlaylistListEmpty>플레이리스트가 비어있습니다.</PlaylistListEmpty>
+      ) : (
+        <PlaylistContainer>
+          {playlists.map(playlist => (
+            <Playlist
+              key={playlist.playlistId}
+              onClick={() => handlePlaylistClick(playlist.playlistId)}
+              playlist={playlist} // 플레이리스트 정보를 전달
+            />
+          ))}
+        </PlaylistContainer>
+      )}
     </PlaylistFeedContainer>
   );
 };
@@ -70,4 +75,17 @@ const PlaylistContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 0px 20px 70px 20px;
+`;
+const PlaylistListEmpty = styled.div`
+  width: 528px;
+  display: flex;
+  justify-content: center;
+  margin-top: 230px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;
