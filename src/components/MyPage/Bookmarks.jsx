@@ -32,7 +32,7 @@ const Bookmarks = ({ myBookmarkData }) => {
             <PlaylistIcon src={bookmark} />
             <Num>{bookmarkCount}</Num>
           </PlaylistOverview>
-          {bookmarkList ? (
+          {bookmarkList.length === 0 ? (
             <BookmarkListEmpty>
               아직 북마크한 플레이리스트가 없습니다.
             </BookmarkListEmpty>
