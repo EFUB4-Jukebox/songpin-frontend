@@ -142,6 +142,7 @@ const CalendarViewPage = () => {
                 genre={it.genreName}
                 listenedDate={it.listenedDate}
                 placeName={it.placeName}
+                songId={it.songInfo.songId}
               />
             ))
           )}
