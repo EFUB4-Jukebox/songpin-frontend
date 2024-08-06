@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyPlaylist } from "../../../../services/api/myPage";
 import usePlaylistIdStore from "../../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../../store/usePlaylistInfoMsgStore";
-
+import pinIcon from "../../../../assets/images/MusicSearchPage/spark_122.svg";
 const PlaylistDropdown = ({ placeholder, setActive }) => {
   const [DropdownView, setDropdownView] = useState(false);
   const [initState, setInitState] = useState(placeholder);
@@ -73,7 +73,11 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
                   >
                     {it.playlistName}
                   </li>
-                  <p>{it.pinCount}</p>
+
+                  <p className="pinCount">
+                    <img src={pinIcon} />
+                    {it.pinCount}
+                  </p>
                 </div>
               ))}
             </ul>
@@ -146,6 +150,10 @@ const Wrapper = styled.div`
       gap: 100px;
       align-items: center;
       margin-top: 10px;
+    }
+    .pinCount {
+      display: flex;
+      gap: 10px;
     }
     &::-webkit-scrollbar {
       width: 7px;
