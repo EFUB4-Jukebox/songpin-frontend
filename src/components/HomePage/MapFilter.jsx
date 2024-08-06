@@ -421,15 +421,6 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
-  .react-calendar__tile--now {
-    background: #fcfcfc;
-    &:hover {
-      background: #5452ff;
-      color: #fcfcfc;
-      border-radius: 50%;
-    }
-  }
-
   .react-calendar__tile--range {
     background: rgba(36, 238, 129, 0.15);
     color: black;
@@ -485,7 +476,7 @@ const ApplyButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   &:hover {
-    background-color: #3937b2;
+    background-color: #5452ff;
     color: #ffffff;
   }
 `;
