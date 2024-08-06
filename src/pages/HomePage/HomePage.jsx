@@ -26,7 +26,6 @@ const HomePage = () => {
         fetchHomeData();
     }, []);
     
-    console.log(recentPlaces);
     return (
         <div style={{ position: "relative" }}>
         <SideBar />

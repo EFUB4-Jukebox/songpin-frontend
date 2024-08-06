@@ -9,7 +9,7 @@ import calendar_selected from "../../assets/filter/calendar_selected.svg";
 import Genre from "../common/Genre";
 import { GenreList } from "../../constants/GenreList";
 
-const MapFilter = ({ onFilterChange }) => {
+const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
   const [selectedOption, setSelectedOption] = useState("All");
   const [showOptions, setShowOptions] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -24,7 +24,6 @@ const MapFilter = ({ onFilterChange }) => {
   const weekDaysShort = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const [selectedPeriod, setSelectedPeriod] = useState("All");
 
-  const [recentPins, setRecentPins] = useState([]);
   const optionsRef = useRef(null);
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
@@ -61,9 +60,11 @@ const MapFilter = ({ onFilterChange }) => {
     if (startDate && endDate) {
       const formattedStartDate = moment(startDate).format("YYYY.MM.DD");
       const formattedEndDate = moment(endDate).format("YYYY.MM.DD");
+      const formattedStartDateToSend = moment(startDate).format("YYYY-MM-DD");
+      const formattedEndDateToSend = moment(endDate).format("YYYY-MM-DD");
       setSelectedOption("Userself");
       setSelectedDatesText(`${formattedStartDate} ~ ${formattedEndDate}`);
-      onFilterChange("Userself", selectedGenres, startDate, endDate);
+      onFilterChange2(selectedGenres, formattedStartDateToSend, formattedEndDateToSend);
     }
   };
 
@@ -72,11 +73,13 @@ const MapFilter = ({ onFilterChange }) => {
       const newGenres = prevGenres.includes(genre)
         ? prevGenres.filter(g => g !== genre)
         : [...prevGenres, genre];
-
-      // 장르가 변경될 때마다 onFilterChange 함수 호출
-      onFilterChange(selectedOption, newGenres);
       return newGenres;
     });
+  };
+
+  const applyGenres = () => {
+    setShowGenre(false);
+    onFilterChange(selectedOption, selectedGenres);
   };
 
   useEffect(() => {
@@ -136,15 +139,6 @@ const MapFilter = ({ onFilterChange }) => {
     onFilterChange(newPeriod, selectedGenres);
   };
 
-  const handleGenreChange = e => {
-    const genreId = e.target.value;
-    const newGenres = e.target.checked
-      ? [...selectedGenres, genreId]
-      : selectedGenres.filter(id => id !== genreId);
-    setSelectedGenres(newGenres);
-    onFilterChange(selectedPeriod, newGenres);
-  };
-
   return (
     <FilterContainer>
       <GivenOptions
@@ -186,6 +180,7 @@ const MapFilter = ({ onFilterChange }) => {
           {showCalendar && (
             <CalendarContainer>
               <StyledCalendar
+                calendarType="gregory"
                 selectRange={false}
                 value={[startDate, endDate]}
                 onChange={handleDateChange}
@@ -237,6 +232,7 @@ const MapFilter = ({ onFilterChange }) => {
                 onClick={() => toggleGenre(genre.id)}
               />
             ))}
+            <GenreApplyButton onClick={applyGenres}>적용</GenreApplyButton>
           </GenreTotal>
         </GenreDropdown>
       )}
@@ -410,6 +406,10 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
+  .react-calendar__tile--now {
+    background: #fcfcfc;
+  }
+
   .react-calendar__tile {
     font-size: 16px;
     display: flex;
@@ -480,6 +480,29 @@ const ApplyButton = styled.button`
     color: #ffffff;
   }
 `;
+const GenreApplyButton = styled.button`
+  border-radius: 8px;
+  border: 1px solid var(--gray02, #747474);
+  background: var(--f8f8f8, #FCFCFC);
+  color: var(--light_black, #232323);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 24px */
+  display: flex;
+  width: 213px;
+  //padding: 4px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #5452ff;
+    color: #ffffff;
+  }
+`;
 const GenreTotal = styled.div`
   width: 204px;
   display: flex;
@@ -493,7 +516,7 @@ const GenreDropdown = styled.div`
   top: 110%;
   z-index: 10;
   width: 230px;
-  height: 200px;
+  height: 247px;
   display: flex;
   justify-content: center;
   align-items: center;
