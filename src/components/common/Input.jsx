@@ -1,16 +1,26 @@
 import styled from "styled-components";
 
-const Input = ({ placeholder, infoMsg, type, value, onChange, hasError }) => {
+const Input = ({
+  position,
+  placeholder,
+  infoMsg,
+  type,
+  value,
+  onChange,
+  hasError,
+}) => {
   return (
     <>
       <InputWrapper hasError={hasError}>
-        <input
+        <InputField
           type={type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
         />
-        {infoMsg && <div className="infoMsg">{infoMsg}</div>}
+        <div className="input">
+          {infoMsg && <div className="infoMsg">{infoMsg}</div>}
+        </div>{" "}
       </InputWrapper>
     </>
   );
@@ -22,20 +32,6 @@ const InputWrapper = styled.div`
   align-items: end;
   gap: 5px;
 
-  input {
-    width: 475px;
-    height: 40px;
-    font-size: 20px;
-    padding: 10px;
-    border: ${props =>
-      props.hasError
-        ? "1px solid #FF3844"
-        : "1px solid var(--gray02, #747474)"};
-    input:focus {
-      border-color: #007bff; /* 원하는 색상으로 변경 */
-    }
-  }
-
   .infoMsg {
     color: var(--gray02, #747474);
     text-align: right;
@@ -43,6 +39,20 @@ const InputWrapper = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 150%; /* 24px */
+  }
+`;
+const InputField = styled.input`
+  width: 477.87px;
+  height: 40px;
+  font-size: 20px;
+  padding: 10px;
+  border: ${props =>
+    props.hasError ? "1px solid #FF3844" : "1px solid var(--gray02, #747474)"};
+  &:focus {
+    border-color: #007bff; /* 원하는 색상으로 변경 */
+  }
+  &::placeholder {
+    font-family: Pretendard; /* 원하는 폰트 패밀리로 변경 */
   }
 `;
 

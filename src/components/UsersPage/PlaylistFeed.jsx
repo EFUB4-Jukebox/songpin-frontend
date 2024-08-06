@@ -13,18 +13,25 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
   return (
     <PlaylistFeedContainer>
       <PinBox>
-        <PinImg src={pinImage} alt="핀이미지" />
+        <Img>
+          <PinImg src={pinImage} alt="핀이미지" />
+        </Img>
         <PinNum>{playlistCount}</PinNum>
       </PinBox>
-      <PlaylistContainer>
-        {playlists.map(playlist => (
-          <Playlist
-            key={playlist.playlistId}
-            onClick={() => handlePlaylistClick(playlist.playlistId)}
-            playlist={playlist} // 플레이리스트 정보를 전달
-          />
-        ))}
-      </PlaylistContainer>
+
+      {playlists.length === 0 ? (
+        <PlaylistListEmpty>플레이리스트가 비어있습니다.</PlaylistListEmpty>
+      ) : (
+        <PlaylistContainer>
+          {playlists.map(playlist => (
+            <Playlist
+              key={playlist.playlistId}
+              onClick={() => handlePlaylistClick(playlist.playlistId)}
+              playlist={playlist} // 플레이리스트 정보를 전달
+            />
+          ))}
+        </PlaylistContainer>
+      )}
     </PlaylistFeedContainer>
   );
 };
@@ -42,14 +49,17 @@ const PinBox = styled.div`
   margin-bottom: 22px;
   margin-left: 34px;
   align-items: center;
+  gap: 10px;
 `;
-
+const Img = styled.div`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const PinImg = styled.img`
-  width: 30px;
-  height: 30px;
   flex-shrink: 0;
-  margin-left: 9px;
-  padding-top: 2px;
 `;
 
 const PinNum = styled.div`
@@ -59,11 +69,23 @@ const PinNum = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  margin-left: 8px;
 `;
 
 const PlaylistContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 0px 20px 70px 20px;
+`;
+const PlaylistListEmpty = styled.div`
+  width: 528px;
+  display: flex;
+  justify-content: center;
+  margin-top: 230px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

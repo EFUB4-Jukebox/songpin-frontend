@@ -106,6 +106,25 @@ function App() {
     }
   };
 
+  const handleFilterChange2 = async (genres, startDate, endDate) => {
+      const genreNameFilters = genres.map(
+        genre => GenreList.find(g => g.id === genre).EngName,
+      );
+      const request = {
+          "boundCoords": {
+          "swLat": 0,
+          "swLng": 0,
+          "neLat": 90,
+          "neLng": 180
+          },
+          "genreNameFilters": genreNameFilters,
+          "startDate": startDate,
+          "endDate": endDate,
+      };
+      const data = await postCustomPeriodMarkers(request);
+      setRecentPins(data.mapPlaceSet || []);
+  };
+
   return (
     <Router>
       <Routes>
@@ -126,6 +145,7 @@ function App() {
               allPins={allPins}
               recentPins={recentPins}
               handleFilterChange={handleFilterChange}
+              handleFilterChange2={handleFilterChange2}
             />
           }
         >
@@ -163,7 +183,7 @@ function App() {
 
 export default App;
 
-function MapLayout({ allPins, recentPins, handleFilterChange }) {
+function MapLayout({ allPins, recentPins, handleFilterChange, handleFilterChange2 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
@@ -266,7 +286,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           }}
         >
       {location.pathname === '/home' && (
-          <MapFilter onFilterChange={handleFilterChange} />
+          <MapFilter onFilterChange={handleFilterChange} onFilterChange2={handleFilterChange2}/>
       )}
       </div>
       <Notification />

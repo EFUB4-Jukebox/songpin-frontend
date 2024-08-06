@@ -58,7 +58,9 @@ const Notification = () => {
           <NoticeBox>
             <AlarmTitle>알림</AlarmTitle>
             <ContentSection>
-              {alarms &&
+            {alarms.length === 0 ? (
+                <NoAlarmsMessage>받은 알림이 없습니다.</NoAlarmsMessage>
+              ) : (
                 alarms.map(alarm => (
                   <ColumnComponent
                     key={alarm.alarmId}
@@ -67,7 +69,8 @@ const Notification = () => {
                     time={alarm.createdTime}
                     id={alarm.senderId}
                   />
-                ))}
+                ))
+              )}
             </ContentSection>
           </NoticeBox>
         </NoticePopup>
@@ -149,4 +152,15 @@ const AlarmTitle = styled.div`
 
 const ContentSection = styled.div`
   padding-top: 18.69px;
+`;
+
+const NoAlarmsMessage = styled.div`
+  padding-top: 130px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

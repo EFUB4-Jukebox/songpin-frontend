@@ -55,31 +55,35 @@ const UserInfoBox = styled.div`
 `;
 
 const UserLogo = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
 `;
 
 const UserNameBox = styled.div`
+  display: flex;
   flex-direction: column;
+  gap: 5px;
   margin-left: 28px;
 `;
 
 const UserName = styled.div`
   color: var(--light_black, #232323);
+
+  /* 본문_medium */
+  font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  height: 24px;
-  margin-bottom: 5px;
 `;
 
 const UserId = styled.div`
   color: var(--gray02, #747474);
 
+  /* comment */
+  font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  height: 24px;
 `;

@@ -1,20 +1,28 @@
-import styled from "styled-components";
-import Input from "../../components/common/Input";
-import Button from "../../components/common/Button";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { resetPassword } from "../../services/api/myPage";
+import styled from "styled-components";
 import { patchResetPw } from "../../services/api/auth";
+import Input from "../common/Input";
+import Button from "../common/Button";
 
-const PwResetPage = () => {
+const GotoPwResetModal = ({ setPwResetModal }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
-  const { uuid } = useParams();
   const [confirmPasswordMsg, setConfirmPasswordMsg] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
+  const modalRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setPwResetModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [setPwResetModal]);
   const validatePassword = password => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()]+$/;
     return regex.test(password);
@@ -47,20 +55,14 @@ const PwResetPage = () => {
         password: newPassword,
         confirmPassword: confirmPassword,
       };
-      const uuidResetPw = {
-        uuid: uuid || "",
-        password: newPassword,
-        confirmPassword: confirmPassword,
-      };
 
       try {
-        if (uuid) {
-          await patchResetPw(uuidResetPw); // UUID가 있는 경로
-          console.log(uuid);
-        } else {
-          await resetPassword(resetPw);
-        }
-        navigate("/resetPasswordComplete");
+        await resetPassword(resetPw);
+        window.alert(
+          "비밀번호 변경이 완료되었습니다. 새 비밀번호로 로그인해주세요.",
+        );
+        localStorage.removeItem("accessToken");
+        navigate("/");
       } catch (error) {
         console.error(error);
         alert("비밀번호 변경에 실패하였습니다.");
@@ -81,51 +83,75 @@ const PwResetPage = () => {
 
   return (
     <Wrapper>
-      <div className="resetText">비밀번호 재설정</div>
-      <Input
-        type="password"
-        value={newPassword}
-        onChange={handleNewPasswordChange}
-        placeholder="새 비밀번호"
-      />
-      <Input
-        type="password"
-        placeholder="새 비밀번호 확인"
-        value={confirmPassword}
-        onChange={handleConfirmPasswordChange}
-        hasError={hasError}
-        infoMsg={confirmPasswordMsg ? confirmPasswordMsg : ""}
-      />
-      <ButtonWrapper>
-        <Button
-          active={newPassword && confirmPassword && passwordValid}
-          onClick={resetComplete}
-          name="완료"
-        />
-      </ButtonWrapper>
+      <ModalWrapper ref={modalRef}>
+        <div className="modalText">비밀번호 재설정</div>
+        <InputButton>
+          <Input
+            type="password"
+            value={newPassword}
+            onChange={handleNewPasswordChange}
+            placeholder="새 비밀번호"
+          />
+          <Input
+            type="password"
+            placeholder="새 비밀번호 확인"
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            hasError={hasError}
+            infoMsg={confirmPasswordMsg ? confirmPasswordMsg : ""}
+          />
+          <ButtonWrapper>
+            <Button
+              active={newPassword && confirmPassword && passwordValid}
+              onClick={resetComplete}
+              name="완료"
+            />
+          </ButtonWrapper>
+        </InputButton>
+      </ModalWrapper>
     </Wrapper>
   );
 };
+export default GotoPwResetModal;
+
+const InputButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
 
 const Wrapper = styled.div`
+  background: rgba(0, 0, 0, 0.2);
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalWrapper = styled.div`
+  width: 740px;
+  height: 518px;
+  flex-shrink: 0;
+  border-radius: 19px;
+  background: var(--f8f8f8, #fcfcfc);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  gap: 16px;
-  .resetText {
+  position: relative;
+
+  .modalText {
     color: var(--light_black, #232323);
     text-align: center;
     font-size: 32px;
     font-style: normal;
     font-weight: 700;
     line-height: 40px; /* 125% */
-    margin-bottom: 26px;
+    margin-bottom: 56px;
   }
 `;
-
 const ButtonWrapper = styled.div`
   margin-top: 43px;
 `;
-export default PwResetPage;

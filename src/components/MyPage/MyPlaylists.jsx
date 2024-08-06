@@ -39,7 +39,9 @@ const MyPlaylists = ({ myPlaylistData }) => {
         <>
           <PlaylistOverview>
             <PlaylistTimes>
-              <PlaylistIcon src={musicLibraryIcon} />
+              <Img>
+                <PlaylistIcon src={musicLibraryIcon} />
+              </Img>
               <Num>{myPlaylistCount}</Num>
             </PlaylistTimes>
             <CreateNewPlaylist onClick={openCreatePlaylist}>
@@ -49,9 +51,11 @@ const MyPlaylists = ({ myPlaylistData }) => {
               <CreatePlaylistModal setModalCommon={openCreatePlaylist} />
             )}
           </PlaylistOverview>
-          <PlaylistSection>
-            {myPlaylist &&
-              myPlaylist.map(playlist => (
+          {myPlaylist.length === 0 ? (
+            <PlaylistListEmpty>플레이리스트가 비어있습니다.</PlaylistListEmpty>
+          ) : (
+            <PlaylistSection>
+              {myPlaylist.map(playlist => (
                 <Playlist
                   // key={it.playlistId}
                   // playlistId={it.playlistId}
@@ -65,7 +69,8 @@ const MyPlaylists = ({ myPlaylistData }) => {
                   onClick={() => handlePlaylistClick(playlist.playlistId)}
                 />
               ))}
-          </PlaylistSection>
+            </PlaylistSection>
+          )}
         </>
       )}
     </PlaylistsContainer>
@@ -77,7 +82,7 @@ export default MyPlaylists;
 const PlaylistsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 30px;
   margin-bottom: 30px;
 `;
 
@@ -85,20 +90,26 @@ const PlaylistOverview = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 38px;
+  margin-left: 34px;
   margin-right: 40px;
 `;
 
 const PlaylistTimes = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 10px;
+`;
+const Img = styled.div`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const PlaylistIcon = styled.img`
-  width: 30px;
-  height: 30px;
   flex-shrink: 0;
-  padding-right: 8px;
 `;
 
 const Num = styled.div`
@@ -108,7 +119,6 @@ const Num = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding-top: 2px;
 `;
 
 const CreateNewPlaylist = styled.div`
@@ -128,4 +138,16 @@ const PlaylistSection = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 28px 8px;
+`;
+const PlaylistListEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

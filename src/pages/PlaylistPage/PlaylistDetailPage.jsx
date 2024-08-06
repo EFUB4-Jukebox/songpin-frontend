@@ -96,7 +96,7 @@ const PlaylistDetailPage = () => {
                 key={pin.playlistPinId}
                 pin={pin}
                 selectable={false}
-                buttonVisible={true}
+                buttonVisible={playlistData.isMine}
                 pinId={pin.pinId}
               />
             ))

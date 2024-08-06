@@ -1,4 +1,3 @@
-import MapFilter from "../../components/HomePage/MapFilter";
 import SideBar from "../../components/HomePage/SideBar";
 import SideSection from "../../components/common/SideSection";
 import styled from "styled-components";
@@ -26,7 +25,6 @@ const HomePage = () => {
     fetchHomeData();
   }, []);
 
-  console.log(recentPlaces);
   return (
     <div style={{ position: "relative" }}>
       <SideBar />
@@ -40,10 +38,10 @@ const HomePage = () => {
           {recentPins &&
             recentPins.map(pin => (
               <PinComponent
-                key={pin.songId}
+                key={pin.SongId}
                 pin={pin}
                 selectable={false}
-                buttonVisible={true}
+                buttonVisible={pin.isMine}
               />
             ))}
         </SongListContainer>
@@ -60,6 +58,7 @@ const HomePage = () => {
         </PlaceListContainer>
       </SideSection>
       {/* <MapFilter /> */}
+      <AnnounceTxt>지도상에 핀은 최대 300개까지 표시됩니다.</AnnounceTxt>
     </div>
   );
 };
@@ -124,4 +123,18 @@ const PlaceListContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   margin-left: 38px;
+`;
+
+const AnnounceTxt = styled.div`
+  width: 221px;
+  height: 19px;
+  flex-shrink: 0;
+  color: var(--gray02, #747474);
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 18px */
+  margin-left: 88px;
+  padding-top: 980px;
 `;
