@@ -6,10 +6,11 @@ import "react-calendar/dist/Calendar.css";
 import open_dropdown from "../../assets/filter/open_dropdown.svg";
 import close_dropdown from "../../assets/filter/close_dropdown.svg";
 import calendar_selected from "../../assets/filter/calendar_selected.svg";
+import more from "../../assets/filter/more_horiz.svg";
 import Genre from "../common/Genre";
 import { GenreList } from "../../constants/GenreList";
 
-const MapFilter = ({ onFilterChange }) => {
+const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
   const [selectedOption, setSelectedOption] = useState("All");
   const [showOptions, setShowOptions] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -24,7 +25,6 @@ const MapFilter = ({ onFilterChange }) => {
   const weekDaysShort = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const [selectedPeriod, setSelectedPeriod] = useState("All");
 
-  const [recentPins, setRecentPins] = useState([]);
   const optionsRef = useRef(null);
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
@@ -37,6 +37,8 @@ const MapFilter = ({ onFilterChange }) => {
       setShowSetTerm(false);
     }
     onFilterChange(term, selectedGenres);
+    setStartDate(null);
+    setEndDate(null);
   };
 
   const handleDateChange = date => {
@@ -61,9 +63,11 @@ const MapFilter = ({ onFilterChange }) => {
     if (startDate && endDate) {
       const formattedStartDate = moment(startDate).format("YYYY.MM.DD");
       const formattedEndDate = moment(endDate).format("YYYY.MM.DD");
+      const formattedStartDateToSend = moment(startDate).format("YYYY-MM-DD");
+      const formattedEndDateToSend = moment(endDate).format("YYYY-MM-DD");
       setSelectedOption("Userself");
       setSelectedDatesText(`${formattedStartDate} ~ ${formattedEndDate}`);
-      onFilterChange("Userself", selectedGenres, startDate, endDate);
+      onFilterChange2(selectedGenres, formattedStartDateToSend, formattedEndDateToSend);
     }
   };
 
@@ -72,11 +76,13 @@ const MapFilter = ({ onFilterChange }) => {
       const newGenres = prevGenres.includes(genre)
         ? prevGenres.filter(g => g !== genre)
         : [...prevGenres, genre];
-
-      // 장르가 변경될 때마다 onFilterChange 함수 호출
-      onFilterChange(selectedOption, newGenres);
       return newGenres;
     });
+  };
+
+  const applyGenres = () => {
+    setShowGenre(false);
+    onFilterChange(selectedOption, selectedGenres);
   };
 
   useEffect(() => {
@@ -134,15 +140,8 @@ const MapFilter = ({ onFilterChange }) => {
     const newPeriod = e.target.value;
     setSelectedPeriod(newPeriod);
     onFilterChange(newPeriod, selectedGenres);
-  };
-
-  const handleGenreChange = e => {
-    const genreId = e.target.value;
-    const newGenres = e.target.checked
-      ? [...selectedGenres, genreId]
-      : selectedGenres.filter(id => id !== genreId);
-    setSelectedGenres(newGenres);
-    onFilterChange(selectedPeriod, newGenres);
+    setStartDate(null);
+    setEndDate(null);
   };
 
   return (
@@ -186,6 +185,7 @@ const MapFilter = ({ onFilterChange }) => {
           {showCalendar && (
             <CalendarContainer>
               <StyledCalendar
+                calendarType="gregory"
                 selectRange={false}
                 value={[startDate, endDate]}
                 onChange={handleDateChange}
@@ -212,8 +212,23 @@ const MapFilter = ({ onFilterChange }) => {
           )}
         </SetTermWrapper>
       )}
-      <SetGenre onClick={handleShowGenre}>
-        장르별
+      <SetGenre hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
+        {selectedGenres.length > 0 ? (
+          <SelectedGenres>
+            <Genre
+              name={GenreList.find(genre => genre.id === selectedGenres[0]).name}
+              img={
+                GenreList.find(genre => genre.id === selectedGenres[0]).whiteImgSrc
+              }
+              bgColor={
+                GenreList.find(genre => genre.id === selectedGenres[0]).bgColor
+              }
+            />
+            {selectedGenres.length > 1 && <MoreIcon src={more} alt="more icon" />}
+          </SelectedGenres>
+        ) : (
+          "장르별"
+        )}
         <DropdownIcon
           src={showGenre ? close_dropdown : open_dropdown}
           alt="dropdown icon"
@@ -227,9 +242,7 @@ const MapFilter = ({ onFilterChange }) => {
                 key={genre.id}
                 name={genre.name}
                 img={
-                  selectedGenres.includes(genre.id)
-                    ? genre.whiteImgSrc
-                    : genre.imgSrc
+                  selectedGenres.includes(genre.id) ? genre.whiteImgSrc : genre.imgSrc
                 }
                 bgColor={
                   selectedGenres.includes(genre.id) ? genre.bgColor : null
@@ -237,6 +250,7 @@ const MapFilter = ({ onFilterChange }) => {
                 onClick={() => toggleGenre(genre.id)}
               />
             ))}
+            <GenreApplyButton onClick={applyGenres}>적용</GenreApplyButton>
           </GenreTotal>
         </GenreDropdown>
       )}
@@ -321,7 +335,7 @@ const SetTerm = styled.div`
   position: relative;
   display: flex;
   padding: 10px 14px;
-  /* width: 142px; */
+  width: 142px;
   height: 24px;
   justify-content: space-between;
   align-items: center;
@@ -341,17 +355,33 @@ const SelectedDateText = styled.div`
   font-size: 18px;
   font-weight: 500;
 `;
+const SelectedGenres = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  //margin-left: -4px;
+`;
+
+const MoreIcon = styled.img`
+  //margin-left: 4px;
+`;
 
 const SetGenre = styled.div`
   position: relative;
   display: flex;
-  padding: 10px 16px 10px 20px;
-  width: 86px;
-  height: 24px;
+  /* padding: 10px 16px 10px 20px;
+  width: auto;
+  height: 24px; */
+  padding: ${props => (props.hasGenres ? "10px 16px 10px 16px" : "10px 16px 10px 20px")};
+  height: ${props => (props.hasGenres ? "auto" : "24px")};
+  width: ${props => (props.hasGenres ? "auto" : "86px")};
   justify-content: center;
   align-items: center;
   margin-left: 20px;
-  border-radius: 24px;
+  margin-top: ${props => (props.hasGenres ? "16px" : "0px")};
+  /* border-radius: 24px; */
+  border-radius: ${props => (props.hasGenres ? "51px" : "24px")};
   border: 1px solid var(--gray02, #747474);
   background: var(--offwhite_, #fcfcfc);
   font-family: Pretendard;
@@ -410,6 +440,10 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
+  .react-calendar__tile--now {
+    background: #fcfcfc;
+  }
+
   .react-calendar__tile {
     font-size: 16px;
     display: flex;
@@ -417,15 +451,6 @@ const StyledCalendar = styled(Calendar)`
     justify-content: center;
     &:hover {
       background: lightgray;
-      border-radius: 50%;
-    }
-  }
-
-  .react-calendar__tile--now {
-    background: #fcfcfc;
-    &:hover {
-      background: #5452ff;
-      color: #fcfcfc;
       border-radius: 50%;
     }
   }
@@ -485,7 +510,30 @@ const ApplyButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   &:hover {
-    background-color: #3937b2;
+    background-color: #5452ff;
+    color: #ffffff;
+  }
+`;
+const GenreApplyButton = styled.button`
+  border-radius: 8px;
+  border: 1px solid var(--gray02, #747474);
+  background: var(--f8f8f8, #FCFCFC);
+  color: var(--light_black, #232323);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 24px */
+  display: flex;
+  width: 213px;
+  //padding: 4px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #5452ff;
     color: #ffffff;
   }
 `;
@@ -502,7 +550,7 @@ const GenreDropdown = styled.div`
   top: 110%;
   z-index: 10;
   width: 230px;
-  height: 200px;
+  height: 247px;
   display: flex;
   justify-content: center;
   align-items: center;

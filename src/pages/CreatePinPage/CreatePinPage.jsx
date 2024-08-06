@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
@@ -31,6 +31,8 @@ const CreatePinPage = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [memo, setMemo] = useState("");
 
+  const calendarRef = useRef(null);
+
   const navigate = useNavigate();
 
   const handleNavigate = location => {
@@ -46,6 +48,7 @@ const CreatePinPage = () => {
 
   const handlePinClick = () => {
     setShowSearchSongContainer(!showSearchSongContainer);
+    setShowSearchPlaceContainer(false);
   };
 
   const handlePinSelect = pinInfo => {
@@ -56,6 +59,7 @@ const CreatePinPage = () => {
 
   const handlePlaceClick = () => {
     setShowSearchPlaceContainer(!showSearchPlaceContainer);
+    setShowSearchSongContainer(false);
   };
 
   const handlePlaceSelect = place => {
@@ -104,6 +108,20 @@ const CreatePinPage = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = e => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target) && !e.target.closest('.calendar-area')) {
+        setShowCalendar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <MainContainer>
       <SideBar></SideBar>
@@ -124,12 +142,12 @@ const CreatePinPage = () => {
           )}
         </Content>
         <Title>언제</Title>
-        <When>
+        <When className="calendar-area" onClick={() => setShowCalendar(!showCalendar)}>
           {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
-          <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
+          <CalendarImg />
         </When>
         {showCalendar && (
-          <CalendarContainer>
+          <CalendarContainer ref={calendarRef}>
             <StyledCalendar
               calendarType="gregory"
               value={date}
