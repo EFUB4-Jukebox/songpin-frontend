@@ -13,6 +13,7 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
   const { setPlaylistId } = usePlaylistIdStore();
   const { playlistInfoMsg, setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
   const [playlistList, setPlaylistList] = useState([]);
+  const [selectPlaylist, setSelectPlaylist] = useState();
   useEffect(() => {
     setPlaylistInfoMsg("");
   }, []);
@@ -47,7 +48,7 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
 
   const handleSelect = (playlistName, playlistId) => {
     setPlaylistId(playlistId);
-    setInitState(playlistName); // 선택된 항목으로 초기 상태 설정
+    setSelectPlaylist(playlistName); // 선택된 항목으로 초기 상태 설정
     setDropdownView(false); // 드롭다운 숨기기
   };
 
@@ -55,18 +56,25 @@ const PlaylistDropdown = ({ placeholder, setActive }) => {
     <InfoWrapper>
       <DropDownWrapper>
         <button className="dropdownButton" onClick={handleClickDropdown}>
-          <div className="placeholder">{initState}</div>
+          {selectPlaylist ? (
+            <div className="selectedPlaylist">{selectPlaylist} </div>
+          ) : (
+            <div className="placeholder">{initState}</div>
+          )}
           <img src={down} alt="dropdown_icon" />
         </button>
         <Wrapper>
           <Dropdown visiblity={DropdownView}>
             <ul>
               {playlistList.map(it => (
-                <li
-                  onClick={() => handleSelect(it.playlistName, it.playlistId)}
-                >
-                  {it.playlistName}
-                </li>
+                <div className="pinDetail">
+                  <li
+                    onClick={() => handleSelect(it.playlistName, it.playlistId)}
+                  >
+                    {it.playlistName}
+                  </li>
+                  <p>{it.pinCount}</p>
+                </div>
               ))}
             </ul>
           </Dropdown>
@@ -101,7 +109,18 @@ const DropDownWrapper = styled.div`
     align-items: center;
   }
   .placeholder {
+    color: var(--gray02, #747474);
+
     font-size: 20px;
+    font-family: Pretendard;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 28px */
+    margin-left: 20px;
+  }
+  .selectedPlaylist {
+    font-size: 20px;
+    font-family: Pretendard;
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 28px */
@@ -122,7 +141,12 @@ const Wrapper = styled.div`
     padding-bottom: 30px;
     box-sizing: border-box;
     overflow-y: auto;
-
+    .pinDetail {
+      display: flex;
+      gap: 100px;
+      align-items: center;
+      margin-top: 10px;
+    }
     &::-webkit-scrollbar {
       width: 7px;
     }
@@ -144,11 +168,10 @@ const Wrapper = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 28px */
-    margin-top: 30px;
     cursor: pointer;
   }
   li:hover {
-    color: red;
+    color: #24ee81;
   }
 `;
 export default PlaylistDropdown;
