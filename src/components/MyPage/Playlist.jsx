@@ -109,6 +109,7 @@ export default Playlist;
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 212px;
 `;
 
 const PlaylistBox = styled.div`

@@ -134,10 +134,14 @@ const CreateNewPlaylist = styled.div`
 `;
 
 const PlaylistSection = styled.div`
-  padding: 32px 40px 0 40px;
+  margin: auto;
+  width: 480px;
+  margin-top: 34px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 28px 8px;
+  grid-gap: 28px 0;
+  justify-items: center;
+  align-items: center;
 `;
 const PlaylistListEmpty = styled.div`
   display: flex;
