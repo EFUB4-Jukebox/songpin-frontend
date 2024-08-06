@@ -375,7 +375,7 @@ const SetGenre = styled.div`
   height: 24px; */
   padding: ${props => (props.hasGenres ? "10px 16px 10px 16px" : "10px 16px 10px 20px")};
   height: ${props => (props.hasGenres ? "auto" : "24px")};
-  width: ${props => (props.hasGenres ? "auto" : "142px")};
+  width: ${props => (props.hasGenres ? "auto" : "86px")};
   justify-content: center;
   align-items: center;
   margin-left: 20px;
