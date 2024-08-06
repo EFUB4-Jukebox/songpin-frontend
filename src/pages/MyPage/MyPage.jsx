@@ -166,6 +166,7 @@ const TopBar = styled.div`
 `;
 
 const PageSelect = styled.div`
+  margin-top: 5px;
   display: flex;
   flex-direction: row;
   gap: 36px;
