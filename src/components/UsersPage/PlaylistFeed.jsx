@@ -24,7 +24,6 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
             playlist={playlist} // 플레이리스트 정보를 전달
           />
         ))}
-
       </PlaylistContainer>
     </PlaylistFeedContainer>
   );
@@ -49,8 +48,8 @@ const PinImg = styled.img`
   width: 30px;
   height: 30px;
   flex-shrink: 0;
-  opacity: 0.8;
   margin-left: 9px;
+  padding-top: 2px;
 `;
 
 const PinNum = styled.div`

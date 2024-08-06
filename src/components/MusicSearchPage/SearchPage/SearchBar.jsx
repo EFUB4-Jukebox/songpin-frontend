@@ -116,6 +116,7 @@ const Search = styled.div`
 const Dropdown = styled.div`
   position: relative;
   cursor: pointer;
+  width: 60px;
 `;
 
 const DropdownHeader = styled.div`
@@ -134,6 +135,8 @@ const DropdownList = styled.div`
   gap: 8px;
   position: absolute;
   top: 160%;
+  width: 28px;
+  height: 56px;
 `;
 
 const ListItem = styled.div`

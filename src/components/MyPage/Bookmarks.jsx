@@ -53,7 +53,6 @@ const BookmarkedContainer = styled.div`
 const PlaylistOverview = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
   margin-left: 36px;
 `;
 
@@ -71,6 +70,7 @@ const Num = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  padding-top: 2px;
 `;
 
 const PlaylistSection = styled.div`

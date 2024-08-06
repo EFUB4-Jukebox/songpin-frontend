@@ -59,9 +59,7 @@ const PinComponent = ({
           <PinTitle>
             <MapIcon src={currentIconSrc} alt="장르 아이콘" />
             <TitleText onClick={handleClick}>{songInfo.title}</TitleText>
-            {buttonVisible && (
-              <PinModalBox top="30px" right="0px" pinId={pinId} />
-            )}
+            {pin.isMine && <PinModalBox top="30px" right="0px" pinId={pinId} />}
           </PinTitle>
           <PinSinger onClick={handleClick}>{songInfo.artist}</PinSinger>
           <InfoBox>
@@ -93,21 +91,22 @@ const PinImg = styled.img`
   width: 78px;
   height: 78px;
   flex-shrink: 0;
-  padding-left: 12px;
+  margin-left: 12px;
   border-radius: 4px;
+  margin-top: 2px;
 `;
 
 const SongBox = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  padding: 9px 11px 9px 0px;
 `;
 
 const TitleBox = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 11px;
-  max-width: 350px;
+  padding-left: 24px;
+  max-width: 335px;
 `;
 
 const PinTitle = styled.div`
@@ -116,15 +115,13 @@ const PinTitle = styled.div`
   align-items: center;
   position: relative;
   height: 28px;
+  padding-top: 4px;
 `;
 
 const MapIcon = styled.img`
   width: 20px;
   height: 20.005px;
   padding-right: 8px;
-  /* &:hover {
-    fill: #1ddfec;
-  } */
 `;
 
 const TitleText = styled.div`
@@ -158,9 +155,7 @@ const InfoBox = styled.div`
   justify-content: flex-end;
   align-items: center;
   white-space: nowrap;
-  /* padding-right: 23px; */
-  width: 350px;
-  padding-top: 5px;
+  width: 320px;
 `;
 
 const InfoText = styled.div`
