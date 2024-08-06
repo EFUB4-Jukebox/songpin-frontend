@@ -10,6 +10,7 @@ import SideSection from "../../components/common/SideSection";
 import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
+import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
@@ -17,6 +18,7 @@ const PlaylistDetailPage = () => {
   const [playlistData, setPlaylistData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
 
   useEffect(() => {
@@ -43,6 +45,21 @@ const PlaylistDetailPage = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+
+  const handleShareClick = () => {
+    // 공유 버튼 클릭 시 링크 복사 등의 동작 수행
+    const currentUrl = window.location.href; // 현재 페이지의 URL
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        setSnackbarVisible(true);
+        setTimeout(() => setSnackbarVisible(false), 3000); // 3초 후에 스낵바 숨기기
+      })
+      .catch(err => {
+        console.error("Failed to copy text: ", err);
+      });
+  };
+
   if (!playlistData) {
     return <SideSection />; // 데이터 로딩 중임을 표시
   }
@@ -76,7 +93,11 @@ const PlaylistDetailPage = () => {
               initialBookmarkId={playlistData.bookmarkId}
               color="black"
             />
-            <ShareBtn src={shareImg} alt="공유 버튼" />
+            <ShareBtn
+              src={shareImg}
+              alt="공유 버튼"
+              onClick={handleShareClick}
+            />
           </IconBox>
         </NameBox>
         <InfoBox>
@@ -105,6 +126,7 @@ const PlaylistDetailPage = () => {
           )}
         </PinContainer>
       </DetailContainer>
+      {snackbarVisible && <CommonSnackbar text="링크가 복사되었습니다!" />}
     </SideSection>
   );
 };
