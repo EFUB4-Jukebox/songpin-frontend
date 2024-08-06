@@ -109,7 +109,8 @@ const SearchSongContainer = ({ onPinSelect }) => {
           {searchResults.length === 0 && isInitialSearch && (
             <EmptySearchResult>
               <BeforeMessage>
-                노래를 검색해 다른 사람들의 핀을 확인해보세요
+                (*Spotify에서 노래를 검색합니다. 노래와 가수가 영어로
+                <br /> 등록되어 있을 가능성이 높아, 영어로 검색해주세요.){" "}
               </BeforeMessage>
             </EmptySearchResult>
           )}
