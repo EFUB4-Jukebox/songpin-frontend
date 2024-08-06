@@ -203,7 +203,7 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
 
             <PersonalInfoConsent>
               <div className="personalInfoConsentCheck">
-                <div>위치정보 및 개인정보 수집에 동의합니다. (필수)</div>
+                <div>개인정보 및 위치정보 수집에 동의합니다. (필수)</div>
                 <HiddenCheckbox
                   checked={personalInfoConsent}
                   onChange={handlePersonalInfoConsent}
@@ -215,7 +215,15 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
                 />
               </div>
               <div className="personalInfoConsentMsg">
-                개인정보 수집에 동의 시에만 서비스를 이용할 수 있습니다.
+                동의 시에만 서비스를 이용하실 수 있습니다.{" "}
+                <a
+                  href="https://songpin.notion.site/SongPin-4c36350460294c21bf1f041125c539f0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  (약관 보기)
+                </a>
               </div>
             </PersonalInfoConsent>
             <div className="signupButton">
