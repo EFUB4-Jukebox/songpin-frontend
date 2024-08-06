@@ -39,7 +39,6 @@ const PinImg = styled.img`
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  opacity: 0.8;
   margin-left: 9px;
 `;
 

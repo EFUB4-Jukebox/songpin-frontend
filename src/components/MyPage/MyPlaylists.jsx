@@ -92,7 +92,6 @@ const PlaylistOverview = styled.div`
 const PlaylistTimes = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
 `;
 
 const PlaylistIcon = styled.img`
@@ -109,6 +108,7 @@ const Num = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  padding-top: 2px;
 `;
 
 const CreateNewPlaylist = styled.div`
