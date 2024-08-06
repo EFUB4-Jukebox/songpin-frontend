@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
@@ -24,6 +24,8 @@ const EditPinPage = () => {
     const [selectedGenre, setSelectedGenre] = useState(null);
     const [isPublic, setIsPublic] = useState(true);
     const [pinData, setPinData] = useState("");
+
+    const calendarRef = useRef(null);
 
     const navigate = useNavigate();
     const params = useParams();
@@ -82,6 +84,20 @@ const EditPinPage = () => {
         console.log("수정됐나?", res);
     };
 
+    useEffect(() => {
+        const handleClickOutside = e => {
+            if (calendarRef.current && !calendarRef.current.contains(e.target) && !e.target.closest('.calendar-area')) {
+            setShowCalendar(false);
+            }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+    
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <MainContainer>
             <SideBar></SideBar>
@@ -95,11 +111,11 @@ const EditPinPage = () => {
                     />
                 </Content>
                     <Title>언제</Title>
-                    <When>
+                    <When className="calendar-area" onClick={() => setShowCalendar(!showCalendar)}>
                         {moment(pinData.listenedDate).format("YYYY.MM.DD")}
-                        <CalendarImg onClick={() => setShowCalendar(!showCalendar)}/></When>
+                        <CalendarImg /></When>
                     {showCalendar && (
-                        <CalendarContainer>
+                        <CalendarContainer ref={calendarRef}>
                             <StyledCalendar
                                 calendarType="gregory"
                                 value={date}
