@@ -59,7 +59,9 @@ const PinComponent = ({
           <PinTitle>
             <MapIcon src={currentIconSrc} alt="장르 아이콘" />
             <TitleText onClick={handleClick}>{songInfo.title}</TitleText>
-            {pin.isMine && <PinModalBox top="30px" right="0px" pinId={pinId} />}
+            {buttonVisible && (
+              <PinModalBox top="30px" right="0px" pinId={pinId} />
+            )}
           </PinTitle>
           <PinSinger onClick={handleClick}>{songInfo.artist}</PinSinger>
           <InfoBox>

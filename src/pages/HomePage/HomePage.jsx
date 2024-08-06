@@ -43,7 +43,7 @@ const HomePage = () => {
                 key={pin.songId}
                 pin={pin}
                 selectable={false}
-                buttonVisible={true}
+                buttonVisible={pin.isMine}
               />
             ))}
         </SongListContainer>
