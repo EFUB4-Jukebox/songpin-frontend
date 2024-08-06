@@ -12,29 +12,19 @@ import {
   getMyPlaylistBookmark,
   getMyProfile,
 } from "../../services/api/myPage";
-
-const spin = keyframes`
-  0% {
-
-    transform: rotate(0deg);
-  }
-  
-  100% {
-    transform: rotate(360deg);
-  }
-`;
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { useQuery } from "@tanstack/react-query";
 
 const MyPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [myPinFeedData, setMypinFeedData] = useState();
-  const [myPlaylistData, setMyPlaylistData] = useState();
-  const [myBookmarkData, setMyBookmarkData] = useState();
-  const [myProfileData, setMyProfileData] = useState();
+
+  // const [myPinFeedData, setMypinFeedData] = useState();
+  // const [myPlaylistData, setMyPlaylistData] = useState();
+  // const [myBookmarkData, setMyBookmarkData] = useState();
+  // const [myProfileData, setMyProfileData] = useState();
 
   const handlePageClick = page => {
     setClickedPage(page);
@@ -51,36 +41,56 @@ const MyPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const getMyFeed = async () => {
-      try {
-        const res = await getMyPinFeed();
-        const res2 = await getMyPlaylist();
-        const res3 = await getMyPlaylistBookmark();
-        const profileData = await getMyProfile();
-        console.log(res);
-        console.log(res2);
-        console.log(res3);
-        console.log(profileData);
+  const { data: myPlaylistData } = useQuery({
+    queryKey: ["getMyPlaylist"],
+    queryFn: getMyPlaylist,
+  });
 
-        if (res && res2 && res3 && profileData) {
-          setMypinFeedData(res);
-          setMyPlaylistData(res2);
-          setMyBookmarkData(res3);
-          setMyProfileData(profileData);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getMyFeed();
-  }, []);
+  const { data: myPinFeedData } = useQuery({
+    queryKey: ["getMyPinFeed"],
+    queryFn: getMyPinFeed,
+  });
+
+  const { data: myBookmarkData } = useQuery({
+    queryKey: ["getMyPlaylistBookmark"],
+    queryFn: getMyPlaylistBookmark,
+  });
+
+  const { data: myProfileData } = useQuery({
+    queryKey: ["getMyProfile"],
+    queryFn: getMyProfile,
+  });
+
+  // useEffect(() => {
+  //   const getMyFeed = async () => {
+  //     try {
+  //       const res = await getMyPinFeed();
+  //       const res2 = await getMyPlaylist();
+  //       const res3 = await getMyPlaylistBookmark();
+  //       const profileData = await getMyProfile();
+  //       console.log(res);
+  //       console.log(res2);
+  //       console.log(res3);
+  //       console.log(profileData);
+
+  //       if (res && res2 && res3 && profileData) {
+  //         setMypinFeedData(res);
+  //         setMyPlaylistData(res2);
+  //         setMyBookmarkData(res3);
+  //         setMyProfileData(profileData);
+  //       }
+  //     } catch (error) {
+  //       console.log("데이터 불러오기에 실패했습니다.", error);
+  //     }
+  //   };
+  //   getMyFeed();
+  // }, []);
 
   return (
     <SideSection showSideBar={showSideBar}>
-      {myPinFeedData ? (
+      {myPinFeedData && myProfileData ? (
         <>
-          <MyInfoTop myProfileData={myProfileData && myProfileData} />
+          <MyInfoTop myProfileData={myProfileData} />
           <TopBar>
             <PageSelect>
               <PageItem
@@ -115,10 +125,7 @@ const MyPage = () => {
           )}
         </>
       ) : (
-        <Loading>
-          데이터를 로딩중입니다.
-          <Spinner src={spinner} />
-        </Loading>
+        <LoadingSpinner />
       )}
     </SideSection>
   );
@@ -142,25 +149,6 @@ export default MyPage;
 //     display: none;
 //   }
 // `;
-
-const Loading = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-  align-items: center;
-  font-family: Pretendard;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  gap: 20px;
-`;
-
-const Spinner = styled.img`
-  width: 50px;
-  height: 50px;
-  animation: ${spin} 1s infinite;
-`;
 
 const TopBar = styled.div`
   display: flex;
