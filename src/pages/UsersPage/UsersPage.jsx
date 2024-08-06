@@ -127,7 +127,7 @@ const ContentBox2 = styled.div`
 
   padding-left: 34px;
   padding-right: 34px;
-  padding-top: 20px;
+  padding-top: 15px;
 
   align-items: center;
 `;
