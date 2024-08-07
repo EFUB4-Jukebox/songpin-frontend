@@ -2,16 +2,25 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { MenuList } from "../../constants/MenuList";
 import LoginModal from "../AuthPage/LoginModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SignupModal from "../AuthPage/SignupModal";
 import CompleteLogin from "../AuthPage/CompleteLogin";
 import PwResetModal from "../AuthPage/PwResetModal";
+import { postLogout } from "../../services/api/auth";
 
 const NavBar = () => {
   const [loginModal, setLoginModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
   const [completeLogin, setCompleteLogin] = useState(false);
   const [pwResetModal, setPwResetModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLogin = () => {
     setLoginModal(true);
@@ -19,6 +28,12 @@ const NavBar = () => {
   const handleSignup = () => {
     setSignupModal(true);
   };
+
+  const handleLogout = async () => {
+    await postLogout();
+    setIsLoggedIn(false);
+  };
+
   return (
     <>
       <div>
@@ -32,8 +47,14 @@ const NavBar = () => {
           </Menu>
           <Login>
             <ul>
-              <li onClick={handleLogin}>로그인</li>
-              <li onClick={handleSignup}>회원가입</li>
+              {isLoggedIn ? (
+                <li onClick={handleLogout}>로그아웃</li>
+              ) : (
+                <>
+                  <li onClick={handleLogin}>로그인</li>
+                  <li onClick={handleSignup}>회원가입</li>
+                </>
+              )}
             </ul>
           </Login>
         </Navbar>

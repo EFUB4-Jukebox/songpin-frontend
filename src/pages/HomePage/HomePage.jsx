@@ -5,11 +5,33 @@ import PinComponent from "../../components/PlaylistPage/PinComponent";
 import PlaceComponent from "../../components/HomePage/PlaceComponent";
 import { getHomeInfo } from "../../services/api/home";
 import { useEffect, useState } from "react";
+import LoginModal from "../../components/AuthPage/LoginModal";
+import SignupModal from "../../components/AuthPage/SignupModal";
+import PwResetModal from "../../components/AuthPage/PwResetModal";
+import CompleteLogin from "../../components/AuthPage/CompleteLogin";
 
 const HomePage = () => {
   const [homeInfo, setHomeInfo] = useState(null);
   const [recentPins, setRecentPins] = useState([]);
   const [recentPlaces, setRecentPlaces] = useState([]);
+  const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
+  const [completeLogin, setCompleteLogin] = useState(false);
+  const [pwResetModal, setPwResetModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handlePageClick = () => {
+    if (!isLoggedIn) {
+      setLoginModal(true);
+    }
+  };
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -26,9 +48,13 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
-      <SideBar />
-      <SideSection>
+    <div
+      style={{ position: "relative" }}
+      onClick={handlePageClick}
+      isNotLoggedIn={!isLoggedIn}
+    >
+      <SideBar isNotLoggedIn={!isLoggedIn} setLoginModal={setLoginModal} />
+      <SideSection isNotLoggedIn={!isLoggedIn}>
         <Title>
           {homeInfo}님, <br />
           무슨 노래 듣고 계세요?
@@ -59,6 +85,29 @@ const HomePage = () => {
       </SideSection>
       {/* <MapFilter /> */}
       <AnnounceTxt>지도상에 핀은 최대 300개까지 표시됩니다.</AnnounceTxt>
+      {loginModal && (
+        <LoginModal
+          setPwResetModal={setPwResetModal}
+          setCompleteLogin={setCompleteLogin}
+          setLoginModal={setLoginModal}
+          setSignupModal={setSignupModal}
+          onClick={e => e.stopPropagation()}
+        />
+      )}
+      {signupModal && (
+        <SignupModal
+          setCompleteLogin={setCompleteLogin}
+          setLoginModal={setLoginModal}
+          setSignupModal={setSignupModal}
+        />
+      )}
+      {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
+      {pwResetModal && (
+        <PwResetModal
+          setPwResetModal={setPwResetModal}
+          setLoginModal={setLoginModal}
+        />
+      )}
     </div>
   );
 };

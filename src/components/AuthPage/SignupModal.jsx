@@ -48,6 +48,7 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
     "닉네임은 8자 이내, 한글, 영어 대소문자, 숫자만 사용 가능합니다.",
   );
   const [nicknameValid, setNicknameValid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = email => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -115,6 +116,8 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
 
   const onSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
+
     if (
       email === "" ||
       nickname === "" ||
@@ -126,9 +129,11 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
       if (password === "") setConfirmPasswordMsg("비밀번호를 입력하세요.");
       if (confirmPassword === "")
         setConfirmPasswordMsg("비밀번호 확인을 입력하세요.");
+      setLoading(false);
       return;
     } else if (!personalInfoConsent) {
       setRedConsent(true);
+      setLoading(false);
       return;
     }
 
@@ -154,6 +159,8 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -232,6 +239,7 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
                 onClick={onSubmit}
                 name="회원가입"
                 disabled={!personalInfoConsent}
+                loading={loading}
               />
             </div>
             <CheckingMember>

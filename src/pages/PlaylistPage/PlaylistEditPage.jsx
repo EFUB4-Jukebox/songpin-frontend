@@ -20,7 +20,7 @@ const PlaylistEditPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [pinList, setPinList] = useState([]); // 추가: 핀 리스트 상태
   const [showSideBar, setShowSideBar] = useState(true);
-
+  const [back, setBack] = useState(false);
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
       try {
@@ -45,11 +45,16 @@ const PlaylistEditPage = () => {
   };
 
   const handlePopup = () => {
-    setIsOpen(!isOpen);
+    if (back) {
+      navigate(-1);
+    } else {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    setIsOpen(true);
+    setBack(true);
   };
   const handleCheckClicked = () => {
     const newIsChecked = !isChecked;
@@ -59,12 +64,10 @@ const PlaylistEditPage = () => {
 
   const handleEditPlaylist = async () => {
     try {
-      const selectedPins = pinList
-        .filter(pin => pin.isSelected)
-        .map(pin => ({
-          playlistPinId: pin.playlistPinId,
-          pinIndex: pin.pinIndex,
-        }));
+      const selectedPins = pinList.map(pin => ({
+        playlistPinId: pin.playlistPinId,
+        pinIndex: pin.pinIndex,
+      }));
 
       await editPlaylist(
         playlistId,

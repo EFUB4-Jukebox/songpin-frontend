@@ -35,7 +35,8 @@ const Playlist = ({ playlist }) => {
     }
   }, [title]);
 
-  const toggleBookmark = async () => {
+  const toggleBookmark = async event => {
+    event.stopPropagation();
     try {
       if (isBookmarked) {
         await deleteBookmarkOne(bookmarkId);
@@ -58,7 +59,7 @@ const Playlist = ({ playlist }) => {
 
   return (
     <PlaylistContainer>
-      <PlaylistBox>
+      <PlaylistBox onClick={handlePlaylistClick}>
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkBtn
             src={isBookmarked ? yesbookmark : nobookmark}
@@ -109,12 +110,14 @@ export default Playlist;
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 212px;
 `;
 
 const PlaylistBox = styled.div`
   display: flex;
   overflow: hidden;
   margin-bottom: 12px;
+  cursor: pointer;
 `;
 
 const BigBox = styled.div`

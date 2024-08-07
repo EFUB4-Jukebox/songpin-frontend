@@ -1,67 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, isNotLoggedIn }) => {
+const SideSectionWithoutSideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [loginModal, setLoginModal] = useState(false);
 
   const handleSideBox = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    //console.log(isNotLoggedIn);
-    if (isNotLoggedIn) {
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
-    }
-  }, [isNotLoggedIn]);
-
-  const handleSideBarClick = () => {
-    if (isNotLoggedIn) {
-      setLoginModal(true);
-    }
-  };
-
   return (
     <SideComponent>
-      <SideBarContainer>
-        <SideBar onClick={handleSideBarClick} />
-      </SideBarContainer>
-      {isOpen && (
-        <>
-          <SideBox isOpen={isOpen}>
-            <Content>{children}</Content>
-          </SideBox>
-          <BoxHandle>
-            <CloseBar onClick={handleSideBox}>
-              <Arrow src={arrowIcon} isOpen={isOpen} />
-            </CloseBar>
-          </BoxHandle>
-        </>
-      )}
+      <SideBox isOpen={isOpen}>
+        <Content>{children}</Content>
+      </SideBox>
+      <BoxHandle>
+        <CloseBar onClick={handleSideBox}>
+          <Arrow src={arrowIcon} isOpen={isOpen} />
+        </CloseBar>
+      </BoxHandle>
     </SideComponent>
   );
 };
 
-export default SideSection;
+export default SideSectionWithoutSideBar;
 
 const SideComponent = styled.div`
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  position: absolute;
-  z-index: 10;
+
   /* overflow-y: overlay; */
 `;
 
-const SideBarContainer = styled.div`
-  width: 80px;
-  border-right: 1px solid var(--gray, #bcbcbc);
-`;
+// const SideBarContainer = styled.div`
+//   width: 80px;
+//   border-right: 1px solid var(--gray, #bcbcbc);
+//   position: absolute;
+//   z-index: 0;
+// `;
 
 const SideBox = styled.div`
   width: ${props => (props.isOpen ? "528px" : "0")};

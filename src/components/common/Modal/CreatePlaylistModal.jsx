@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ModalCommon from "./ModalCommon";
 import { createPlaylist } from "../../../services/api/playlist";
+import useSnackbarStore from "../../../store/useSnackbarStore";
 
 const CreatePlaylistModal = ({ setModalCommon }) => {
   const [inputValue, setInputValue] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [active, setActive] = useState(false);
-
+  const { setIsSnackbar } = useSnackbarStore();
   const handleCreatePlaylist = async () => {
     const isVisibility = isPublic ? "PUBLIC" : "PRIVATE";
     try {
@@ -16,6 +17,7 @@ const CreatePlaylistModal = ({ setModalCommon }) => {
       };
       console.log(createdPlaylist);
       const res = await createPlaylist(createdPlaylist);
+      setIsSnackbar("플레이리스트가 생성되었습니다!");
       console.log(res);
       setModalCommon(false);
     } catch (error) {

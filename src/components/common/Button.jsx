@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const Button = ({ name, onClick, active }) => {
+const Button = ({ name, onClick, active, loading }) => {
   useEffect(() => {
     console.log(active);
   }, []);
@@ -10,10 +10,18 @@ const Button = ({ name, onClick, active }) => {
       <Wrapper>
         <button
           className={active ? "activeButton" : "inactiveButton"}
-          onClick={active ? onClick : null}
-          disabled={!active}
+          onClick={active && !loading ? onClick : null}
+          disabled={!active || loading}
         >
-          {name}
+          {loading ? (
+            <LoadingDots>
+              <div />
+              <div />
+              <div />
+            </LoadingDots>
+          ) : (
+            name
+          )}
         </button>
       </Wrapper>
     </>
@@ -49,4 +57,43 @@ const Wrapper = styled.div`
     line-height: 40px;
   }
 `;
+
+const loading = keyframes`
+0%,100% {
+opacity:0;
+transform: scale(0.5);
+}
+50% {
+  opacity:1;
+  transform: scale(1.2);
+}
+`;
+
+const LoadingDots = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+
+  div {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background-color: gray;
+    border-radius: 50%;
+    animation: ${loading} 1s infinite;
+
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+      margin: 0px 10px;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+`;
+
 export default Button;
