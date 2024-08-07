@@ -11,7 +11,6 @@ import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
-
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
@@ -20,6 +19,10 @@ const PlaylistDetailPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
+
+  const handleUserClick = id => {
+    navigate(`/users/${id}`);
+  };
 
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
@@ -86,7 +89,9 @@ const PlaylistDetailPage = () => {
           <PlaylistName>{playlistData.playlistName}</PlaylistName>
         </NameContainer>
         <NameBox>
-          <UserName>by {playlistData.creatorNickname}</UserName>
+          <UserName onClick={() => handleUserClick(playlistData.creatorId)}>
+            by {playlistData.creatorNickname}
+          </UserName>
           <IconBox>
             <BookmarkToggle
               playlistId={playlistId}
@@ -225,6 +230,7 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  cursor: pointer;
 `;
 
 const IconBox = styled.div`
