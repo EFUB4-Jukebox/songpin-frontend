@@ -98,10 +98,14 @@ const TitleText = styled.div`
 `;
 
 const PlaylistFeed = styled.div`
+  margin: auto;
+  width: 480px;
+  margin-top: 34px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* grid-gap: 28px 28px; */
-  padding: 0px 20px 70px 20px;
+  grid-gap: 28px 0;
+  justify-items: center;
+  align-items: center;
 `;
 
 const NoPlaylist = styled.div`
