@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import mapIconSparkBlack from "../../assets/images/MusicSearchPage/spark_black.svg";
 import uncheckedBox from "../../assets/images/MusicSearchPage/checkbox.svg";
@@ -23,6 +23,7 @@ const MusicInfoPage = () => {
   const [pins, setPins] = useState([]);
   const [myPins, setMyPins] = useState([]);
   const [showSideBar, setShowSideBar] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -114,7 +115,7 @@ const MusicInfoPage = () => {
   }
 
   return (
-    <SideSection showSideBar={showSideBar}>
+    <SideSection showSideBar={showSideBar} key={`${songId}-${location.key}`}>
       <MusicInfo>
         <SongInfo>
           <BackIcon src={backIcon} onClick={goPreviousPage} />
