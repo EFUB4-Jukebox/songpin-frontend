@@ -17,6 +17,7 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          hasError={hasError}
         />
         <div className="input">
           {infoMsg && <div className="infoMsg">{infoMsg}</div>}
@@ -48,11 +49,8 @@ const InputField = styled.input`
   padding: 10px;
   border: ${props =>
     props.hasError ? "1px solid #FF3844" : "1px solid var(--gray02, #747474)"};
-  &:focus {
-    border-color: #007bff; /* 원하는 색상으로 변경 */
-  }
   &::placeholder {
-    font-family: Pretendard; /* 원하는 폰트 패밀리로 변경 */
+    font-family: Pretendard;
   }
 `;
 
