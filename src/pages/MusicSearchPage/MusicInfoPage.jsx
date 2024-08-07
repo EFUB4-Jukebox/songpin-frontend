@@ -111,7 +111,7 @@ const MusicInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection showSideBar={showSideBar}/>; // 로딩 중
+    return <SideSection showSideBar={showSideBar} />; // 로딩 중
   }
 
   return (
@@ -267,6 +267,7 @@ const Singer = styled.div`
   font-weight: 500;
   line-height: normal;
   margin-bottom: 11px;
+  width: 462px;
 `;
 
 const PinCount = styled.div`
