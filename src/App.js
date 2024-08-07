@@ -256,9 +256,12 @@ function MapLayout({
       return;
     }
 
-    if (pin.placePinCount >= 2) {
+    if (pin.placePinCount > 1) {
+      console.log(pin);
       navigate(`/details-place/${pin.placeId}`);
     } else {
+      console.log("핀 정보:", pin);
+      console.log("곡 정보:", pin.latestSongId);
       navigate(`/details-song/${pin.latestSongId}`);
     }
   };
@@ -353,7 +356,7 @@ function MapLayout({
           return (
             <Wrapper onClick={() => handleMapClick(pin)}>
               <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
-                <MapMarker
+                <MapMarker onClick={() => handleMapClick(pin)}
                   position={{ lat: pin.latitude, lng: pin.longitude }}
                   image={{
                     src: genreImages[pin.latestGenreName] || extra,

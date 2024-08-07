@@ -12,7 +12,7 @@ const SideSection = ({ children, isNotLoggedIn }) => {
   };
 
   useEffect(() => {
-    console.log(isNotLoggedIn);
+    //console.log(isNotLoggedIn);
     if (isNotLoggedIn) {
       setIsOpen(false);
     } else {
