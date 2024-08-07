@@ -48,7 +48,11 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative" }} onClick={handlePageClick}>
+    <div
+      style={{ position: "relative" }}
+      onClick={handlePageClick}
+      isNotLoggedIn={!isLoggedIn}
+    >
       <SideBar isNotLoggedIn={!isLoggedIn} setLoginModal={setLoginModal} />
       <SideSection isNotLoggedIn={!isLoggedIn}>
         <Title>

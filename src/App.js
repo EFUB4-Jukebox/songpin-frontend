@@ -172,7 +172,7 @@ function App() {
               handleFilterChange={handleFilterChange}
               handleFilterChange2={handleFilterChange2}
               isLoggedIn={isLoggedIn}
-              setLoginModal={handlePageClick}
+              setLoginModal={setLoginModal}
             />
           }
         >
@@ -246,10 +246,17 @@ function MapLayout({
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
   const [fadeOut, setFadeOut] = useState(false);
-  const handleMapClick = event => {
+
+  const handleMapClick = pin => {
     if (!isLoggedIn) {
       setLoginModal(true);
       return;
+    }
+
+    if (pin.placePinCount >= 2) {
+      navigate(`/details-place/${pin.placeId}`);
+    } else {
+      navigate(`/details-song/${pin.latestSongId}`);
     }
   };
 
@@ -271,7 +278,6 @@ function MapLayout({
       }}
     >
       <Map
-        onClick={handleMapClick}
         center={{ lat: 37.56011030387691, lng: 126.94585449321849 }}
         style={{
           position: "absolute",
@@ -301,17 +307,7 @@ function MapLayout({
                   },
                 },
               }}
-              onClick={() => {
-                if (!isLoggedIn) {
-                  setLoginModal(true);
-                  return;
-                }
-                if (pin.placePinCount >= 2) {
-                  navigate(`/details-place/${pin.placeId}`);
-                } else {
-                  navigate(`/details-song/${pin.latestSongId}`);
-                }
-              }}
+              onClick={() => handleMapClick(pin)}
             >
               {/* <div style={{color:"#000"}}>{pin.name}</div> */}
             </MapMarker>
