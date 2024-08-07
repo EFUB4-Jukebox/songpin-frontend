@@ -1,28 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, showSideBar }) => {
+const SideSection = ({ children, isNotLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleSideBox = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    console.log(isNotLoggedIn);
+    if (isNotLoggedIn) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [isNotLoggedIn]);
+
   return (
     <SideComponent>
       <SideBarContainer>
         <SideBar />
       </SideBarContainer>
-      <SideBox isOpen={isOpen}>
-        <Content>{children}</Content>
-      </SideBox>
-      <BoxHandle>
-        <CloseBar onClick={handleSideBox}>
-          <Arrow src={arrowIcon} isOpen={isOpen} />
-        </CloseBar>
-      </BoxHandle>
+      {isOpen && (
+        <>
+          <SideBox isOpen={isOpen}>
+            <Content>{children}</Content>
+          </SideBox>
+          <BoxHandle>
+            <CloseBar onClick={handleSideBox}>
+              <Arrow src={arrowIcon} isOpen={isOpen} />
+            </CloseBar>
+          </BoxHandle>
+        </>
+      )}
     </SideComponent>
   );
 };

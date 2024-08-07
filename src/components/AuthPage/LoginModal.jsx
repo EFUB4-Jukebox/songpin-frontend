@@ -64,7 +64,7 @@ const LoginModal = ({
   return (
     <>
       {
-        <Wrapper>
+        <Wrapper onClick={e => e.stopPropagation()}>
           <LoginWrapper ref={modalRef}>
             <div className="login">로그인하세요</div>
             <Input
