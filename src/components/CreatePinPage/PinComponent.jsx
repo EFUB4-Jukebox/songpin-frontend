@@ -48,7 +48,7 @@ const PinImg = styled.img`
 const TextBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px 15px 10px 29px;
+  margin: 16px 15px 10px 16px;
   width: 100%;
   height: 78px;
   overflow: hidden;
