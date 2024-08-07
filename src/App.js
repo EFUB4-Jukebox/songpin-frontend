@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import {
   BrowserRouter as Router,
   Route,
@@ -30,7 +31,7 @@ import Main from "./pages/IntroducePage/Main";
 import MyPinSearchPage from "./pages/MyPage/MyPinSearchPage";
 import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
 
 import {
@@ -161,9 +162,7 @@ function App() {
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
-
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -193,10 +192,56 @@ function MapLayout({
   handleFilterChange2,
 }) {
   const navigate = useNavigate();
+  const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
+  const [lat, setLat] = useState(defaultCenter.lat);
+  const [lng, setLng] = useState(defaultCenter.lng);
+
   const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
   const [fadeOut, setFadeOut] = useState(false);
+  const groupPinsByLocation = (pins) => {
+    const groupedPins = pins.reduce((acc, pin) => {
+      const key = `${pin.latitude},${pin.longitude}`;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(pin);
+      return acc;
+    }, {});
+    return groupedPins;
+  };
+
+  const groupedPins = groupPinsByLocation(pinsToDisplay);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const { latitude, longitude } = position.coords;
+          const isValidLocation =
+            latitude >= 33.0 && latitude <= 38.0 && longitude >= 124.0 && longitude <= 132.0;
+
+          if (isValidLocation) {
+            setLat(latitude);
+            setLng(longitude);
+          } else {
+            setLat(defaultCenter.lat);
+            setLng(defaultCenter.lng);
+          }
+        },
+        function () {
+          setLat(defaultCenter.lat);
+          setLng(defaultCenter.lng);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (isSnackbar) {
@@ -216,7 +261,7 @@ function MapLayout({
       }}
     >
       <Map
-        center={{ lat: 37.56011030387691, lng: 126.94585449321849 }}
+        center={{ lat, lng }}
         style={{
           position: "absolute",
           top: 0,
@@ -227,35 +272,39 @@ function MapLayout({
           pointerEvents: "auto",
         }}
       >
-        {pinsToDisplay.length > 0 &&
-          pinsToDisplay.map(pin => (
-            <MapMarker
-              key={pin.id}
-              position={{ lat: pin.latitude, lng: pin.longitude }}
-              image={{
-                src: genreImages[pin.latestGenreName] || extra,
-                size: {
-                  width: 114,
-                  height: 114,
-                },
-                options: {
-                  offset: {
-                    x: 57,
-                    y: 57,
-                  },
-                },
-              }}
-              onClick={() => {
-                if (pin.placePinCount >= 2) {
-                  navigate(`/details-place/${pin.placeId}`);
-                } else {
-                  navigate(`/details-song/${pin.latestSongId}`);
-                }
-              }}
-            >
-              {/* <div style={{color:"#000"}}>{pin.name}</div> */}
-            </MapMarker>
-          ))}
+        {Object.entries(groupedPins).map(([key, pins]) => {
+          const pin = pins[0]; // 대표로 사용할 핀 데이터
+          const pinCount = pins.length;
+
+          return (
+            <MarkerContainer key={key}>
+              <MapMarker
+                position={{ lat: pin.latitude, lng: pin.longitude }}
+                image={{
+                  src: genreImages[pin.latestGenreName] || extra,
+                  size: { width: 114, height: 114 },
+                  options: { offset: { x: 57, y: 57 } },
+                }}
+                onClick={() => {
+                  if (pinCount >= 2) {
+                    navigate(`/details-place/${pin.placeId}`);
+                  } else {
+                    navigate(`/details-song/${pin.latestSongId}`);
+                  }
+                }}
+              />
+              {pinCount > 1 && (
+                <PinNum
+                  style={{
+                    fontSize: pinCount >= 10 ? 16 : 20,
+                  }}
+                >
+                  {pinCount}
+                </PinNum>
+              )}
+            </MarkerContainer>
+          );
+        })}
       </Map>
       <div
         style={{
@@ -277,7 +326,6 @@ function MapLayout({
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
-          {/* <Route path="/user-follows" element={<UserFollowPage />} /> */}
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
@@ -321,3 +369,27 @@ function MapLayout({
     </div>
   );
 }
+
+const MarkerContainer = styled.div`
+  position: relative;
+`;
+
+const PinNum = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--f8f8f8, #FCFCFC);
+  text-align: center;
+  text-shadow: -1.5px 0px #232323, 0px 1.5px #232323, 1.5px 0px #232323, 0px -1.5px #232323;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+`;
