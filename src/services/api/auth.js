@@ -45,17 +45,10 @@ export const postLogin = async userData => {
 
 export const postLogout = async () => {
   try {
-    const res = await client.post(
-      "/logout",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-        withCredentials: true,
-      },
-    );
-    localStorage.removeItem("accessToken");
+    const res = await client.post("/logout");
+
+    localStorage.clear();
+
     console.log("로그아웃 성공");
     alert("로그아웃 되었습니다.");
   } catch (e) {

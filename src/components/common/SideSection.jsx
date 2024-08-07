@@ -12,7 +12,6 @@ const SideSection = ({ children, isNotLoggedIn }) => {
   };
 
   useEffect(() => {
-    //console.log(isNotLoggedIn);
     if (isNotLoggedIn) {
       setIsOpen(false);
     } else {
@@ -31,11 +30,13 @@ const SideSection = ({ children, isNotLoggedIn }) => {
       <SideBarContainer>
         <SideBar onClick={handleSideBarClick} />
       </SideBarContainer>
-      {isOpen && (
+      {!isNotLoggedIn && (
         <>
-          <SideBox isOpen={isOpen}>
-            <Content>{children}</Content>
-          </SideBox>
+          {isOpen && (
+            <SideBox isOpen={isOpen}>
+              <Content>{children}</Content>
+            </SideBox>
+          )}
           <BoxHandle>
             <CloseBar onClick={handleSideBox}>
               <Arrow src={arrowIcon} isOpen={isOpen} />

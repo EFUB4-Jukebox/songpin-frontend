@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
-import location from "../../assets/images/MusicSearchPage/location_icon.svg";
+import locationIcon from "../../assets/images/MusicSearchPage/location_icon.svg";
 import shareButton from "../../assets/images/MusicSearchPage/sharing_button.svg";
 import sparkIcon from "../../assets/images/MusicSearchPage/spark_122.svg";
 import PinComponent from "../../components/MusicSearchPage/PinComponent";
@@ -79,7 +79,7 @@ const PlaceInfoPage = () => {
         <BackIcon src={backIcon} onClick={handleNavigate} />
         <PlaceDetails>
           <PlaceTitle>
-            <LocationIcon src={location} />
+            <LocationIcon src={locationIcon} />
             <Name>{placeInfo.placeName}</Name>
           </PlaceTitle>
           <SharingBtn src={shareButton} onClick={handleShareClick} />
