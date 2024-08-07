@@ -6,14 +6,14 @@ import { getMyPlaylist } from "../../../services/api/myPage";
 import usePlaylistIdStore from "../../../store/usePlaylistIdStore";
 import usePlaylistInfoMsgStore from "../../../store/usePlaylistInfoMsgStore";
 import CommonSnackbar from "../snackbar/CommonSnackbar";
+import useSnackbarStore from "../../../store/useSnackbarStore";
 
 const AddPlaylistModal = ({ setModalCommon, pinId }) => {
   const [active, setActive] = useState(false);
   const { playlistId } = usePlaylistIdStore();
   const { setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
-  const [snackbarActive, setSnackbarActive] = useState(false);
-  const [fadeOut, setFadeOut] = useState(false);
-  const [init, setInit] = useState(true);
+  const { setIsSnackbar } = useSnackbarStore();
+
   const addPlaylist = async () => {
     try {
       const pinPlaylist = {
@@ -25,23 +25,13 @@ const AddPlaylistModal = ({ setModalCommon, pinId }) => {
       if (res) {
         setPlaylistInfoMsg(res.message);
       } else {
-        setSnackbarActive(true);
-        setTimeout(() => {
-          setSnackbarActive(false);
-          setModalCommon(false);
-        }, 1500);
+        setIsSnackbar("핀을 플레이리스트에 담았습니다!");
+        setModalCommon(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  // useEffect(() => {
-  //   if (init) {
-  //     setInit(false);
-  //     return;
-  //   }
-  //   !snackbarActive && setModalCommon(false);
-  // }, [snackbarActive]);
 
   return (
     <>
@@ -55,12 +45,6 @@ const AddPlaylistModal = ({ setModalCommon, pinId }) => {
         active={active}
         setActive={setActive}
       />
-      {snackbarActive && (
-        <CommonSnackbar
-          text="핀이 플레이리스트에 담겼습니다!"
-          className={fadeOut ? "fade-out" : ""}
-        />
-      )}
     </>
   );
 };

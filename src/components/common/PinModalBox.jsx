@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moreButton from "../../assets/images/MyPage/more-icon.svg";
 import SmallModal from "./Modal/SmallModal";
 import AddPlaylistModal from "./Modal/AddPlaylistModal";
 import { useNavigate } from "react-router-dom";
 import { deletePin } from "../../services/api/pin";
+import CommonSnackbar from "./snackbar/CommonSnackbar";
 
 const options = ["담기", "수정", "삭제"];
 

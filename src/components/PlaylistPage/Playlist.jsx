@@ -82,8 +82,9 @@ export default Playlist;
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px;
+  /* margin: 15px; */
   cursor: pointer;
+  width: 212px;
 `;
 const PlaylistBox = styled.div`
   display: flex;

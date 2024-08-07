@@ -16,6 +16,8 @@ import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/loc
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
 import { postNewPin } from "../../services/api/pin";
+import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -32,6 +34,7 @@ const CreatePinPage = () => {
   const [memo, setMemo] = useState("");
   const [active, setActive] = useState(false);
   const [infoMsg, setInfoMsg] = useState("");
+  const { setIsSnackbar } = useSnackbarStore();
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
@@ -100,11 +103,13 @@ const CreatePinPage = () => {
     console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
     const res = await postNewPin(request);
+    setIsSnackbar("핀이 생성되었습니다!");
     console.log(res.headers.location.slice(7));
     const songInfo = res.headers.location.slice(7);
     if (songInfo) {
       const songId = Number(songInfo);
       console.log(songId);
+
       navigate(`/details-song/${songId}`);
     }
   };
