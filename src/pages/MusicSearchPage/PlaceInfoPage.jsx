@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import location from "../../assets/images/MusicSearchPage/location_icon.svg";
 import shareButton from "../../assets/images/MusicSearchPage/sharing_button.svg";
@@ -14,6 +14,7 @@ import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 const PlaceInfoPage = () => {
   const navigate = useNavigate();
   const { placeId } = useParams();
+  const location = useLocation();
   const [placeInfo, setPlaceInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSideBar, setShowSideBar] = useState(true);
@@ -73,7 +74,7 @@ const PlaceInfoPage = () => {
   }
 
   return (
-    <SideSection showSideBar={showSideBar}>
+    <SideSection showSideBar={showSideBar} key={`${placeId}-${location.key}`}>
       <PlaceInfo>
         <BackIcon src={backIcon} onClick={handleNavigate} />
         <PlaceDetails>
