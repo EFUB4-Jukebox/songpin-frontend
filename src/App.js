@@ -5,6 +5,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 import IntroducePage from "./pages/IntroducePage/IntroducePage";
@@ -32,6 +33,7 @@ import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
+
 import {
   postAllMarkers,
   postRecentMarkers,
@@ -48,6 +50,8 @@ import rock from "./assets/map/glowing_map_rock.svg";
 import extra from "./assets/map/glowing_map_extra.svg";
 import { GenreList } from "./constants/GenreList";
 import MapFilter from "./components/HomePage/MapFilter";
+import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
+import useSnackbarStore from "./store/useSnackbarStore";
 
 const genreImages = {
   POP: pop,
@@ -106,6 +110,25 @@ function App() {
     }
   };
 
+  const handleFilterChange2 = async (genres, startDate, endDate) => {
+    const genreNameFilters = genres.map(
+      genre => GenreList.find(g => g.id === genre).EngName,
+    );
+    const request = {
+      boundCoords: {
+        swLat: 0,
+        swLng: 0,
+        neLat: 90,
+        neLng: 180,
+      },
+      genreNameFilters: genreNameFilters,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    const data = await postCustomPeriodMarkers(request);
+    setRecentPins(data.mapPlaceSet || []);
+  };
+
   return (
     <Router>
       <Routes>
@@ -126,6 +149,7 @@ function App() {
               allPins={allPins}
               recentPins={recentPins}
               handleFilterChange={handleFilterChange}
+              handleFilterChange2={handleFilterChange2}
             />
           }
         >
@@ -134,7 +158,7 @@ function App() {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
@@ -161,13 +185,21 @@ function App() {
 
 export default App;
 
-function MapLayout({ allPins, recentPins, handleFilterChange }) {
+function MapLayout({
+  allPins,
+  recentPins,
+  handleFilterChange,
+  handleFilterChange2,
+}) {
   const navigate = useNavigate();
   const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
   const [lat, setLat] = useState(defaultCenter.lat);
   const [lng, setLng] = useState(defaultCenter.lng);
 
+  const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
+  const { isSnackbar, setIsSnackbar } = useSnackbarStore();
+  const [fadeOut, setFadeOut] = useState(false);
   const groupPinsByLocation = (pins) => {
     const groupedPins = pins.reduce((acc, pin) => {
       const key = `${pin.latitude},${pin.longitude}`;
@@ -210,6 +242,15 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (isSnackbar) {
+      const timer = setTimeout(() => {
+        setIsSnackbar("");
+      }, 2000); // 2초
+      return () => clearTimeout(timer);
+    }
+  }, [isSnackbar]);
 
   return (
     <div
@@ -281,7 +322,7 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage />} />
-          <Route path="/pin-edit" element={<EditPinPage />} />
+          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
@@ -311,8 +352,19 @@ function MapLayout({ allPins, recentPins, handleFilterChange }) {
           zIndex: 1,
         }}
       >
-        <MapFilter onFilterChange={handleFilterChange} />
+        {location.pathname === "/home" && (
+          <MapFilter
+            onFilterChange={handleFilterChange}
+            onFilterChange2={handleFilterChange2}
+          />
+        )}
       </div>
+      {isSnackbar && (
+        <CommonSnackbar
+          text={isSnackbar}
+          className={fadeOut ? "fade-out" : ""}
+        />
+      )}
       <Notification />
     </div>
   );

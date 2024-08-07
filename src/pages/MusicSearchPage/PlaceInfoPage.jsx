@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import location from "../../assets/images/MusicSearchPage/location_icon.svg";
 import shareButton from "../../assets/images/MusicSearchPage/sharing_button.svg";
@@ -9,13 +9,16 @@ import PinComponent from "../../components/MusicSearchPage/PinComponent";
 import SideSection from "../../components/common/SideSection";
 import { getPlaceDetails } from "../../services/api/place";
 import { GenreList } from "../../constants/GenreList";
+import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 
 const PlaceInfoPage = () => {
   const navigate = useNavigate();
   const { placeId } = useParams();
+  const location = useLocation();
   const [placeInfo, setPlaceInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSideBar, setShowSideBar] = useState(true);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const handleNavigate = () => {
     navigate("/search");
@@ -52,12 +55,26 @@ const PlaceInfoPage = () => {
     return `${year}.${month}.${day}`;
   };
 
+  const handleShareClick = () => {
+    // 공유 버튼 클릭 시 링크 복사 등의 동작 수행
+    const currentUrl = window.location.href; // 현재 페이지의 URL
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        setSnackbarVisible(true);
+        setTimeout(() => setSnackbarVisible(false), 3000); // 3초 후에 스낵바 숨기기
+      })
+      .catch(err => {
+        console.error("Failed to copy text: ", err);
+      });
+  };
+
   if (loading) {
-    return <SideSection showSideBar={showSideBar}/>; // 로딩 중
+    return <SideSection showSideBar={showSideBar} />; // 로딩 중
   }
 
   return (
-    <SideSection showSideBar={showSideBar}>
+    <SideSection showSideBar={showSideBar} key={`${placeId}-${location.key}`}>
       <PlaceInfo>
         <BackIcon src={backIcon} onClick={handleNavigate} />
         <PlaceDetails>
@@ -65,7 +82,7 @@ const PlaceInfoPage = () => {
             <LocationIcon src={location} />
             <Name>{placeInfo.placeName}</Name>
           </PlaceTitle>
-          <SharingBtn src={shareButton} />
+          <SharingBtn src={shareButton} onClick={handleShareClick} />
         </PlaceDetails>
         <LocationInfo>{placeInfo.address}</LocationInfo>
         <PinSection>
@@ -90,6 +107,7 @@ const PlaceInfoPage = () => {
           </PinsContainer>
         </PinSection>
       </PlaceInfo>
+      {snackbarVisible && <CommonSnackbar text="링크가 복사되었습니다!" />}
     </SideSection>
   );
 };

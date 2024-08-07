@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
@@ -15,7 +15,9 @@ import { ReactComponent as CalendarImg } from "../../assets/images/CreatePin/cal
 import { ReactComponent as LocationImg } from "../../assets/images/CreatePin/location_on.svg";
 import PublicToggle from "../../components/common/PublicToggle";
 import calendar_selected from "../../assets/images/CreatePin/calendar_selected.svg";
-import { postNewPin } from "../../services/api/create";
+import { postNewPin } from "../../services/api/pin";
+import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -30,11 +32,17 @@ const CreatePinPage = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
   const [memo, setMemo] = useState("");
+  const [active, setActive] = useState(false);
+  const [infoMsg, setInfoMsg] = useState("");
+  const { setIsSnackbar } = useSnackbarStore();
+  const calendarRef = useRef(null);
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate("/details-song"); // 곡 ID로 수정
+  const handleNavigate = location => {
+    const params = location.split("/");
+    const songId = params[2];
+    navigate(`/details-song/${songId}`);
   };
 
   const onInputHandler = e => {
@@ -44,6 +52,7 @@ const CreatePinPage = () => {
 
   const handlePinClick = () => {
     setShowSearchSongContainer(!showSearchSongContainer);
+    setShowSearchPlaceContainer(false);
   };
 
   const handlePinSelect = pinInfo => {
@@ -54,6 +63,7 @@ const CreatePinPage = () => {
 
   const handlePlaceClick = () => {
     setShowSearchPlaceContainer(!showSearchPlaceContainer);
+    setShowSearchSongContainer(false);
   };
 
   const handlePlaceSelect = place => {
@@ -90,17 +100,47 @@ const CreatePinPage = () => {
       memo: memo,
       visibility: isPublic ? "PUBLIC" : "PRIVATE",
     };
-    console.log(selectedPin);
+    console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
-    const response = await postNewPin(request);
-    console.log("PostPin response:", response);
-    if (response && response.status === 201) {
-      console.log("Pin Post Success");
-      handleNavigate();
-    } else {
-      console.error("Failed to post Pin:", response);
+    const res = await postNewPin(request);
+    setIsSnackbar("핀이 생성되었습니다!");
+    console.log(res.headers.location.slice(7));
+    const songInfo = res.headers.location.slice(7);
+    if (songInfo) {
+      const songId = Number(songInfo);
+      console.log(songId);
+
+      navigate(`/details-song/${songId}`);
     }
   };
+
+  useEffect(() => {
+    if (!selectedPin || !selectedPlace || !date || !selectedGenre) {
+      setActive(false);
+      setInfoMsg("입력하지 않은 정보가 있습니다.");
+    } else {
+      setActive(true);
+      setInfoMsg("");
+    }
+  }, [selectedPin, selectedPlace, date, selectedGenre]);
+
+  useEffect(() => {
+    const handleClickOutside = e => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target) &&
+        !e.target.closest(".calendar-area")
+      ) {
+        setShowCalendar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <MainContainer>
@@ -122,12 +162,15 @@ const CreatePinPage = () => {
           )}
         </Content>
         <Title>언제</Title>
-        <When>
+        <When
+          className="calendar-area"
+          onClick={() => setShowCalendar(!showCalendar)}
+        >
           {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
           <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
         </When>
         {showCalendar && (
-          <CalendarContainer>
+          <CalendarContainer ref={calendarRef}>
             <StyledCalendar
               calendarType="gregory"
               value={date}
@@ -181,10 +224,17 @@ const CreatePinPage = () => {
           <span>/200</span>
         </TextNum>
         <IsPublic>
-          <Title>공개 여부</Title>
+          <Title>메모 공개 여부</Title>
           <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
         </IsPublic>
-        <CreateBtn onClick={handlePostPin}>핀 생성하기</CreateBtn>
+        <Info>{infoMsg}</Info>
+        <CreateBtn
+          className={active ? "activeButton" : "inactiveButton"}
+          disabled={!active}
+          onClick={handlePostPin}
+        >
+          핀 생성하기
+        </CreateBtn>
       </CreateSection>
       {showSearchSongContainer && (
         <SearchSongContainerWrapper>
@@ -199,7 +249,6 @@ const CreatePinPage = () => {
     </MainContainer>
   );
 };
-
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -304,12 +353,16 @@ const MemoArea = styled.textarea`
   border: none;
   border-radius: 8px;
   background: var(--offwhite, #efefef);
-  color: var(--gray02, #747474);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+
+  &::placeholder {
+    color: var(--gray02, #747474);
+  }
 `;
 
 const TextNum = styled.p`
@@ -328,30 +381,52 @@ const IsPublic = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 26px;
+  margin-top: 6px;
   margin-right: 32px;
 `;
 
 const CreateBtn = styled.button`
-  display: flex;
-  width: 462px;
-  padding: 16px 0px;
-  margin-left: 30px;
-  margin-top: 37px;
-  margin-bottom: 45px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  border-radius: 8px;
-  background: var(--black, #000000);
-  color: var(--white, #ffffff);
-  font-family: Pretendard;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 150%;
-  cursor: pointer;
+  &.activeButton {
+    background: var(--black, #000000);
+    display: flex;
+    width: 462px;
+    padding: 16px 0px;
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 8px;
+    color: var(--white, #ffffff);
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    cursor: pointer;
+  }
+  &.inactiveButton {
+    display: flex;
+    width: 462px;
+    padding: 16px 0px;
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 8px;
+    background: var(--gray, #bcbcbc);
+    color: var(--white, #ffffff);
+    font-family: Pretendard;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
 `;
 
 const CalendarContainer = styled.div`
@@ -381,9 +456,10 @@ const StyledCalendar = styled(Calendar)`
       font-weight: bold;
     }
   }
-  
+
   .react-calendar__month-view__days__day--weekend {
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: #00bfff;
     }
   }
@@ -411,7 +487,8 @@ const StyledCalendar = styled(Calendar)`
     background-size: 15%;
     color: white;
 
-    &:nth-child(7n) { /* 토요일 */
+    &:nth-child(7n) {
+      /* 토요일 */
       color: white;
     }
   }
@@ -440,7 +517,8 @@ const GenreContainer = styled.div`
 const SearchSongContainerWrapper = styled.div`
   display: flex;
   position: absolute;
-  left: 528px;
+  border-left: 0.5px solid lightgray;
+  left: 609px;
   width: 50%;
   height: 100%;
   z-index: 10;
@@ -449,10 +527,23 @@ const SearchSongContainerWrapper = styled.div`
 const SearchPlaceContainerWrapper = styled.div`
   display: flex;
   position: absolute;
-  left: 528px;
+  border-left: 0.5px solid lightgray;
+  left: 609px;
   width: 50%;
   height: 100%;
   z-index: 10;
+`;
+
+const Info = styled.div`
+  color: var(--gray02, #747474);
+  text-align: right;
+  margin-right: 35px;
+  margin-top: 10px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
 `;
 
 export default CreatePinPage;

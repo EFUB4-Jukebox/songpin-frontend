@@ -8,6 +8,8 @@ import { postAllMarkers } from "../../services/api/map";
 const MusicInfoPinPreview = ({ pin }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const {
+    pinId,
+    creatorId,
     creatorNickname,
     listenedDate,
     memo,
@@ -21,7 +23,7 @@ const MusicInfoPinPreview = ({ pin }) => {
   const navigate = useNavigate();
 
   const goUsersPage = () => {
-    navigate("/users");
+    navigate(`/users/${creatorId}`);
   };
 
   // const moveToLocation = (latitude, longitude) => {
@@ -78,13 +80,16 @@ const MusicInfoPinPreview = ({ pin }) => {
         <PinContent>
           <UserView>
             <UserName onClick={goUsersPage}>{creatorNickname}</UserName>
-            {isMine && <PinModalBox top="32px" right="0px" />}
+            {isMine && (
+              <PinModalBox top="32px" right="0px" pinId={pinId && pinId} />
+            )}
           </UserView>
           <PinMemo
             onClick={isTruncated ? () => {} : toggleTruncation}
             isTruncated={isTruncated}
             visibility={visibility}
             isEmpty={!memo}
+            style={{ whiteSpace: "pre-wrap" }}
           >
             {visibility === "PRIVATE" && <SecretPin src={lockIcon} />}
             {visibility === "PRIVATE" ? "비공개 메모입니다" : displayText}

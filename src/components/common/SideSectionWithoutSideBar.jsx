@@ -3,7 +3,7 @@ import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, showSideBar }) => {
+const SideSectionWithoutSideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleSideBox = () => {
@@ -12,9 +12,6 @@ const SideSection = ({ children, showSideBar }) => {
 
   return (
     <SideComponent>
-      <SideBarContainer>
-        <SideBar />
-      </SideBarContainer>
       <SideBox isOpen={isOpen}>
         <Content>{children}</Content>
       </SideBox>
@@ -27,21 +24,22 @@ const SideSection = ({ children, showSideBar }) => {
   );
 };
 
-export default SideSection;
+export default SideSectionWithoutSideBar;
 
 const SideComponent = styled.div`
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  position: absolute;
-  z-index: 10;
+
   /* overflow-y: overlay; */
 `;
 
-const SideBarContainer = styled.div`
-  width: 80px;
-  border-right: 1px solid var(--gray, #bcbcbc);
-`;
+// const SideBarContainer = styled.div`
+//   width: 80px;
+//   border-right: 1px solid var(--gray, #bcbcbc);
+//   position: absolute;
+//   z-index: 0;
+// `;
 
 const SideBox = styled.div`
   width: ${props => (props.isOpen ? "528px" : "0")};

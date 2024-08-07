@@ -9,11 +9,12 @@ import { postLogout } from "../../services/api/auth";
 import { getMyProfile } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { ProfileImg } from "../../constants/ProfileImg";
+import GotoPwResetModal from "../../components/AuthPage/GotoPwResetModal";
 
 const SettingsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSideBar, setShowSideBar] = useState(true);
-
+  const [pwResetModal, setPwResetModal] = useState(false);
   const handleModal = () => {
     setIsModalOpen(prevState => !prevState);
   };
@@ -32,7 +33,7 @@ const SettingsPage = () => {
     navigate("/edit");
   };
   const goPwEditPage = () => {
-    navigate("/resetPassword");
+    setPwResetModal(true);
   };
 
   const onLogout = async () => {
@@ -56,36 +57,39 @@ const SettingsPage = () => {
   const img = ProfileImg.find(it => it.EngName === profileData.profileImg);
   const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
   const nickname = profileData.nickname;
-  const email = profileData.email;
+  const handle = profileData.handle;
 
   return (
-    <SideSection showSideBar={showSideBar}>
-      <SettingComponent>
-        <BackIcon src={backIcon} onClick={goMyPage} />
-        <UserInfoBox>
-          <UserInformation>
-            <UserLogo src={profileImg} alt="User logo pop" />
-            <UserNameBox>
-              <UserName>{nickname}</UserName>
-              <UserMail>{email}</UserMail>
-            </UserNameBox>
-          </UserInformation>
-          <ProfileEditBtn onClick={goEditPage}>프로필 편집</ProfileEditBtn>
-        </UserInfoBox>
-        <ClickBtnsSection>
-          <Button onClick={goPwEditPage}>비밀번호 재설정</Button>
-          <Button onClick={onLogout}>로그아웃</Button>
-          <Button onClick={handleModal}>회원탈퇴</Button>
-          {isModalOpen && (
-            <OpenQuitModal
-              setIsModalOpen={setIsModalOpen}
-              onClose={handleModal}
-              onQuit={handleQuitBtn}
-            />
-          )}
-        </ClickBtnsSection>
-      </SettingComponent>
-    </SideSection>
+    <>
+      <SideSection showSideBar={showSideBar}>
+        <SettingComponent>
+          <BackIcon src={backIcon} onClick={goMyPage} />
+          <UserInfoBox>
+            <UserInformation>
+              <UserLogo src={profileImg} alt="User logo pop" />
+              <UserNameBox>
+                <UserName>{nickname}</UserName>
+                <UserMail>@{handle}</UserMail>
+              </UserNameBox>
+            </UserInformation>
+            <ProfileEditBtn onClick={goEditPage}>프로필 편집</ProfileEditBtn>
+          </UserInfoBox>
+          <ClickBtnsSection>
+            <Button onClick={goPwEditPage}>비밀번호 재설정</Button>
+            <Button onClick={onLogout}>로그아웃</Button>
+            <Button onClick={handleModal}>회원탈퇴</Button>
+            {isModalOpen && (
+              <OpenQuitModal
+                setIsModalOpen={setIsModalOpen}
+                onClose={handleModal}
+                onQuit={handleQuitBtn}
+              />
+            )}
+          </ClickBtnsSection>
+        </SettingComponent>
+      </SideSection>
+      {pwResetModal && <GotoPwResetModal setPwResetModal={setPwResetModal} />}
+    </>
   );
 };
 
@@ -117,15 +121,15 @@ const UserInformation = styled.div`
 `;
 
 const UserLogo = styled.img`
-  width: 60px;
-  height: 60px;
-  padding-right: 32px;
+  width: 70px;
+  height: 70px;
 `;
 
 const UserNameBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin-left: 28px;
+  margin-top: 8px;
 `;
 
 const UserName = styled.div`
@@ -138,6 +142,7 @@ const UserName = styled.div`
 `;
 
 const UserMail = styled.div`
+  margin-top: 6px;
   color: var(--gray02, #747474);
   font-family: Pretendard;
   font-size: 16px;
@@ -154,6 +159,7 @@ const ProfileEditBtn = styled.div`
   font-weight: 400;
   line-height: 140%; /* 28px */
   cursor: pointer;
+  margin-top: 8px;
 `;
 
 const ClickBtnsSection = styled.div`

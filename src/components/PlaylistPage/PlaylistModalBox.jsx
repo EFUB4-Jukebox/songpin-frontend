@@ -31,9 +31,10 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
   };
 
   const handleDeletePlaylist = () => {
+    navigate(-1);
     setIsDeleteModalOpen(false);
     deletePlaylist(playlistId);
-    navigate(-1);
+
     // window.location.reload();
   };
 
@@ -102,4 +103,7 @@ const ListItem = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   cursor: pointer;
+  &:hover {
+    color: #24ee81;
+  }
 `;

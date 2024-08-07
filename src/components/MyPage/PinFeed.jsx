@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyPinFeed } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const PinFeed = () => {
+const PinFeed = ({ myPinFeedData }) => {
   const [totalPinNum, setTotalPinNum] = useState();
   const [pinFeedList, setPinFeedList] = useState([]);
   const [feedElementTitle, setFeedElementTitle] = useState();
@@ -33,64 +33,52 @@ const PinFeed = () => {
   // const pinFeedList = data?.pinFeedList || [];
 
   useEffect(() => {
-    console.log(pinFeedList);
-    {
-      pinFeedList &&
-        pinFeedList.map(it => {
-          console.log(it.songInfo.title);
-          console.log(it.listenedDate);
-        });
+    if (myPinFeedData) {
+      console.log(myPinFeedData);
+      setTotalPinNum(myPinFeedData.totalElements);
+      setPinFeedList(myPinFeedData.pinFeedList);
     }
-  }, []);
-
-  useEffect(() => {
-    const getMyFeed = async () => {
-      try {
-        const res = await getMyPinFeed();
-        console.log(res);
-        if (res) {
-          setTotalPinNum(res.totalElements);
-          setPinFeedList(res.pinFeedList);
-          // pinFeedList && setFeedElementTitle(pinFeedList.songInfo.title);
-          // pinFeedList && setFeedElementArtist(pinFeedList.songInfo.artist);
-          // pinFeedList && setFeedElementImgPath(pinFeedList.songInfo.imgPath);
-          // pinFeedList && setListenedDate(pinFeedList.listenedDate);
-          // pinFeedList && setPlaceName(pinFeedList.placeName);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getMyFeed();
-  }, []);
+  }, [myPinFeedData]);
 
   return (
     <PinFeedContainer>
-      <PinShow>
-        <PinTimes>
-          <PinIcon src={pinIconSpark} />
-          <Num>{totalPinNum}</Num>
-        </PinTimes>
-        <ShowIcons>
-          <Calendar src={calendarIcon} onClick={goCalendar} />
-          <Search src={searchIcon} onClick={goMySearch} />
-        </ShowIcons>
-      </PinShow>
-      <PinsSection>
-        {pinFeedList &&
-          pinFeedList.map(it => (
-            <PinMemoComponent
-              title={it.songInfo.title}
-              artist={it.songInfo.artist}
-              imgPath={it.songInfo.imgPath}
-              genre={it.genreName}
-              listenedDate={it.listenedDate}
-              placeName={it.placeName}
-              pinId={it.pinId}
-              memo={it.memo}
-            />
-          ))}
-      </PinsSection>
+      {myPinFeedData && (
+        <>
+          <PinShow>
+            <PinTimes>
+              <PinIcon src={pinIconSpark} />
+              <Num>{totalPinNum}</Num>
+            </PinTimes>
+            <ShowIcons>
+              <Calendar src={calendarIcon} onClick={goCalendar} />
+              <Search src={searchIcon} onClick={goMySearch} />
+            </ShowIcons>
+          </PinShow>
+
+          {pinFeedList.length === 0 ? (
+            <PinfeedEmpty>아직 추가한 핀이 없습니다.</PinfeedEmpty>
+          ) : (
+            <PinsSection>
+              {pinFeedList.map(it => (
+                <PinMemoComponent
+                  songId={it.songInfo.songId}
+                  title={it.songInfo.title}
+                  artist={it.songInfo.artist}
+                  imgPath={it.songInfo.imgPath}
+                  genreName={it.genreName}
+                  listenedDate={it.listenedDate}
+                  placeName={it.placeName}
+                  pinId={it.pinId && it.pinId}
+                  memo={it.memo}
+                  visibility={it.visibility}
+                  latitude={it.latitude}
+                  longitude={it.longitude}
+                />
+              ))}
+            </PinsSection>
+          )}
+        </>
+      )}
     </PinFeedContainer>
   );
 };
@@ -100,7 +88,7 @@ export default PinFeed;
 const PinFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 25px;
+  margin-top: 30px;
   /* width: 528px; */
 `;
 
@@ -108,22 +96,21 @@ const PinShow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 40px;
-  margin-right: 35px;
+  margin-left: 34px;
+  margin-right: 40px;
 `;
 
 const PinTimes = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
 `;
 
 const PinIcon = styled.img`
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  //opacity: 0.8;
-  padding-right: 8px;
 `;
 
 const Num = styled.div`
@@ -155,6 +142,19 @@ const PinsSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 32px;
+  padding-top: 34px;
   margin-bottom: 13px;
+`;
+
+const PinfeedEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

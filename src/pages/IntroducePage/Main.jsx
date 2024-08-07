@@ -49,34 +49,35 @@ const BackgroundWrapper = styled.div`
   z-index: 0;
 `;
 const Wrapper = styled.div`
+  min-width: 1920px;
   position: relative;
   z-index: 1;
 `;
 const Center = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  position: fixed;
+  left: 50%;
   z-index: 1;
-  top: -30px;
+  top: 85px;
+  transform: translateX(-50%);
 `;
 const Bottom = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: pointer;
+  img {
+    width: 810.9px;
+    height: 366.3px;
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
 `;
 const BottomText = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
-  width: 100vw;
+  left: 50%;
   bottom: 80px;
-  margin: auto;
+  transform: translateX(-50%);
   z-index: 2;
+  cursor: pointer;
 `;
 
 export default Main;

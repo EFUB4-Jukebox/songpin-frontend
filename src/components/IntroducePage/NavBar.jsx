@@ -1,11 +1,11 @@
-import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { MenuList } from '../../constants/MenuList';
-import LoginModal from '../AuthPage/LoginModal';
-import { useState } from 'react';
-import SignupModal from '../AuthPage/SignupModal';
-import CompleteLogin from '../AuthPage/CompleteLogin';
-import PwResetModal from '../AuthPage/PwResetModal';
+import styled from "styled-components";
+import { NavLink } from "react-router-dom";
+import { MenuList } from "../../constants/MenuList";
+import LoginModal from "../AuthPage/LoginModal";
+import { useState } from "react";
+import SignupModal from "../AuthPage/SignupModal";
+import CompleteLogin from "../AuthPage/CompleteLogin";
+import PwResetModal from "../AuthPage/PwResetModal";
 
 const NavBar = () => {
   const [loginModal, setLoginModal] = useState(false);
@@ -24,7 +24,7 @@ const NavBar = () => {
       <div>
         <Navbar>
           <Menu>
-            {MenuList.map((it) => (
+            {MenuList.map(it => (
               <StyledNavLink to={it.to} key={it.id}>
                 {it.name}
               </StyledNavLink>
@@ -54,17 +54,24 @@ const NavBar = () => {
         />
       )}
       {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
-      {pwResetModal && <PwResetModal setPwResetModal={setPwResetModal} setLoginModal={setLoginModal} />}
+      {pwResetModal && (
+        <PwResetModal
+          setPwResetModal={setPwResetModal}
+          setLoginModal={setLoginModal}
+        />
+      )}
     </>
   );
 };
 
 const Navbar = styled.nav`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   margin-top: 48px;
   position: relative;
   z-index: 2;
+  white-space: nowrap;
 `;
 const Menu = styled.ul`
   display: flex;

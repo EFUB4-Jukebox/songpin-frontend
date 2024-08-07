@@ -5,7 +5,7 @@ import Playlist from "./Playlist";
 import { getMyPlaylistBookmark } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const Bookmarks = () => {
+const Bookmarks = ({ myBookmarkData }) => {
   const [bookmarkCount, setBookmarkCount] = useState();
   const [bookmarkList, setBookmarkList] = useState([]);
 
@@ -18,29 +18,33 @@ const Bookmarks = () => {
   // const bookmarkList = data?.bookmarkList || [];
 
   useEffect(() => {
-    const getBookmark = async () => {
-      try {
-        const res = await getMyPlaylistBookmark();
-        console.log(res);
-        if (res) {
-          setBookmarkCount(res.bookmarkCount);
-          setBookmarkList(res.bookmarkList);
-        }
-      } catch (error) {
-        console.log("데이터 불러오기에 실패했습니다.", error);
-      }
-    };
-    getBookmark();
-  }, []);
+    if (myBookmarkData) {
+      setBookmarkCount(myBookmarkData.bookmarkCount);
+      setBookmarkList(myBookmarkData.bookmarkList);
+    }
+  }, [myBookmarkData]);
+
   return (
     <BookmarkedContainer>
-      <PlaylistOverview>
-        <PlaylistIcon src={bookmark} />
-        <Num>{bookmarkCount}</Num>
-      </PlaylistOverview>
-      <PlaylistSection>
-        {bookmarkList && bookmarkList.map(it => <Playlist playlist={it} />)}
-      </PlaylistSection>
+      {myBookmarkData && (
+        <>
+          <PlaylistOverview>
+            <PlaylistIcon src={bookmark} />
+            <Num>{bookmarkCount}</Num>
+          </PlaylistOverview>
+          {bookmarkList.length === 0 ? (
+            <BookmarkListEmpty>
+              아직 북마크한 플레이리스트가 없습니다.
+            </BookmarkListEmpty>
+          ) : (
+            <PlaylistSection>
+              {bookmarkList.map(it => (
+                <Playlist playlist={it} />
+              ))}
+            </PlaylistSection>
+          )}
+        </>
+      )}
     </BookmarkedContainer>
   );
 };
@@ -57,15 +61,15 @@ const BookmarkedContainer = styled.div`
 const PlaylistOverview = styled.div`
   display: flex;
   flex-direction: row;
+  margin-left: 29px;
   align-items: center;
-  margin-left: 36px;
+  gap: 6px;
 `;
 
 const PlaylistIcon = styled.img`
   width: 30px;
   height: 30px;
   flex-shrink: 0;
-  padding-right: 8px;
 `;
 
 const Num = styled.div`
@@ -81,5 +85,18 @@ const PlaylistSection = styled.div`
   padding: 32px 40px 0 40px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 28px 28px;
+  grid-gap: 28px 8px;
+`;
+
+const BookmarkListEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 250px;
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
 `;

@@ -3,9 +3,9 @@ import { QueryClient } from "@tanstack/react-query";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: true,
       refetchOnWindowFocus: false,
-      suspense: true,
+      suspense: false,
     },
   },
 });

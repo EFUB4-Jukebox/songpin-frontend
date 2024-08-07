@@ -7,20 +7,22 @@ import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import dropdownIcon from "../../assets/images/MyPage/arrow-down.svg";
 import { getCalendarPin } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const startYear = 1980;
-const endYear = 2024;
-const years = [...Array(endYear - startYear + 1).keys()].map(
-  i => i + startYear,
+const startYear = 2024;
+const endYear = 1950;
+const years = [...Array(startYear - endYear + 1).keys()].map(
+  i => startYear - i,
 );
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const CalendarViewPage = () => {
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isMonthOpen, setIsMonthOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(2024); // 현재 날짜 반영
-  const [selectedMonth, setSelectedMonth] = useState(7); // 현재 날짜 반영
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // 현재 날짜 반영
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // 현재 날짜 반영
   const [showSideBar, setShowSideBar] = useState(true);
+  // const [pinList, setPinList]=useState([]);
   const navigate = useNavigate();
 
   const { isError, data, error } = useQuery({
@@ -29,17 +31,20 @@ const CalendarViewPage = () => {
     keepPreviousData: true, // 데이터가 로딩 중에도 이전 데이터를 유지
   });
 
-  if (!data) {
-    return <div>데이터가 없습니다.</div>;
-  }
+  // useEffect(()=>{
+  //   const getCalendarData = async()=>{
+  //     const res = await getCalendarPin({year: selectedYear, month: selectedMonth});
+  //     setPinList(res.pinList);
+  //   }; getCalendarData();
+  // },[])
 
   if (isError) {
     console.error("Error fetching user info:", error);
     return <div>오류 발생: {error.message}</div>;
   }
 
-  const calendarData = data;
-  const pinList = calendarData.pinList;
+  const calendarData = data && data;
+  const pinList = calendarData && calendarData.pinList;
 
   const togglingYear = () => {
     setIsYearOpen(!isYearOpen);
@@ -69,7 +74,7 @@ const CalendarViewPage = () => {
           <Calendar>
             <DateChoice>
               <DateSet onClick={togglingYear}>
-                <Date>{selectedYear}년</Date>
+                <DateWrapper>{selectedYear}년</DateWrapper>
                 <Dropdown src={dropdownIcon} isOpen={isYearOpen} />
               </DateSet>
               {isYearOpen && (
@@ -96,7 +101,7 @@ const CalendarViewPage = () => {
             </DateChoice>
             <DateChoice>
               <DateSet onClick={togglingMonth}>
-                <Date>{selectedMonth}월</Date>
+                <DateWrapper>{selectedMonth}월</DateWrapper>
                 <Dropdown src={dropdownIcon} isOpen={isMonthOpen} />
               </DateSet>
               {isMonthOpen && (
@@ -120,9 +125,13 @@ const CalendarViewPage = () => {
               )}
             </DateChoice>
           </Calendar>
-          {pinList.length === 0 ? (
+          {!pinList ? (
             <Empty>
-              <EmptyMessage>"해당 월에 들은 송핀이 없습니다"</EmptyMessage>
+              <LoadingSpinner />
+            </Empty>
+          ) : pinList.length === 0 ? (
+            <Empty>
+              <EmptyMessage>해당 월에 들은 송핀이 없습니다.</EmptyMessage>
             </Empty>
           ) : (
             pinList.map(it => (
@@ -133,6 +142,7 @@ const CalendarViewPage = () => {
                 genre={it.genreName}
                 listenedDate={it.listenedDate}
                 placeName={it.placeName}
+                songId={it.songInfo.songId}
               />
             ))
           )}
@@ -183,7 +193,7 @@ const DateSet = styled.div`
   cursor: pointer;
 `;
 
-const Date = styled.div`
+const DateWrapper = styled.div`
   color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 24px;

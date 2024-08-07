@@ -5,46 +5,45 @@ import { getMyProfile } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
 const Followers = () => {
-  const [followerCount, setFollowerCount] = useState();
-  const [followingCount, setFollowingCount] = useState();
-  const [memberId, setMemberId] = useState();
-  const [data, setData] = useState(false);
+  // const [followerCount, setFollowerCount] = useState();
+  // const [followingCount, setFollowingCount] = useState();
+  // const [memberId, setMemberId] = useState();
   const navigate = useNavigate();
 
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["getMyProfile"],
-  //   queryFn: getMyProfile,
-  // });
+  const { data: profileData } = useQuery({
+    queryKey: ["getMyProfile"],
+    queryFn: getMyProfile,
+  });
 
-  // if (isLoading) return <div>로딩 중...</div>;
-  // if (error) return <div>오류 발생: {error.message}</div>;
+  const followerCount = profileData.followerCount;
+  const followingCount = profileData.followingCount;
+  const memberId = profileData.memberId;
+  const handle = profileData.handle;
 
-  // const followerCount = data.followerCount;
-  // const followingCount = data.followingCount;
+  // useEffect(() => {
+  //   const getProfile = async () => {
+  //     try {
+  //       const res = await getMyProfile();
+  //       console.log(res);
+  //       if (res) {
+  //         setFollowerCount(res.followerCount);
+  //         setFollowingCount(res.followingCount);
+  //         setMemberId(res.memberId);
+  //       }
+  //     } catch (error) {
+  //       console.log("Login Failed", error);
+  //     }
+  //   };
+  //   getProfile();
+  // }, []);
 
-  useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const res = await getMyProfile();
-        console.log(res);
-        if (res) {
-          setFollowerCount(res.followerCount);
-          setFollowingCount(res.followingCount);
-          setMemberId(res.memberId);
-        }
-      } catch (error) {
-        console.log("Login Failed", error);
-      }
-    };
-    getProfile();
-  }, []);
-
-  useEffect(() => {
-    setData(true);
-  }, [setFollowerCount, setFollowingCount]);
+  // useEffect(() => {
+  //   setData(true);
+  // }, [setFollowerCount, setFollowingCount]);
 
   const handleNavigation = menu => {
-    if (memberId) navigate(`/users/${memberId}/follows?menu=${menu}`);
+    if (memberId)
+      navigate(`/users/${memberId}/follows?menu=${menu}&handle=${handle}`);
   };
 
   const goEditPage = () => {
@@ -53,7 +52,7 @@ const Followers = () => {
 
   return (
     <>
-      {data ? (
+      {profileData ? (
         <FollowerComponent>
           <FollowInfoBox>
             <FollowBox onClick={() => handleNavigation("followers")}>

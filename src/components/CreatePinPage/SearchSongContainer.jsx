@@ -4,6 +4,7 @@ import SideSection from "../common/SideSection";
 import PlainSearchBar from "./PlainSearchBar";
 import PinComponent from "./PinComponent";
 import { getExSpotify } from "../../services/api/spotify";
+import SideSectionWithoutSideBar from "../common/SideSectionWithoutSideBar";
 
 const SearchSongContainer = ({ onPinSelect }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -92,7 +93,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
   }, [offset, keyword, hasMore, isLoading]);
 
   return (
-    <SideSection>
+    <SideSectionWithoutSideBar>
       <Content>
         <PlainSearchBar onSearch={handleSearch} />
         <SearchResult>
@@ -108,7 +109,8 @@ const SearchSongContainer = ({ onPinSelect }) => {
           {searchResults.length === 0 && isInitialSearch && (
             <EmptySearchResult>
               <BeforeMessage>
-                노래를 검색해 다른 사람들의 핀을 확인해보세요
+                (*Spotify에서 노래를 검색합니다. 노래와 가수가 영어로
+                <br /> 등록되어 있을 가능성이 높아, 영어로 검색해주세요.){" "}
               </BeforeMessage>
             </EmptySearchResult>
           )}
@@ -120,7 +122,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
           <div ref={loaderRef} style={{ height: "20px" }}></div>
         </SearchResult>
       </Content>
-    </SideSection>
+    </SideSectionWithoutSideBar>
   );
 };
 

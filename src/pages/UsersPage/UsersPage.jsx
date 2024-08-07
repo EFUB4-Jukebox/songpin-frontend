@@ -65,7 +65,7 @@ const UsersPage = () => {
       <ContentBox>
         <BackBtn src={backArrow} onClick={handleBackClick} />
       </ContentBox>
-      <ContentBox>
+      <ContentBox2>
         {userData ? (
           <>
             <UserInfo
@@ -78,7 +78,7 @@ const UsersPage = () => {
         ) : (
           <div></div>
         )}
-      </ContentBox>
+      </ContentBox2>
       <ContentBox>
         <MenuBox>
           <MenuText
@@ -114,13 +114,23 @@ const ContentBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
-  padding-left: 34px;
+  padding-left: 41px;
   padding-right: 34px;
   padding-top: 40px;
 
   align-items: center;
 `;
+const ContentBox2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 
+  padding-left: 42px;
+  padding-right: 34px;
+  padding-top: 15px;
+
+  align-items: center;
+`;
 const BackBtn = styled.img`
   width: 40px;
   height: 40px;

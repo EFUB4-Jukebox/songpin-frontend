@@ -11,8 +11,14 @@ export const postSignup = async userData => {
     if (res.status === 409) {
       alert("이미 가입된 이메일입니다.");
       return null;
+    } else if (res.status === 401) {
+      alert("탈퇴한 회원입니다.");
+      return null;
+    } else if (res.status === 400) {
+      return null;
+    } else {
+      console.log(userData, "회원가입 성공");
     }
-    console.log(userData, "회원가입 성공");
   } catch (e) {
     console.error(e);
     throw new Error(e.response.data.message);

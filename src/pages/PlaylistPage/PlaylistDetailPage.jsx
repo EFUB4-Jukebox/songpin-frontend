@@ -10,6 +10,7 @@ import SideSection from "../../components/common/SideSection";
 import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
+import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
@@ -17,6 +18,7 @@ const PlaylistDetailPage = () => {
   const [playlistData, setPlaylistData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
 
   useEffect(() => {
@@ -43,8 +45,23 @@ const PlaylistDetailPage = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+
+  const handleShareClick = () => {
+    // 공유 버튼 클릭 시 링크 복사 등의 동작 수행
+    const currentUrl = window.location.href; // 현재 페이지의 URL
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        setSnackbarVisible(true);
+        setTimeout(() => setSnackbarVisible(false), 3000); // 3초 후에 스낵바 숨기기
+      })
+      .catch(err => {
+        console.error("Failed to copy text: ", err);
+      });
+  };
+
   if (!playlistData) {
-    return <div></div>; // 데이터 로딩 중임을 표시
+    return <SideSection />; // 데이터 로딩 중임을 표시
   }
 
   return (
@@ -76,7 +93,11 @@ const PlaylistDetailPage = () => {
               initialBookmarkId={playlistData.bookmarkId}
               color="black"
             />
-            <ShareBtn src={shareImg} alt="공유 버튼" />
+            <ShareBtn
+              src={shareImg}
+              alt="공유 버튼"
+              onClick={handleShareClick}
+            />
           </IconBox>
         </NameBox>
         <InfoBox>
@@ -90,17 +111,22 @@ const PlaylistDetailPage = () => {
           </UpdatedDate>
         </InfoBox>
         <PinContainer>
-          {playlistData.pinList.map(pin => (
-            <PinComponent
-              key={pin.playlistPinId}
-              pin={pin}
-              selectable={false}
-              buttonVisible={true}
-              pinId={pin.pinId}
-            />
-          ))}
+          {playlistData.pinList.length > 0 ? (
+            playlistData.pinList.map(pin => (
+              <PinComponent
+                key={pin.playlistPinId}
+                pin={pin}
+                selectable={false}
+                buttonVisible={playlistData.isMine}
+                pinId={pin.pinId}
+              />
+            ))
+          ) : (
+            <NoPin>아직 담긴 핀이 없습니다.</NoPin>
+          )}
         </PinContainer>
       </DetailContainer>
+      {snackbarVisible && <CommonSnackbar text="링크가 복사되었습니다!" />}
     </SideSection>
   );
 };
@@ -137,8 +163,8 @@ const PlaylistBox = styled.div`
 `;
 
 const BigBox = styled.div`
-  width: 309px;
-  height: 309px;
+  width: 310px;
+  height: 310px;
   border-radius: 18px 0px 0px 18px;
   border-right: 1px solid var(--f8f8f8, #fcfcfc);
   background: ${({ imageUrl }) =>
@@ -153,20 +179,22 @@ const SmallBoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1px;
+  height: 310px;
 `;
 
 const SmallBox = styled.div`
   width: 155px;
+  height: 155px;
   background: ${({ imageUrl }) =>
     imageUrl ? `url(${imageUrl}) no-repeat center center` : "#E7E7E7"};
   background-size: cover;
 
   &:first-child {
-    height: 154px;
+    /* height: 154px; */
     border-radius: 0px 18px 0px 0px;
   }
   &:last-child {
-    height: 155px;
+    /* height: 155px; */
     border-radius: 0px 0px 18px 0px;
   }
 `;
@@ -191,7 +219,7 @@ const NameBox = styled.div`
   margin-top: 18px;
 `;
 const UserName = styled.div`
-  color: var(--gray03, #5f5f5f);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
@@ -264,4 +292,15 @@ const LockImg = styled.img`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+`;
+
+const NoPin = styled.div`
+  color: var(--gray02, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  margin-top: 145px;
 `;
