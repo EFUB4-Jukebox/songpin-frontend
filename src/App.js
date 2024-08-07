@@ -200,19 +200,20 @@ function MapLayout({
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
   const [fadeOut, setFadeOut] = useState(false);
-  const groupPinsByLocation = (pins) => {
-    const groupedPins = pins.reduce((acc, pin) => {
-      const key = `${pin.latitude},${pin.longitude}`;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(pin);
-      return acc;
-    }, {});
-    return groupedPins;
-  };
 
-  const groupedPins = groupPinsByLocation(pinsToDisplay);
+  // const groupPinsByLocation = (pins) => {
+  //   const groupedPins = pins.reduce((acc, pin) => {
+  //     const key = `${pin.latitude},${pin.longitude}`;
+  //     if (!acc[key]) {
+  //       acc[key] = [];
+  //     }
+  //     acc[key].push(pin);
+  //     return acc;
+  //   }, {});
+  //   return groupedPins;
+  // };
+
+  // const groupedPins = groupPinsByLocation(pinsToDisplay);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -240,8 +241,11 @@ function MapLayout({
           maximumAge: 0,
         }
       );
+    } else {
+      setLat(defaultCenter.lat);
+      setLng(defaultCenter.lng);
     }
-  }, []);
+  }, [defaultCenter.lat, defaultCenter.lng]);
 
   useEffect(() => {
     if (isSnackbar) {
@@ -254,11 +258,11 @@ function MapLayout({
 
   return (
     <div
-      style={{
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
-      }}
+      // style={{
+      //   position: "relative",
+      //   width: "100vw",
+      //   height: "100vh",
+      // }}
     >
       <Map
         center={{ lat, lng }}
@@ -272,37 +276,42 @@ function MapLayout({
           pointerEvents: "auto",
         }}
       >
-        {Object.entries(groupedPins).map(([key, pins]) => {
+        {/* {Object.entries(groupedPins).map(([key, pins]) => {
+          if (pins.length === 0) return null; // 핀이 없으면 건너뜀
           const pin = pins[0]; // 대표로 사용할 핀 데이터
-          const pinCount = pins.length;
+          const pinCount = pins.length; */}
+          {pinsToDisplay.map((pin) => {
+          const pinCount = pinsToDisplay.filter(
+            p => p.latitude === pin.latitude && p.longitude === pin.longitude
+          ).length;
 
           return (
-            <MarkerContainer key={key}>
-              <MapMarker
-                position={{ lat: pin.latitude, lng: pin.longitude }}
-                image={{
-                  src: genreImages[pin.latestGenreName] || extra,
-                  size: { width: 114, height: 114 },
-                  options: { offset: { x: 57, y: 57 } },
-                }}
-                onClick={() => {
-                  if (pinCount >= 2) {
-                    navigate(`/details-place/${pin.placeId}`);
-                  } else {
-                    navigate(`/details-song/${pin.latestSongId}`);
-                  }
-                }}
-              />
-              {pinCount > 1 && (
-                <PinNum
-                  style={{
-                    fontSize: pinCount >= 10 ? 16 : 20,
+            <Wrapper
+              onClick={() => {
+                if (pin.placePinCount >= 2) {
+                  navigate(`/details-place/${pin.placeId}`);
+                } else {
+                  navigate(`/details-song/${pin.latestSongId}`);
+                }
+              }}>
+              <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
+                <MapMarker
+                  position={{ lat: pin.latitude, lng: pin.longitude }}
+                  image={{
+                    src: genreImages[pin.latestGenreName] || extra,
+                    size: { width: 114, height: 114 },
+                    options: { offset: { x: 57, y: 57 } },
                   }}
-                >
-                  {pinCount}
-                </PinNum>
-              )}
-            </MarkerContainer>
+                />
+                {pin.placePinCount > 1 && (
+                  <CustomOverlayMap position={{ lat: pin.latitude, lng: pin.longitude }}>
+                    <PinNum>
+                      {pin.placePinCount}
+                    </PinNum>
+                  </CustomOverlayMap>
+                )}
+              </React.Fragment>
+            </Wrapper>
           );
         })}
       </Map>
@@ -370,15 +379,15 @@ function MapLayout({
   );
 }
 
-const MarkerContainer = styled.div`
-  position: relative;
+const Wrapper = styled.div`
+  cursor: pointer;
 `;
 
 const PinNum = styled.div`
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   background: transparent;
   border-radius: 50%;
   display: flex;
