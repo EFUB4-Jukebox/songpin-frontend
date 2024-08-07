@@ -9,16 +9,25 @@ import sidebar_playlist from "../../assets/sidebar/sidebar_playlist.svg";
 import sidebar_usersearch from "../../assets/sidebar/sidebar_usersearch.svg";
 import sidebar_mypage from "../../assets/sidebar/sidebar_mypage.svg";
 
-const SideBar = () => {
+const SideBar = ({ isNotLoggedIn, setLoginModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activePath, setActivePath] = useState(location.pathname);
+  const [activePath, setActivePath] = React.useState(location.pathname);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setActivePath(location.pathname);
   }, [location]);
 
   const onItemClick = path => {
+    if (isNotLoggedIn) {
+      setLoginModal(true);
+    } else {
+      setActivePath(path);
+      navigate(path);
+    }
+  };
+
+  const onFirstItemClick = path => {
     setActivePath(path);
     navigate(path);
   };
@@ -27,30 +36,34 @@ const SideBar = () => {
     <SideBarContainer>
       <PinFeatures>
         <StyledButton
-          onClick={() => onItemClick("/")}
+          onClick={() => onFirstItemClick("/")}
           noBackground={activePath === "/"}
         >
           <HomeLogo src={sidebar_logo} alt="Home Logo" />
         </StyledButton>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/home")}
           isActive={activePath === "/home"}
         >
           <Home src={sidebar_home} alt="Home" />
         </StyledButton>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/search")}
           isActive={activePath === "/search"}
         >
           <Search src={sidebar_search} alt="Search" />
         </StyledButton>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/create")}
           isActive={activePath === "/create"}
         >
           <Create src={sidebar_create} alt="Create" />
         </StyledButton>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/playlists")}
           isActive={activePath === "/playlists"}
         >
@@ -59,12 +72,14 @@ const SideBar = () => {
       </PinFeatures>
       <UserFeatures>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/usersearch")}
           isActive={activePath === "/usersearch"}
         >
           <UserSearch src={sidebar_usersearch} alt="Search User" />
         </StyledButton>
         <StyledButton
+          isNotLoggedIn={isNotLoggedIn}
           onClick={() => onItemClick("/mypage")}
           isActive={activePath === "/mypage"}
         >
@@ -133,6 +148,11 @@ const StyledButton = styled.button`
             filter: brightness(0) invert(1);
         }
     `}
+  ${props =>
+    props.isNotLoggedIn &&
+    `cursor: default;
+    pointer-events: none;
+  `}
 `;
 
 const HomeLogo = styled.img`

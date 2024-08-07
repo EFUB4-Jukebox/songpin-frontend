@@ -5,6 +5,7 @@ import SideBar from "../HomePage/SideBar";
 
 const SideSection = ({ children, isNotLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [loginModal, setLoginModal] = useState(false);
 
   const handleSideBox = () => {
     setIsOpen(!isOpen);
@@ -19,10 +20,16 @@ const SideSection = ({ children, isNotLoggedIn }) => {
     }
   }, [isNotLoggedIn]);
 
+  const handleSideBarClick = () => {
+    if (isNotLoggedIn) {
+      setLoginModal(true);
+    }
+  };
+
   return (
     <SideComponent>
       <SideBarContainer>
-        <SideBar />
+        <SideBar onClick={handleSideBarClick} />
       </SideBarContainer>
       {isOpen && (
         <>

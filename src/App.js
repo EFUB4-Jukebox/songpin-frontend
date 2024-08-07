@@ -32,6 +32,10 @@ import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
+import LoginModal from "../src/components/AuthPage/LoginModal";
+import SignupModal from "./components/AuthPage/SignupModal";
+import PwResetModal from "./components/AuthPage/PwResetModal";
+import CompleteLogin from "./components/AuthPage/CompleteLogin";
 
 import {
   postAllMarkers,
@@ -66,6 +70,24 @@ const genreImages = {
 function App() {
   const [allPins, setAllPins] = useState([]);
   const [recentPins, setRecentPins] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
+  const [completeLogin, setCompleteLogin] = useState(false);
+  const [pwResetModal, setPwResetModal] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handlePageClick = () => {
+    if (!isLoggedIn) {
+      setLoginModal(true);
+    }
+  };
 
   useEffect(() => {
     const fetchAllPinData = async () => {
@@ -149,6 +171,8 @@ function App() {
               recentPins={recentPins}
               handleFilterChange={handleFilterChange}
               handleFilterChange2={handleFilterChange2}
+              isLoggedIn={isLoggedIn}
+              setLoginModal={handlePageClick}
             />
           }
         >
@@ -180,6 +204,29 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
+      {loginModal && (
+        <LoginModal
+          setPwResetModal={setPwResetModal}
+          setCompleteLogin={setCompleteLogin}
+          setLoginModal={setLoginModal}
+          setSignupModal={setSignupModal}
+          onClick={e => e.stopPropagation()}
+        />
+      )}
+      {signupModal && (
+        <SignupModal
+          setCompleteLogin={setCompleteLogin}
+          setLoginModal={setLoginModal}
+          setSignupModal={setSignupModal}
+        />
+      )}
+      {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
+      {pwResetModal && (
+        <PwResetModal
+          setPwResetModal={setPwResetModal}
+          setLoginModal={setLoginModal}
+        />
+      )}
     </Router>
   );
 }
@@ -191,12 +238,20 @@ function MapLayout({
   recentPins,
   handleFilterChange,
   handleFilterChange2,
+  isLoggedIn,
+  setLoginModal,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
   const [fadeOut, setFadeOut] = useState(false);
+  const handleMapClick = event => {
+    if (!isLoggedIn) {
+      setLoginModal(true);
+      return;
+    }
+  };
 
   useEffect(() => {
     if (isSnackbar) {
@@ -216,6 +271,7 @@ function MapLayout({
       }}
     >
       <Map
+        onClick={handleMapClick}
         center={{ lat: 37.56011030387691, lng: 126.94585449321849 }}
         style={{
           position: "absolute",
@@ -246,6 +302,10 @@ function MapLayout({
                 },
               }}
               onClick={() => {
+                if (!isLoggedIn) {
+                  setLoginModal(true);
+                  return;
+                }
                 if (pin.placePinCount >= 2) {
                   navigate(`/details-place/${pin.placeId}`);
                 } else {
