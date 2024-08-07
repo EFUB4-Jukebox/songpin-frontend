@@ -412,7 +412,6 @@ function MapLayout({
           <Route path="/calendar" element={<CalendarViewPage />} />
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Routes>
-        <AnnounceTxt>지도상에 핀은 최대 300개까지 표시됩니다.</AnnounceTxt>
       </div>
       <div
         style={{
@@ -422,7 +421,8 @@ function MapLayout({
           height: "100%",
           zIndex: 1,
         }}
-      >
+        >
+        <AnnounceTxt>지도상에 핀은 최대 300개까지 표시됩니다.</AnnounceTxt>
         {location.pathname === "/home" && (
           <MapFilter
             onFilterChange={handleFilterChange}
@@ -470,6 +470,7 @@ const PinNum = styled.div`
 `;
 
 const AnnounceTxt = styled.div`
+  position: fixed;
   width: 221px;
   height: 19px;
   flex-shrink: 0;
@@ -480,6 +481,8 @@ const AnnounceTxt = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 150%; /* 18px */
-  margin-left: 88px;
-  padding-top: 980px;
+  /* margin-left: 7.5em;
+  padding-top: 84em; */
+  bottom: 20px;
+  left: 90px;
 `;
