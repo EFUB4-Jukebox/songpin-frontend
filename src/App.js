@@ -32,6 +32,7 @@ import PwResetPage from "./pages/AuthPages/PwResetPage";
 import PwResetCompletePage from "./pages/AuthPages/PwResetCompletePage";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import Notification from "./components/common/Notification";
+
 import {
   postAllMarkers,
   postRecentMarkers,
@@ -48,6 +49,8 @@ import rock from "./assets/map/glowing_map_rock.svg";
 import extra from "./assets/map/glowing_map_extra.svg";
 import { GenreList } from "./constants/GenreList";
 import MapFilter from "./components/HomePage/MapFilter";
+import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
+import useSnackbarStore from "./store/useSnackbarStore";
 
 const genreImages = {
   POP: pop,
@@ -107,22 +110,22 @@ function App() {
   };
 
   const handleFilterChange2 = async (genres, startDate, endDate) => {
-      const genreNameFilters = genres.map(
-        genre => GenreList.find(g => g.id === genre).EngName,
-      );
-      const request = {
-          "boundCoords": {
-          "swLat": 0,
-          "swLng": 0,
-          "neLat": 90,
-          "neLng": 180
-          },
-          "genreNameFilters": genreNameFilters,
-          "startDate": startDate,
-          "endDate": endDate,
-      };
-      const data = await postCustomPeriodMarkers(request);
-      setRecentPins(data.mapPlaceSet || []);
+    const genreNameFilters = genres.map(
+      genre => GenreList.find(g => g.id === genre).EngName,
+    );
+    const request = {
+      boundCoords: {
+        swLat: 0,
+        swLng: 0,
+        neLat: 90,
+        neLng: 180,
+      },
+      genreNameFilters: genreNameFilters,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    const data = await postCustomPeriodMarkers(request);
+    setRecentPins(data.mapPlaceSet || []);
   };
 
   return (
@@ -183,10 +186,26 @@ function App() {
 
 export default App;
 
-function MapLayout({ allPins, recentPins, handleFilterChange, handleFilterChange2 }) {
+function MapLayout({
+  allPins,
+  recentPins,
+  handleFilterChange,
+  handleFilterChange2,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
+  const { isSnackbar, setIsSnackbar } = useSnackbarStore();
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    if (isSnackbar) {
+      const timer = setTimeout(() => {
+        setIsSnackbar("");
+      }, 2000); // 2초
+      return () => clearTimeout(timer);
+    }
+  }, [isSnackbar]);
 
   return (
     <div
@@ -277,18 +296,27 @@ function MapLayout({ allPins, recentPins, handleFilterChange, handleFilterChange
         </Routes>
       </div>
       <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            zIndex: 1,
-          }}
-        >
-      {location.pathname === '/home' && (
-          <MapFilter onFilterChange={handleFilterChange} onFilterChange2={handleFilterChange2}/>
-      )}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          zIndex: 1,
+        }}
+      >
+        {location.pathname === "/home" && (
+          <MapFilter
+            onFilterChange={handleFilterChange}
+            onFilterChange2={handleFilterChange2}
+          />
+        )}
       </div>
+      {isSnackbar && (
+        <CommonSnackbar
+          text={isSnackbar}
+          className={fadeOut ? "fade-out" : ""}
+        />
+      )}
       <Notification />
     </div>
   );
