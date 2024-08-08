@@ -56,9 +56,11 @@ const MusicInfoPinPreview = ({ pin }) => {
   };
 
   const text = memo || "메모가 비어 있습니다";
-  const maxLength = 59;
-  const showMoreBtn = text.length > maxLength;
-  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+  const maxLines = 2;
+  const showMoreBtn = text.split("\n").length > maxLines;
+  const displayText = isTruncated
+    ? text.split("\n").slice(0, maxLines).join("\n")
+    : text;
 
   const formatDate = dateString => {
     const date = new window.Date(dateString);
