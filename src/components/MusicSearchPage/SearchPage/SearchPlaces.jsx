@@ -55,12 +55,12 @@ const SearchPlaces = ({ keyword, sortBy }) => {
         keyword,
         sortBy,
         page,
-        size: 10,
+        size: 20,
       });
 
       setSearchResults(prevResults => [...prevResults, ...data]);
       setPage(prevPage => prevPage + 1);
-      setHasMore(data.length === 10);
+      setHasMore(data.length === 20);
     } catch (error) {
       console.error("검색 에러: ", error);
     } finally {
