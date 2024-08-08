@@ -12,6 +12,7 @@ const MusicInfoPinPreview = ({ pin }) => {
     pinId,
     creatorId,
     creatorNickname,
+    // creatorStatus,
     listenedDate,
     memo,
     visibility,
@@ -24,6 +25,8 @@ const MusicInfoPinPreview = ({ pin }) => {
   const navigate = useNavigate();
   const { setMyPageClick } = useMyPageClickStore();
   const goUsersPage = () => {
+    // 주석 풀면 >>> <<<안의 나머지 코드는 지워주세요
+    // >>>
     console.log(isMine);
     if (isMine) {
       setMyPageClick(false);
@@ -31,31 +34,15 @@ const MusicInfoPinPreview = ({ pin }) => {
     } else {
       navigate(`/users/${creatorId}`);
     }
+
+    // if (isMine) {
+    //   setMyPageClick(false);
+    //   navigate(`/mypage`);
+    // } else if (creatorStatus === "ACTIVE") {
+    //   navigate(`/users/${creatorId}`);
+    // }
+    // <<<
   };
-
-  // const moveToLocation = (latitude, longitude) => {
-  //   const request = {
-  //     boundCoords: {
-  //       swLat: latitude - 0.05, // 대략적인 예시 좌표
-  //       swLng: longitude - 0.05,
-  //       neLat: latitude + 0.05,
-  //       neLng: longitude + 0.05,
-  //     },
-  //     genreNameFilters: null,
-  //   };
-
-  //   postAllMarkers(request)
-  //     .then(data => {
-  //       console.log("Received pins data:", data);
-  //     })
-  //     .catch(error => {
-  //       console.error("Error loading pins:", error.message);
-  //     });
-  // };
-
-  // const goMapLocation = () => {
-  //   moveToLocation(latitude, longitude);
-  // };
 
   const goMapLocation = () => {
     const location = {
@@ -86,7 +73,14 @@ const MusicInfoPinPreview = ({ pin }) => {
       <PinPreview>
         <PinContent>
           <UserView>
-            <UserName onClick={goUsersPage}>{creatorNickname}</UserName>
+            {/* >>> */}
+            <UserName onClick={goUsersPage}>
+              {/* <UserName
+              onClick={goUsersPage}
+              clickable={creatorStatus === "ACTIVE"}> */}
+              {/* <<< */}
+              {creatorNickname}
+            </UserName>
             {isMine && (
               <PinModalBox top="32px" right="0px" pinId={pinId && pinId} />
             )}
@@ -152,7 +146,14 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 22.4px */
+  /* >>> */
   cursor: pointer;
+  /* cursor: ${props =>
+    props.clickable
+      ? "pointer"
+      : "not-allowed"};  // 상태에 따라 커서 스타일 변경
+   */
+  /* <<<  */
   width: auto;
   display: inline-block;
 `;
