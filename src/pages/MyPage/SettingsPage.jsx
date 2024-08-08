@@ -38,7 +38,7 @@ const SettingsPage = () => {
 
   const onLogout = async () => {
     await postLogout();
-    window.location.replace("/introduce");
+    window.location.replace("/");
   };
 
   const { isError, data, error } = useQuery({

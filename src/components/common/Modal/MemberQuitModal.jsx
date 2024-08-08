@@ -20,7 +20,8 @@ const MemberQuitModal = ({ onClose, setIsModalOpen }) => {
       console.log(res);
       if (!res.data) {
         setIsModalOpen(false);
-        navigate("/");
+        localStorage.removeItem("accessToken");
+        window.location.replace("/");
       } else {
         setErrorMsg(res.data.message);
       }
