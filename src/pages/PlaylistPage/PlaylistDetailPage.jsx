@@ -12,6 +12,8 @@ import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useEditStore from "../../store/useProfileEditStore";
+import { getMyProfile } from "../../services/api/myPage";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
@@ -20,9 +22,15 @@ const PlaylistDetailPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
-
-  const handleUserClick = id => {
-    navigate(`/users/${id}`);
+  const { setMyPageClick } = useMyPageClickStore();
+  const handleUserClick = async id => {
+    const res = await getMyProfile();
+    if (id === res.memberId) {
+      setMyPageClick(false);
+      navigate(`/mypage`);
+    } else {
+      navigate(`/users/${id}`);
+    }
   };
 
   useEffect(() => {
