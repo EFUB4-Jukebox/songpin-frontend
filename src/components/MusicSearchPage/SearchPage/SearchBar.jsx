@@ -183,6 +183,7 @@ const Input = styled.input`
   line-height: normal;
   border: none;
   outline: none;
+  width: 352px;
   &::placeholder {
     color: var(--gray, #bcbcbc);
     font-family: Pretendard;
