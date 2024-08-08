@@ -3,7 +3,7 @@ import lofi from "../../assets/common/lo_fi_Icon.svg";
 import hiphop from "../../assets/common/hiphop_Icon.svg";
 import rock from "../../assets/common/rock_Icon.svg";
 import pop from "../../assets/common/pop_Icon.svg";
-import ballade from "../../assets/common/ballad.svg";
+import ballade from "../../assets/common/ballade_Icon.svg";
 
 const Background2 = () => {
   const canvasRef = useRef(null);
@@ -158,13 +158,21 @@ const Background2 = () => {
         ctx.translate(x, y); // 캔버스 원점 이동
         ctx.rotate(angle); // 회전 적용
 
-        const scaledR = r * 1.2; // 이미지 크기 조정
+        const img = imgRef.current;
+        const imgWidth = img.naturalWidth;
+        const imgHeight = img.naturalHeight;
+        const imgRatio = imgWidth / imgHeight;
+
+        // 원의 크기를 비율에 맞게 조정
+        const scaledWidth = r * 1.2 * imgRatio;
+        const scaledHeight = r * 1.2;
+
         ctx.drawImage(
-          imgRef.current,
-          -scaledR / 2,
-          -scaledR / 2,
-          scaledR,
-          scaledR,
+          img,
+          -scaledWidth / 2,
+          -scaledHeight / 2,
+          scaledWidth,
+          scaledHeight,
         );
 
         ctx.restore(); // 원래 상태로 복구
