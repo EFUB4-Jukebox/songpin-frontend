@@ -11,6 +11,7 @@ import SmallModal from "../../components/common/Modal/SmallModal";
 import { getPlaylistDetail, editPlaylist } from "../../services/api/playlist";
 import useProfileEditStore from "../../store/useProfileEditStore";
 import useEditStore from "../../store/useProfileEditStore";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const PlaylistEditPage = () => {
   const { playlistId } = useParams();
@@ -68,7 +69,7 @@ const PlaylistEditPage = () => {
 
   const handleEditPlaylist = async () => {
     try {
-      const selectedPins = pinList.map(pin => ({
+      const selectedPins = pinList.map((pin, index) => ({
         playlistPinId: pin.playlistPinId,
         pinIndex: pin.pinIndex,
       }));
@@ -80,6 +81,7 @@ const PlaylistEditPage = () => {
         selectedPins.length, // 선택된 핀의 개수
         selectedPins, // 수정된 핀 리스트
       );
+      // console.log(pinList);
       if (!res) {
         setEdit(true);
       }
@@ -105,6 +107,22 @@ const PlaylistEditPage = () => {
   };
   const handleDeleteSelectedPins = () => {
     setPinList(prev => prev.filter(pin => !pin.isSelected));
+  };
+
+  // 핀 리스트 드래그 앤 드롭 핸들러
+  const handleOnDragEnd = result => {
+    if (!result.destination) return;
+
+    const items = Array.from(pinList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    // pinIndex 업데이트
+    const updatedItems = items.map((pin, index) => ({
+      ...pin,
+      pinIndex: items.length - index - 1, // 새로운 인덱스 할당(내림차순)
+    }));
+
+    setPinList(updatedItems);
   };
 
   return (
@@ -153,17 +171,41 @@ const PlaylistEditPage = () => {
           </SelectBox>
           <BtnText onClick={handleDeleteSelectedPins}>삭제</BtnText>
         </ContentBox>
-        <PinContainer>
-          {pinList.map(pin => (
-            <PinComponent
-              key={pin.playlistPinId}
-              pin={pin}
-              selectable={true}
-              buttonVisible={false}
-              onSelect={handlePinSelect}
-            />
-          ))}
-        </PinContainer>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="pins">
+            {provided => (
+              <PinContainer
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {pinList.map((pin, index) => (
+                  <Draggable
+                    key={pin.playlistPinId}
+                    draggableId={String(pin.playlistPinId)}
+                    index={index}
+                  >
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <PinComponent
+                          key={pin.playlistPinId}
+                          pin={pin}
+                          selectable={true}
+                          buttonVisible={false}
+                          onSelect={handlePinSelect}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </PinContainer>
+            )}
+          </Droppable>
+        </DragDropContext>
       </EditContainer>
     </SideSection>
   );

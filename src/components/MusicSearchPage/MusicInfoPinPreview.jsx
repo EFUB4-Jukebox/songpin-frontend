@@ -4,6 +4,7 @@ import lockIcon from "../../assets/images/MyPage/lock.svg";
 import { useNavigate } from "react-router-dom";
 import PinModalBox from "../common/PinModalBox";
 import { postAllMarkers } from "../../services/api/map";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
 
 const MusicInfoPinPreview = ({ pin }) => {
   const [isTruncated, setIsTruncated] = useState(true);
@@ -21,9 +22,15 @@ const MusicInfoPinPreview = ({ pin }) => {
   } = pin;
 
   const navigate = useNavigate();
-
+  const { setMyPageClick } = useMyPageClickStore();
   const goUsersPage = () => {
-    navigate(`/users/${creatorId}`);
+    console.log(isMine);
+    if (isMine) {
+      setMyPageClick(false);
+      navigate(`/mypage`);
+    } else {
+      navigate(`/users/${creatorId}`);
+    }
   };
 
   // const moveToLocation = (latitude, longitude) => {
