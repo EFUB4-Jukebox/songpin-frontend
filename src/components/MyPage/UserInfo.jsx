@@ -42,7 +42,7 @@ const UserInfo = ({ myProfileData }) => {
       <UserLogo src={profileImg ? profileImg : userLogoEx} alt="User logo " />
       <UserNameBox>
         <UserName>{nickname ? nickname : ""}</UserName>
-        <UserId>{handle ? `@ ${handle}` : ""}</UserId>
+        <UserId>{handle ? `@${handle}` : ""}</UserId>
       </UserNameBox>
     </UserInfoBox>
   );
