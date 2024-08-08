@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50px;
-  background: #62625f;
+  background: #232323b3;
   color: var(--f8f8f8, #fcfcfc);
   text-align: center;
   font-size: 20px;

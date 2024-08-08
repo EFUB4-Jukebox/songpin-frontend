@@ -248,6 +248,7 @@ const SelectBox = styled.div`
 const PinContainer = styled.div``;
 
 const Edit = styled.div`
+  width: 305px;
   display: flex;
   flex-direction: column;
 `;
@@ -261,10 +262,11 @@ const EditText = styled.input`
   line-height: 140%; /* 28px */
   border: none;
   outline: none;
+  width: 265px;
 `;
 
 const Line = styled.div`
-  width: 293px;
+  width: 312px;
   height: 1px;
   background: var(--gray02, #747474);
 `;
@@ -280,8 +282,8 @@ const AlarmMessage = styled.div`
 `;
 
 const EditBox = styled.div`
+  width: 305px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
 `;
