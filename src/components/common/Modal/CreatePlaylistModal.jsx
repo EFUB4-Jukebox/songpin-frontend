@@ -5,7 +5,7 @@ import useSnackbarStore from "../../../store/useSnackbarStore";
 
 const CreatePlaylistModal = ({ setModalCommon }) => {
   const [inputValue, setInputValue] = useState("");
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [active, setActive] = useState(false);
   const { setIsSnackbar } = useSnackbarStore();
   const handleCreatePlaylist = async () => {

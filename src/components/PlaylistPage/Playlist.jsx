@@ -35,7 +35,7 @@ const Playlist = ({ playlist, onClick }) => {
   };
   return (
     <PlaylistContainer>
-      <PlaylistBox>
+      <PlaylistBox onClick={onClick}>
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkToggle
             playlistId={playlistId}
