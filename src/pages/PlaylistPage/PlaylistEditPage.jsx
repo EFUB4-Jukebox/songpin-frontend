@@ -149,7 +149,7 @@ const PlaylistEditPage = () => {
               alt="전체선택 버튼"
               onClick={handleCheckClicked}
             />
-            <SelectText>전체선택</SelectText>
+            <SelectText onClick={handleCheckClicked}>전체선택</SelectText>
           </SelectBox>
           <BtnText onClick={handleDeleteSelectedPins}>삭제</BtnText>
         </ContentBox>
@@ -237,6 +237,7 @@ const SelectText = styled.div`
   font-weight: 400;
   line-height: 140%; /* 28px */
   padding-left: 9px;
+  cursor: pointer;
 `;
 
 const SelectBox = styled.div`

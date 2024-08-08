@@ -166,7 +166,11 @@ const CreatePinPage = () => {
           className="calendar-area"
           onClick={() => setShowCalendar(!showCalendar)}
         >
-          {moment(date).format("YYYY.MM.DD") || "언제 이 노래를 들었나요?"}
+          {(
+            <div className="selectedDate">
+              {moment(date).format("YYYY.MM.DD")}
+            </div>
+          ) || "언제 이 노래를 들었나요?"}
           <CalendarImg onClick={() => setShowCalendar(!showCalendar)} />
         </When>
         {showCalendar && (
@@ -187,7 +191,7 @@ const CreatePinPage = () => {
         <Title>어디서</Title>
         <Where onClick={handlePlaceClick}>
           {selectedPlace ? (
-            <div>
+            <div className="selectedPlace">
               <div>{selectedPlace.place_name}</div>
             </div>
           ) : (
@@ -324,6 +328,9 @@ const When = styled.div`
   font-weight: 400;
   line-height: 140%;
   cursor: pointer;
+  .selectedDate {
+    color: var(--light_black, #232323);
+  }
 `;
 
 const Where = styled.div`
@@ -341,6 +348,9 @@ const Where = styled.div`
   font-weight: 400;
   line-height: 140%;
   cursor: pointer;
+  .selectedPlace {
+    color: var(--light_black, #232323);
+  }
 `;
 
 const MemoArea = styled.textarea`
