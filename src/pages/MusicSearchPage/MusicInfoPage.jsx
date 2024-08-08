@@ -98,7 +98,7 @@ const MusicInfoPage = () => {
   };
 
   useEffect(() => {
-    setIsChecked(false); // Reset isChecked when songId or location changes
+    setIsChecked(false);
   }, [songId]);
 
   const displayedPins = isChecked ? myPins : pins;
