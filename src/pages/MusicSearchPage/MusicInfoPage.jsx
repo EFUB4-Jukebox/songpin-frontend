@@ -169,7 +169,9 @@ const MusicInfoPage = () => {
               />
             </CheckMyPin>
           </PinInfo>
-          {displayedPins.length > 0 ? (
+          {pinLoading ? (
+            <></>
+          ) : displayedPins.length > 0 ? (
             displayedPins.map(pin => (
               <MusicInfoPinPreview key={pin.pinId} pin={pin} />
             ))

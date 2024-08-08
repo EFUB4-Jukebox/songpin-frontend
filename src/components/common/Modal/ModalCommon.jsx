@@ -69,6 +69,9 @@ const ModalCommon = ({
             </CreatePlaylistBox>
           )}
           <Button active={active} name={buttonName} onClick={handleButton} />
+          {addPlaylist && (
+            <GotoCreatePlaylist>새 플레이리스트 만들기</GotoCreatePlaylist>
+          )}
         </InputButton>
       </ModalWrapper>
     </Wrapper>
@@ -161,4 +164,14 @@ const CreatePlaylistBox = styled.div`
   align-items: flex-end;
 `;
 
+const GotoCreatePlaylist = styled.div`
+  color: var(--light_black, #232323);
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  cursor: pointer;
+`;
 export default ModalCommon;

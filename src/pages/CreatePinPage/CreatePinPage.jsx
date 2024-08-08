@@ -142,6 +142,21 @@ const CreatePinPage = () => {
     };
   }, []);
 
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const today = moment();
+      const tileDate = moment(date);
+
+      if (tileDate.isBefore(today, "day")) {
+        return "react-calendar__tile--past";
+      }
+      if (tileDate.isAfter(today, "day")) {
+        return "react-calendar__tile--future";
+      }
+    }
+    return null;
+  };
+
   return (
     <MainContainer>
       <SideBar></SideBar>
@@ -178,6 +193,7 @@ const CreatePinPage = () => {
             <StyledCalendar
               calendarType="gregory"
               value={date}
+              maxDate={new Date()}
               onChange={handleDateChange}
               formatDay={(locale, date) => moment(date).format("D")}
               formatYear={(locale, date) => moment(date).format("YYYY")}
@@ -185,6 +201,7 @@ const CreatePinPage = () => {
                 moment(date).format("YYYY년 MM월")
               }
               showNeighboringMonth={true}
+              tileClassName={tileClassName}
             />
           </CalendarContainer>
         )}
@@ -479,10 +496,6 @@ const StyledCalendar = styled(Calendar)`
     display: flex;
     align-items: center;
     justify-content: center;
-    &:hover {
-      background: lightgray;
-      border-radius: 50%;
-    }
   }
   .react-calendar__tile--now {
     background: #fcfcfc;
@@ -492,6 +505,7 @@ const StyledCalendar = styled(Calendar)`
       border-radius: 50%;
     }
   }
+
   .react-calendar__tile--active {
     background: url(${calendar_selected}) center center no-repeat !important;
     background-size: 15%;
@@ -511,6 +525,15 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__month-view__days__day {
     height: 39px;
     width: 20px;
+  }
+  .react-calendar__tile--past {
+    &:hover {
+      background: lightgray;
+      border-radius: 50%;
+    }
+  }
+
+  .react-calendar__tile--future {
   }
 `;
 
