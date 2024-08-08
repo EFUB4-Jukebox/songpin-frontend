@@ -66,9 +66,9 @@ export const postLogout = async () => {
 export const postToken = async () => {
   try {
     const res = await client.post("/token");
-    console.log(res);
 
     const { accessToken } = res.data;
+
     if (accessToken) {
       console.log(accessToken);
       localStorage.setItem("accessToken", accessToken);
@@ -78,12 +78,12 @@ export const postToken = async () => {
     }
   } catch (e) {
     console.error(e);
-    if (e.response) {
-      if (e.response.status === 401) {
-        if (e.response.errorCode === "EXPIRED_REFRESH_TOKEN")
-          window.location.href = "/";
-      }
+
+    if (e.response && e.response.status === 401) {
+      if (e.response.data.errorCode === "EXPIRED_REFRESH_TOKEN")
+        window.location.href = "/";
     }
+
     throw e;
   }
 };
