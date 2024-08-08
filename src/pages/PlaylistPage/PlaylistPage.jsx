@@ -106,6 +106,7 @@ const PlaylistFeed = styled.div`
   grid-gap: 28px 0;
   justify-items: center;
   align-items: center;
+  margin-bottom: 78px;
 `;
 
 const NoPlaylist = styled.div`

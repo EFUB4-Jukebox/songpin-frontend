@@ -167,9 +167,7 @@ const Line = styled.div`
 const FeedBox = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-
+  justify-content: center;
   padding-top: 30px;
-
   align-items: center;
 `;

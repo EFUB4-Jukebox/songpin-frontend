@@ -35,7 +35,7 @@ const Playlist = ({ playlist, onClick }) => {
   };
   return (
     <PlaylistContainer>
-      <PlaylistBox>
+      <PlaylistBox onClick={onClick}>
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkToggle
             playlistId={playlistId}
@@ -57,7 +57,7 @@ const Playlist = ({ playlist, onClick }) => {
           onMouseLeave={() => setIsHovered(false)}
           onClick={onClick}
         >
-          <PlaylistName ref={titleRef} isHovered={isHovered}>
+          <PlaylistName ref={titleRef} isHovered={isHovered} onClick={onClick}>
             {titleWidth > 210
               ? `${title} ${String.fromCharCode(8195)} ${String.fromCharCode(8195)} ${title}`
               : title}

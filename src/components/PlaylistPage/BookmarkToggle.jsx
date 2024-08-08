@@ -11,7 +11,8 @@ const BookmarkToggle = ({ playlistId, initialBookmarkId, color }) => {
   const [bookmarkId, setBookmarkId] = useState(initialBookmarkId);
   const isWhite = color === "white";
 
-  const toggleBookmark = async () => {
+  const toggleBookmark = async event => {
+    event.stopPropagation();
     try {
       if (isBookmarked) {
         if (bookmarkId) {

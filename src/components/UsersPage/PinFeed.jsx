@@ -32,8 +32,8 @@ export default PinFeed;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: 34px;
-  margin-left: 34px;
+  margin-bottom: 30px;
+  /* margin-left: 34px; */
   align-items: center;
   gap: 10px;
 `;
@@ -54,7 +54,7 @@ const PinNum = styled.div`
 `;
 
 const PinContainer = styled.div`
-  margin-left: 32px;
+  /* margin-left: 32px; */
 `;
 const PinfeedEmpty = styled.div`
   width: 528px;
