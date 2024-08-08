@@ -51,6 +51,7 @@ import { GenreList } from "./constants/GenreList";
 import MapFilter from "./components/HomePage/MapFilter";
 import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "./store/useSnackbarStore";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const genreImages = {
   POP: pop,
@@ -180,6 +181,7 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
+      <ReactQueryDevtools initialIsOpen={true} />
     </Router>
   );
 }
