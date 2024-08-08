@@ -8,7 +8,12 @@ import usePlaylistInfoMsgStore from "../../../store/usePlaylistInfoMsgStore";
 import CommonSnackbar from "../snackbar/CommonSnackbar";
 import useSnackbarStore from "../../../store/useSnackbarStore";
 
-const AddPlaylistModal = ({ setModalCommon, pinId }) => {
+const AddPlaylistModal = ({
+  setModalCommon,
+  pinId,
+  setIsCreatePlaylistModalOpen,
+  setIsAddPlaylistModalOpen,
+}) => {
   const [active, setActive] = useState(false);
   const { playlistId } = usePlaylistIdStore();
   const { setPlaylistInfoMsg } = usePlaylistInfoMsgStore();
@@ -44,6 +49,8 @@ const AddPlaylistModal = ({ setModalCommon, pinId }) => {
         setModalCommon={setModalCommon}
         active={active}
         setActive={setActive}
+        setIsCreatePlaylistModalOpen={setIsCreatePlaylistModalOpen}
+        setIsAddPlaylistModalOpen={setIsAddPlaylistModalOpen}
       />
     </>
   );
