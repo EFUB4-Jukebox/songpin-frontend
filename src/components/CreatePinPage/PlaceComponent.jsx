@@ -1,14 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-const PlaceComponent = ({placeName, placeAddress, placeId, placeLng, placeLat, onPlaceClick}) => {
+const PlaceComponent = ({
+  placeName,
+  placeAddress,
+  placeId,
+  placeLng,
+  placeLat,
+  onPlaceClick,
+}) => {
   const handleClick = () => {
     const placeInfo = {
       place_name: placeName,
       address_name: placeAddress,
       id: placeId,
       x: placeLng,
-      y: placeLat
+      y: placeLat,
     };
     onPlaceClick(placeInfo);
   };
@@ -27,10 +34,7 @@ const PlaceComponent = ({placeName, placeAddress, placeId, placeLng, placeLat, o
 export default PlaceComponent;
 
 const PlaceBox = styled.div`
-  &:hover {
-    opacity: 0.8;
-    background: rgba(0, 0, 0, 0.2);
-  }
+  cursor: pointer;
 `;
 
 const Content = styled.div`
@@ -41,6 +45,10 @@ const Content = styled.div`
   justify-content: center;
   align-items: flex-start;
   opacity: 0.8;
+  &:hover {
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const PlaceName = styled.div`
