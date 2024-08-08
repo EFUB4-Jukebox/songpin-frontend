@@ -118,15 +118,17 @@ const PlaylistDetailPage = () => {
         </InfoBox>
         <PinContainer>
           {playlistData.pinList.length > 0 ? (
-            playlistData.pinList.map(pin => (
-              <PinComponent
-                key={pin.playlistPinId}
-                pin={pin}
-                selectable={false}
-                buttonVisible={playlistData.isMine}
-                pinId={pin.pinId}
-              />
-            ))
+            [...playlistData.pinList]
+              .sort((a, b) => b.pinIndex - a.pinIndex) // pinIndex를 기준으로 내림차순 정렬
+              .map(pin => (
+                <PinComponent
+                  key={pin.playlistPinId}
+                  pin={pin}
+                  selectable={false}
+                  buttonVisible={playlistData.isMine}
+                  pinId={pin.pinId}
+                />
+              ))
           ) : (
             <NoPin>아직 담긴 핀이 없습니다.</NoPin>
           )}
