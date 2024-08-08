@@ -4,6 +4,7 @@ import Input from "../Input";
 import Button from "../Button";
 import PlaylistDropdown from "./dropdown/PlaylistDropdown";
 import PublicToggle from "../PublicToggle";
+import useIsCreatePlaylistStore from "../../../store/useIsCreatePlaylistStore";
 const ModalCommon = ({
   modalText,
   inputPlaceholder,
@@ -18,9 +19,11 @@ const ModalCommon = ({
   setInputValue,
   isPublic,
   setIsPublic,
+  setIsCreatePlaylistModalOpen,
+  setIsAddPlaylistModalOpen,
 }) => {
   const modalRef = useRef(null);
-
+  const { setIsCreatePlaylist } = useIsCreatePlaylistStore();
   useEffect(() => {
     const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -28,6 +31,9 @@ const ModalCommon = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [setModalCommon]);
 
   const handleChange = event => {
@@ -40,6 +46,12 @@ const ModalCommon = ({
   useEffect(() => {
     createPlaylist && setActive(inputValue.length > 0);
   }, [inputValue, setActive]);
+
+  const handlePlaylist = () => {
+    setIsCreatePlaylistModalOpen(true);
+    setIsCreatePlaylist(true);
+    setIsAddPlaylistModalOpen(false);
+  };
 
   return (
     <Wrapper>
@@ -70,7 +82,9 @@ const ModalCommon = ({
           )}
           <Button active={active} name={buttonName} onClick={handleButton} />
           {addPlaylist && (
-            <GotoCreatePlaylist>새 플레이리스트 만들기</GotoCreatePlaylist>
+            <GotoCreatePlaylist onClick={handlePlaylist}>
+              새 플레이리스트 만들기
+            </GotoCreatePlaylist>
           )}
         </InputButton>
       </ModalWrapper>
@@ -173,5 +187,8 @@ const GotoCreatePlaylist = styled.div`
   font-weight: 400;
   line-height: 140%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 `;
 export default ModalCommon;
