@@ -9,6 +9,8 @@ import SideSection from "../../components/common/SideSection";
 import PublicToggle from "../../components/common/PublicToggle";
 import SmallModal from "../../components/common/Modal/SmallModal";
 import { getPlaylistDetail, editPlaylist } from "../../services/api/playlist";
+import useProfileEditStore from "../../store/useProfileEditStore";
+import useEditStore from "../../store/useProfileEditStore";
 
 const PlaylistEditPage = () => {
   const { playlistId } = useParams();
@@ -21,6 +23,8 @@ const PlaylistEditPage = () => {
   const [pinList, setPinList] = useState([]); // 추가: 핀 리스트 상태
   const [showSideBar, setShowSideBar] = useState(true);
   const [back, setBack] = useState(false);
+  const { edit, setEdit } = useEditStore();
+
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
       try {
@@ -69,15 +73,16 @@ const PlaylistEditPage = () => {
         pinIndex: pin.pinIndex,
       }));
 
-      await editPlaylist(
+      const res = await editPlaylist(
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
         selectedPins.length, // 선택된 핀의 개수
         selectedPins, // 수정된 핀 리스트
       );
-
-      navigate(-1);
+      if (!res) {
+        navigate(-1);
+      }
     } catch (error) {
       console.error("Error updating playlist:", error);
     }

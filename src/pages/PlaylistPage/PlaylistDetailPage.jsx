@@ -11,6 +11,7 @@ import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
+import useEditStore from "../../store/useProfileEditStore";
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
