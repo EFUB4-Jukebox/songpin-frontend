@@ -3,7 +3,7 @@ import lofi from "../../assets/common/lo_fi_Icon.svg";
 import hiphop from "../../assets/common/hiphop_Icon.svg";
 import rock from "../../assets/common/rock_Icon.svg";
 import pop from "../../assets/common/pop_Icon.svg";
-import ballade from "../../assets/common/ballade_Icon.svg";
+import ballade from "../../assets/common/ballad.svg";
 
 const Background = () => {
   const canvasRef = useRef(null);
@@ -160,7 +160,7 @@ const Background = () => {
     {
       x: useRef(1200),
       y: useRef(300),
-      r: 32,
+      r: 35,
       vx: 3,
       vy: -3,
       img: ballade,
@@ -169,7 +169,7 @@ const Background = () => {
     {
       x: useRef(1500),
       y: useRef(100),
-      r: 32,
+      r: 35,
       vx: 4,
       vy: -4,
       img: ballade,
@@ -178,7 +178,7 @@ const Background = () => {
     {
       x: useRef(900),
       y: useRef(900),
-      r: 32,
+      r: 35,
       vx: 4,
       vy: -4,
       img: ballade,
@@ -187,7 +187,7 @@ const Background = () => {
     {
       x: useRef(300),
       y: useRef(800),
-      r: 32,
+      r: 35,
       vx: -3,
       vy: 2,
       img: ballade,

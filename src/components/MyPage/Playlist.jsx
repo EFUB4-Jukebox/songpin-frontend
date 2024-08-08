@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { addBookmarkOne, deleteBookmarkOne } from "../../services/api/myPage";
 import { useNavigate } from "react-router-dom";
+import useEditStore from "../../store/useProfileEditStore";
 
 const Playlist = ({ playlist }) => {
   const {
@@ -27,7 +28,7 @@ const Playlist = ({ playlist }) => {
   const [title, setTitle] = useState(playlistName);
   const [titleWidth, setTitleWidth] = useState(0);
   const titleRef = useRef(null);
-
+  const { setEdit } = useEditStore();
   useEffect(() => {
     if (titleRef.current) {
       const width = titleRef.current.offsetWidth;

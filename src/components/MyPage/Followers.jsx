@@ -4,21 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { getMyProfile } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const Followers = () => {
+const Followers = ({ memberId, followerCount, followingCount, handle }) => {
   // const [followerCount, setFollowerCount] = useState();
   // const [followingCount, setFollowingCount] = useState();
   // const [memberId, setMemberId] = useState();
   const navigate = useNavigate();
 
-  const { data: profileData } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-  });
+  // const { data: profileData } = useQuery({
+  //   queryKey: ["getMyProfile"],
+  //   queryFn: getMyProfile,
+  // });
 
-  const followerCount = profileData.followerCount;
-  const followingCount = profileData.followingCount;
-  const memberId = profileData.memberId;
-  const handle = profileData.handle;
+  // const followerCount = profileData && profileData.followerCount;
+  // const followingCount = profileData && profileData.followingCount;
+  // const memberId = profileData && profileData.memberId;
+  // const handle = profileData && profileData.handle;
 
   // useEffect(() => {
   //   const getProfile = async () => {
@@ -52,7 +52,7 @@ const Followers = () => {
 
   return (
     <>
-      {profileData ? (
+      {
         <FollowerComponent>
           <FollowInfoBox>
             <FollowBox onClick={() => handleNavigation("followers")}>
@@ -71,9 +71,7 @@ const Followers = () => {
 
           <EditBtn onClick={goEditPage}>프로필 편집</EditBtn>
         </FollowerComponent>
-      ) : (
-        <></>
-      )}
+      }
     </>
   );
 };

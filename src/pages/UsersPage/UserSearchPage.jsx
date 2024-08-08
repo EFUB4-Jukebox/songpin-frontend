@@ -57,7 +57,11 @@ const UserSearchPage = () => {
           onSearch={handleSearch}
         />
       </SearchBox>
-      {!searched && <MainText>다른 사람을 팔로우해보세요</MainText>}
+      {!searched && (
+        <EmptySearchResult>
+          <MainText>다른 사람을 팔로우해보세요.</MainText>
+        </EmptySearchResult>
+      )}
       {searching ? (
         <div></div>
       ) : searchResults.length > 0 ? (
@@ -94,15 +98,23 @@ const SearchBox = styled.div`
   padding: 40px 34px 10px 34px;
 `;
 
+const EmptySearchResult = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 263px);
+  margin-top: 45px;
+`;
+
 const MainText = styled.div`
-  color: var(--gray, #bcbcbc);
+  color: var(--gray02, #747474);
   text-align: center;
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 28px */
-  margin-top: 448px;
+  /* margin-top: 448px; */
 `;
 
 const NoUser = styled.div`

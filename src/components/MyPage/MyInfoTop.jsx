@@ -1,29 +1,60 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import UserInfo from "./UserInfo";
 import Followers from "./Followers";
 import settingIcon from "../../assets/images/MyPage/settings.svg";
 import { useNavigate } from "react-router-dom";
-
-const MyInfoTop = ({ myProfileData }) => {
+import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
+const MyInfoTop = ({
+  handle,
+  nickname,
+  imgSrc,
+  followerCount,
+  followingCount,
+  memberId,
+}) => {
   const navigate = useNavigate();
   const goSettingsPage = () => {
     navigate("/settings");
   };
+  const { myPageClick, setMyPageClick } = useMyPageClickStore();
 
   return (
     <MyInfo>
-      <Settings src={settingIcon} onClick={goSettingsPage}></Settings>
+      <Wrapper>
+        {!myPageClick && (
+          <BackIcon src={backIcon} onClick={() => navigate(-1)}></BackIcon>
+        )}
+        <Settings src={settingIcon} onClick={goSettingsPage}></Settings>
+      </Wrapper>
       <User>
-        <UserInfo myProfileData={myProfileData} />
-        <Followers />
+        <UserInfo handle={handle} nickname={nickname} imgSrc={imgSrc} />
+        <Followers
+          handle={handle}
+          followerCount={followerCount}
+          followingCount={followingCount}
+          memberId={memberId}
+        />
       </User>
     </MyInfo>
   );
 };
 
 export default MyInfoTop;
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
+const BackIcon = styled.img`
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  margin-left: 40px;
+  cursor: pointer;
+`;
 const MyInfo = styled.div`
   display: flex;
   flex-direction: column;

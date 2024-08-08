@@ -6,6 +6,8 @@ import AddPlaylistModal from "./Modal/AddPlaylistModal";
 import { useNavigate } from "react-router-dom";
 import { deletePin } from "../../services/api/pin";
 import CommonSnackbar from "./snackbar/CommonSnackbar";
+import useIsCreatePlaylistStore from "../../store/useIsCreatePlaylistStore";
+import CreatePlaylistModal from "./Modal/CreatePlaylistModal";
 
 const options = ["담기", "수정", "삭제"];
 
@@ -14,6 +16,8 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
   const [clickedOption, setClickedOption] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddPlaylistModalOpen, setIsAddPlaylistModalOpen] = useState(false);
+  const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] =
+    useState(false);
 
   const handlePopup = () => {
     setIsOpen(!isOpen);
@@ -45,6 +49,10 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
     setIsAddPlaylistModalOpen(prevState => !prevState);
   };
 
+  const handleCreatePlaylistModal = () => {
+    setIsCreatePlaylistModalOpen(prevState => !prevState);
+  };
+
   const navigate = useNavigate();
   const goPinEditPage = () => {
     navigate(`/pin-edit/${pinId}`);
@@ -69,12 +77,22 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
           onDecide={handleDeletePin}
         />
       )}
-      {isAddPlaylistModalOpen && clickedOption === "담기" && (
-        <AddPlaylistModal
-          pinId={pinId}
-          setModalCommon={handleAddPlaylistModal}
-        />
-      )}
+      {clickedOption === "담기" &&
+        (isCreatePlaylistModalOpen ? (
+          <CreatePlaylistModal
+            setIsAddPlaylistModalOpen={setIsAddPlaylistModalOpen}
+            setModalCommon={handleCreatePlaylistModal}
+          />
+        ) : (
+          isAddPlaylistModalOpen && (
+            <AddPlaylistModal
+              pinId={pinId}
+              setModalCommon={handleAddPlaylistModal}
+              setIsCreatePlaylistModalOpen={setIsCreatePlaylistModalOpen}
+              setIsAddPlaylistModalOpen={setIsAddPlaylistModalOpen}
+            />
+          )
+        ))}
       {clickedOption === "수정" && { goPinEditPage }}
     </PinModal>
   );

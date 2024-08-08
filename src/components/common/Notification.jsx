@@ -33,11 +33,19 @@ const Notification = () => {
       console.log("sse opened!");
     };
 
-    eventSource.addEventListener("sse-alarm", event => {
+    eventSource.addEventListener("sse-alarm", async event => {
       console.log("sse-alarm");
       const data = JSON.parse(event.data);
       console.log(data);
-      setIsNewAlarm(true);
+
+      try {
+        const newAlarmData = await postNewAlarms();
+        if (newAlarmData.someCondition) {
+          setIsNewAlarm(true);
+        }
+      } catch (error) {
+        console.error("Error checking new alarms:", error);
+      }
     });
 
     eventSource.onerror = async e => {

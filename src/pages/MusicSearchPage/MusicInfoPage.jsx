@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import mapIconSparkBlack from "../../assets/images/MusicSearchPage/spark_black.svg";
 import uncheckedBox from "../../assets/images/MusicSearchPage/checkbox.svg";
@@ -10,6 +10,7 @@ import SideSection from "../../components/common/SideSection";
 import { getMySongPins, getSongDetails } from "../../services/api/song";
 import { getSongPins } from "../../services/api/song";
 import { GenreList } from "../../constants/GenreList";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const MusicInfoPage = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -24,6 +25,10 @@ const MusicInfoPage = () => {
   const [myPins, setMyPins] = useState([]);
   const [showSideBar, setShowSideBar] = useState(true);
   const location = useLocation();
+  const [pinLoading, setPinLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const loaderRef = useRef(null);
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -41,17 +46,19 @@ const MusicInfoPage = () => {
   const handleCheckboxChange = async () => {
     setIsChecked(!isChecked);
     if (!isChecked) {
-      fetchMySongPins();
+      setPinLoading(true);
+      await fetchMySongPins();
+      setPinLoading(false);
     }
   };
 
-  const navigate = useNavigate();
   const goPreviousPage = () => {
     window.history.back();
   };
 
   useEffect(() => {
     const fetchSongDetails = async () => {
+      setLoading(true);
       if (songId) {
         try {
           const res = await getSongDetails(songId);
@@ -70,8 +77,14 @@ const MusicInfoPage = () => {
     const fetchSongPins = async () => {
       if (songId) {
         try {
-          const pinsRes = await getSongPins(songId);
+          // setPinLoading(true);
+          setPage(0);
+
+          const pinsRes = await getSongPins({ songId, page: 0, size: 15 });
+
           setPins(pinsRes);
+          setPage(1);
+          setHasMore(pinsRes.length === 15);
         } catch (err) {
           console.error(err);
           setPins([]);
@@ -84,14 +97,66 @@ const MusicInfoPage = () => {
   const fetchMySongPins = async () => {
     if (songId) {
       try {
-        const myPinsRes = await getMySongPins(songId);
+        // setPinLoading(true);
+        setPage(0);
+
+        const myPinsRes = await getMySongPins({ songId, page: 0, size: 15 });
+
         setMyPins(myPinsRes);
+        setPage(1);
+        setHasMore(myPinsRes.length === 15);
       } catch (err) {
         console.error(err);
         setMyPins([]);
       }
     }
   };
+
+  const loadMoreResults = async () => {
+    if (!hasMore || pinLoading) return;
+
+    try {
+      const data = isChecked
+        ? await getMySongPins({ songId, page, size: 15 })
+        : await getSongPins({ songId, page, size: 15 });
+
+      isChecked
+        ? setMyPins(prevResults => [...prevResults, ...data])
+        : setPins(prevResults => [...prevResults, ...data]);
+      setPage(prevPage => prevPage + 1);
+      setHasMore(data.length === 15);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          loadMoreResults(); // 스크롤 끝까지 내릴 때 추가 데이터 요청
+        }
+      },
+      {
+        root: null, // 기본값 viewport
+        rootMargin: "100px 0px 0px 0px",
+        threshold: 1.0, // 100%에서 호출
+      },
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [page, pinLoading, hasMore]);
+
+  useEffect(() => {
+    setIsChecked(false);
+  }, [songId]);
 
   const displayedPins = isChecked ? myPins : pins;
 
@@ -111,7 +176,11 @@ const MusicInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection showSideBar={showSideBar}/>; // 로딩 중
+    return (
+      <SideSection showSideBar={showSideBar}>
+        <LoadingSpinner />
+      </SideSection>
+    ); // 로딩 중
   }
 
   return (
@@ -119,7 +188,7 @@ const MusicInfoPage = () => {
       <MusicInfo>
         <SongInfo>
           <BackIcon src={backIcon} onClick={goPreviousPage} />
-          <AlbumImg src={songInfo.imgPath} alt="앨범 이미지" />
+          <AlbumImg src={songInfo?.imgPath} alt="앨범 이미지" />
           <SongDetail>
             <SongTitle>
               <MapIcon src={iconSrc} alt="장르 아이콘" />
@@ -137,15 +206,15 @@ const MusicInfoPage = () => {
                 {titleWidth > 424 && <FadeOut />}
               </RotateBox>
             </SongTitle>
-            <Singer>{songInfo.artist}</Singer>
+            <Singer>{songInfo?.artist}</Singer>
             <PinCount>
               <MapIconBlack src={mapIconSparkBlack} />
-              <Num>{songInfo.pinCount}</Num>
+              <Num>{songInfo?.pinCount}</Num>
             </PinCount>
           </SongDetail>
           <PinInfo>
             <ListenedTimes>
-              {songInfo.lastListenedDate
+              {songInfo?.lastListenedDate
                 ? `최근 들은 날짜: ${formatDate(songInfo.lastListenedDate)}`
                 : "아직 듣지 않았어요"}
             </ListenedTimes>
@@ -157,7 +226,9 @@ const MusicInfoPage = () => {
               />
             </CheckMyPin>
           </PinInfo>
-          {displayedPins.length > 0 ? (
+          {pinLoading ? (
+            <></>
+          ) : displayedPins.length > 0 ? (
             displayedPins.map(pin => (
               <MusicInfoPinPreview key={pin.pinId} pin={pin} />
             ))
@@ -166,6 +237,7 @@ const MusicInfoPage = () => {
           )}
         </SongInfo>
       </MusicInfo>
+      <div ref={loaderRef} style={{ height: "5px" }}></div>
     </SideSection>
   );
 };
@@ -267,6 +339,7 @@ const Singer = styled.div`
   font-weight: 500;
   line-height: normal;
   margin-bottom: 11px;
+  width: 462px;
 `;
 
 const PinCount = styled.div`

@@ -20,9 +20,11 @@ const PinComponent = ({ pin }) => {
     isPrivate && !pin.isMine
       ? "비공개인 메모입니다."
       : pin.memo || "메모가 비어 있습니다.";
-  const maxLength = 59;
-  const showMoreBtn = text.length > maxLength;
-  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+  const maxLines = 2;
+  const showMoreBtn = text.split("\n").length > maxLines;
+  const displayText = isTruncated
+    ? text.split("\n").slice(0, maxLines).join("\n")
+    : text;
 
   const getGenreIcon = genreName => {
     const genre = GenreList.find(item => item.EngName === genreName);
@@ -67,6 +69,7 @@ const PinComponent = ({ pin }) => {
           <LyricText
             onClick={isTruncated && !isPrivate ? () => {} : toggleTruncation}
             isTruncated={isTruncated}
+            style={{ whiteSpace: "pre-wrap" }}
           >
             {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
             {displayText}
@@ -169,6 +172,10 @@ const PinSinger = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
+  max-width: 312px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const MoreIcon = styled.img`

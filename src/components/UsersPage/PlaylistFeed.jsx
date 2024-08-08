@@ -18,7 +18,6 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
         </Img>
         <PinNum>{playlistCount}</PinNum>
       </PinBox>
-
       {playlists.length === 0 ? (
         <PlaylistListEmpty>플레이리스트가 비어있습니다.</PlaylistListEmpty>
       ) : (
@@ -41,15 +40,17 @@ export default PlaylistFeed;
 const PlaylistFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: 22px;
-  margin-left: 34px;
+  margin-bottom: 30px;
+  margin-left: 10px;
   align-items: center;
   gap: 10px;
+  /* width: 528px; */
 `;
 const Img = styled.div`
   width: 20px;
@@ -72,9 +73,18 @@ const PinNum = styled.div`
 `;
 
 const PlaylistContainer = styled.div`
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 0px 20px 70px 20px;
+  margin: 0px 20px 70px 20px; */
+  margin: auto;
+  width: 480px;
+  /* margin-top: 34px; */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 28px 0;
+  justify-items: center;
+  align-items: center;
+  margin-bottom: 78px;
 `;
 const PlaylistListEmpty = styled.div`
   width: 528px;

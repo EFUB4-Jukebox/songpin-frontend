@@ -5,10 +5,10 @@ import { getMyProfile } from "../../services/api/myPage";
 import { ProfileImg } from "../../constants/ProfileImg";
 import { useQuery } from "@tanstack/react-query";
 
-const UserInfo = ({ myProfileData }) => {
+const UserInfo = ({ handle, nickname, imgSrc }) => {
   const [profileImg, setProfileImg] = useState();
-  const [nickname, setNickname] = useState();
-  const [handle, setHandle] = useState();
+  const [userNickname, setUserNickname] = useState();
+  const [userHandle, setUserHandle] = useState();
   // const { isError, data, error } = useQuery({
   //   queryKey: ["getMyProfile"],
   //   queryFn: getMyProfile,
@@ -28,21 +28,19 @@ const UserInfo = ({ myProfileData }) => {
   // const handle = profileData.handle;
 
   useEffect(() => {
-    if (myProfileData) {
-      const img = ProfileImg.find(
-        it => it.EngName === myProfileData.profileImg,
-      );
+    if (handle && nickname && imgSrc) {
+      const img = ProfileImg.find(it => it.EngName === imgSrc);
       setProfileImg(img.imgSrc);
-      setNickname(myProfileData.nickname);
-      setHandle(myProfileData.handle);
+      setUserNickname(nickname);
+      setUserHandle(handle);
     }
   }, []);
   return (
     <UserInfoBox>
       <UserLogo src={profileImg ? profileImg : userLogoEx} alt="User logo " />
       <UserNameBox>
-        <UserName>{nickname ? nickname : ""}</UserName>
-        <UserId>{handle ? `@ ${handle}` : ""}</UserId>
+        <UserName>{userNickname ? userNickname : ""}</UserName>
+        <UserId>{userHandle ? `@${userHandle}` : ""}</UserId>
       </UserNameBox>
     </UserInfoBox>
   );

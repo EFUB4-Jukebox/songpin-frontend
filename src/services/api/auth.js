@@ -63,34 +63,27 @@ export const postLogout = async () => {
   }
 };
 
-const getAccessToken = () => localStorage.getItem("accessToken");
-
 export const postToken = async () => {
   try {
-    const res = await client.post(
-      "/token",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-        withCredentials: true,
-      },
-    );
+    const res = await client.post("/token");
 
     const { accessToken } = res.data;
-    console.log(accessToken);
-    localStorage.setItem("accessToken", accessToken);
-    console.log(accessToken);
 
-    return accessToken;
+    if (accessToken) {
+      console.log(accessToken);
+      localStorage.setItem("accessToken", accessToken);
+      return accessToken;
+    } else {
+      console.log("accessToken 오류");
+    }
   } catch (e) {
     console.error(e);
 
-    if (e.response.status === 401) {
-      if (e.response.errorCode === "EXPIRED_REFRESH_TOKEN")
-        window.location.href = "/home";
+    if (e.response && e.response.status === 401) {
+      if (e.response.data.errorCode === "EXPIRED_REFRESH_TOKEN")
+        window.location.href = "/";
     }
+
     throw e;
   }
 };

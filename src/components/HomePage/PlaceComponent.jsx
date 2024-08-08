@@ -37,9 +37,9 @@ const PlaceBox = styled.div`
   flex-shrink: 0;
   margin-bottom: 12px;
   &:hover {
-    opacity: 0.8;
     background: rgba(0, 0, 0, 0.2);
   }
+  cursor: pointer;
 `;
 
 const Mark = styled.div`

@@ -4,6 +4,7 @@ import Input from "../Input";
 import Button from "../Button";
 import PlaylistDropdown from "./dropdown/PlaylistDropdown";
 import PublicToggle from "../PublicToggle";
+import useIsCreatePlaylistStore from "../../../store/useIsCreatePlaylistStore";
 const ModalCommon = ({
   modalText,
   inputPlaceholder,
@@ -18,9 +19,11 @@ const ModalCommon = ({
   setInputValue,
   isPublic,
   setIsPublic,
+  setIsCreatePlaylistModalOpen,
+  setIsAddPlaylistModalOpen,
 }) => {
   const modalRef = useRef(null);
-
+  const { setIsCreatePlaylist } = useIsCreatePlaylistStore();
   useEffect(() => {
     const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -28,6 +31,9 @@ const ModalCommon = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [setModalCommon]);
 
   const handleChange = event => {
@@ -40,6 +46,12 @@ const ModalCommon = ({
   useEffect(() => {
     createPlaylist && setActive(inputValue.length > 0);
   }, [inputValue, setActive]);
+
+  const handlePlaylist = () => {
+    setIsCreatePlaylistModalOpen(true);
+    setIsCreatePlaylist(true);
+    setIsAddPlaylistModalOpen(false);
+  };
 
   return (
     <Wrapper>
@@ -69,6 +81,11 @@ const ModalCommon = ({
             </CreatePlaylistBox>
           )}
           <Button active={active} name={buttonName} onClick={handleButton} />
+          {addPlaylist && (
+            <GotoCreatePlaylist onClick={handlePlaylist}>
+              새 플레이리스트 만들기
+            </GotoCreatePlaylist>
+          )}
         </InputButton>
       </ModalWrapper>
     </Wrapper>
@@ -114,6 +131,7 @@ const ModalWrapper = styled.div`
   }
 `;
 const EditText = styled.input`
+  width: 400px;
   color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
@@ -160,4 +178,17 @@ const CreatePlaylistBox = styled.div`
   align-items: flex-end;
 `;
 
+const GotoCreatePlaylist = styled.div`
+  color: var(--light_black, #232323);
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+`;
 export default ModalCommon;

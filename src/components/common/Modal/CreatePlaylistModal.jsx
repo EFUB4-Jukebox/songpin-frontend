@@ -3,9 +3,9 @@ import ModalCommon from "./ModalCommon";
 import { createPlaylist } from "../../../services/api/playlist";
 import useSnackbarStore from "../../../store/useSnackbarStore";
 
-const CreatePlaylistModal = ({ setModalCommon }) => {
+const CreatePlaylistModal = ({ setModalCommon, setIsAddPlaylistModalOpen }) => {
   const [inputValue, setInputValue] = useState("");
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [active, setActive] = useState(false);
   const { setIsSnackbar } = useSnackbarStore();
   const handleCreatePlaylist = async () => {
@@ -20,6 +20,7 @@ const CreatePlaylistModal = ({ setModalCommon }) => {
       setIsSnackbar("플레이리스트가 생성되었습니다!");
       console.log(res);
       setModalCommon(false);
+      setIsAddPlaylistModalOpen(true);
     } catch (error) {
       console.log("error : ", error);
     }

@@ -56,6 +56,7 @@ import { GenreList } from "./constants/GenreList";
 import MapFilter from "./components/HomePage/MapFilter";
 import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "./store/useSnackbarStore";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const genreImages = {
   POP: pop,
@@ -203,6 +204,7 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
+      <ReactQueryDevtools initialIsOpen={true} />
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
@@ -356,7 +358,8 @@ function MapLayout({
           return (
             <Wrapper onClick={() => handleMapClick(pin)}>
               <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
-                <MapMarker onClick={() => handleMapClick(pin)}
+                <MapMarker
+                  onClick={() => handleMapClick(pin)}
                   position={{ lat: pin.latitude, lng: pin.longitude }}
                   image={{
                     src: genreImages[pin.latestGenreName] || extra,
@@ -422,6 +425,7 @@ function MapLayout({
           zIndex: 1,
         }}
       >
+        <AnnounceTxt>지도상에 핀은 최대 300개까지 표시됩니다.</AnnounceTxt>
         {location.pathname === "/home" && (
           <MapFilter
             onFilterChange={handleFilterChange}
@@ -466,4 +470,22 @@ const PinNum = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: 150%;
+`;
+
+const AnnounceTxt = styled.div`
+  position: fixed;
+  width: 221px;
+  height: 19px;
+  flex-shrink: 0;
+  color: var(--gray02, #747474);
+  background-color: transparent;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 18px */
+  /* margin-left: 7.5em;
+  padding-top: 84em; */
+  bottom: 20px;
+  left: 90px;
 `;

@@ -9,6 +9,9 @@ import SideSection from "../../components/common/SideSection";
 import PublicToggle from "../../components/common/PublicToggle";
 import SmallModal from "../../components/common/Modal/SmallModal";
 import { getPlaylistDetail, editPlaylist } from "../../services/api/playlist";
+import useProfileEditStore from "../../store/useProfileEditStore";
+import useEditStore from "../../store/useProfileEditStore";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const PlaylistEditPage = () => {
   const { playlistId } = useParams();
@@ -21,6 +24,8 @@ const PlaylistEditPage = () => {
   const [pinList, setPinList] = useState([]); // 추가: 핀 리스트 상태
   const [showSideBar, setShowSideBar] = useState(true);
   const [back, setBack] = useState(false);
+  const { edit, setEdit } = useEditStore();
+
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
       try {
@@ -64,24 +69,32 @@ const PlaylistEditPage = () => {
 
   const handleEditPlaylist = async () => {
     try {
-      const selectedPins = pinList.map(pin => ({
+      const selectedPins = pinList.map((pin, index) => ({
         playlistPinId: pin.playlistPinId,
         pinIndex: pin.pinIndex,
       }));
 
-      await editPlaylist(
+      const res = await editPlaylist(
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
         selectedPins.length, // 선택된 핀의 개수
         selectedPins, // 수정된 핀 리스트
       );
-
-      navigate(-1);
+      // console.log(pinList);
+      if (!res) {
+        setEdit(true);
+      }
     } catch (error) {
       console.error("Error updating playlist:", error);
     }
   };
+
+  useEffect(() => {
+    if (edit) {
+      navigate(-1);
+    }
+  }, [edit]);
 
   const handlePinSelect = id => {
     setPinList(prev =>
@@ -94,6 +107,22 @@ const PlaylistEditPage = () => {
   };
   const handleDeleteSelectedPins = () => {
     setPinList(prev => prev.filter(pin => !pin.isSelected));
+  };
+
+  // 핀 리스트 드래그 앤 드롭 핸들러
+  const handleOnDragEnd = result => {
+    if (!result.destination) return;
+
+    const items = Array.from(pinList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    // pinIndex 업데이트
+    const updatedItems = items.map((pin, index) => ({
+      ...pin,
+      pinIndex: items.length - index - 1, // 새로운 인덱스 할당(내림차순)
+    }));
+
+    setPinList(updatedItems);
   };
 
   return (
@@ -138,21 +167,45 @@ const PlaylistEditPage = () => {
               alt="전체선택 버튼"
               onClick={handleCheckClicked}
             />
-            <SelectText>전체선택</SelectText>
+            <SelectText onClick={handleCheckClicked}>전체선택</SelectText>
           </SelectBox>
           <BtnText onClick={handleDeleteSelectedPins}>삭제</BtnText>
         </ContentBox>
-        <PinContainer>
-          {pinList.map(pin => (
-            <PinComponent
-              key={pin.playlistPinId}
-              pin={pin}
-              selectable={true}
-              buttonVisible={false}
-              onSelect={handlePinSelect}
-            />
-          ))}
-        </PinContainer>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="pins">
+            {provided => (
+              <PinContainer
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {pinList.map((pin, index) => (
+                  <Draggable
+                    key={pin.playlistPinId}
+                    draggableId={String(pin.playlistPinId)}
+                    index={index}
+                  >
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <PinComponent
+                          key={pin.playlistPinId}
+                          pin={pin}
+                          selectable={true}
+                          buttonVisible={false}
+                          onSelect={handlePinSelect}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </PinContainer>
+            )}
+          </Droppable>
+        </DragDropContext>
       </EditContainer>
     </SideSection>
   );
@@ -226,6 +279,7 @@ const SelectText = styled.div`
   font-weight: 400;
   line-height: 140%; /* 28px */
   padding-left: 9px;
+  cursor: pointer;
 `;
 
 const SelectBox = styled.div`
@@ -237,6 +291,7 @@ const SelectBox = styled.div`
 const PinContainer = styled.div``;
 
 const Edit = styled.div`
+  width: 305px;
   display: flex;
   flex-direction: column;
 `;
@@ -250,10 +305,11 @@ const EditText = styled.input`
   line-height: 140%; /* 28px */
   border: none;
   outline: none;
+  width: 265px;
 `;
 
 const Line = styled.div`
-  width: 293px;
+  width: 312px;
   height: 1px;
   background: var(--gray02, #747474);
 `;
@@ -269,8 +325,8 @@ const AlarmMessage = styled.div`
 `;
 
 const EditBox = styled.div`
+  width: 305px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
 `;

@@ -11,7 +11,9 @@ import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 // import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
-
+import useEditStore from "../../store/useProfileEditStore";
+import { getMyProfile } from "../../services/api/myPage";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
 const PlaylistDetailPage = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
@@ -20,6 +22,16 @@ const PlaylistDetailPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
+  const { setMyPageClick } = useMyPageClickStore();
+  const handleUserClick = async id => {
+    const res = await getMyProfile();
+    if (id === res.memberId) {
+      setMyPageClick(false);
+      navigate(`/mypage`);
+    } else {
+      navigate(`/users/${id}`);
+    }
+  };
 
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
@@ -86,7 +98,9 @@ const PlaylistDetailPage = () => {
           <PlaylistName>{playlistData.playlistName}</PlaylistName>
         </NameContainer>
         <NameBox>
-          <UserName>by {playlistData.creatorNickname}</UserName>
+          <UserName onClick={() => handleUserClick(playlistData.creatorId)}>
+            by {playlistData.creatorNickname}
+          </UserName>
           <IconBox>
             <BookmarkToggle
               playlistId={playlistId}
@@ -112,15 +126,17 @@ const PlaylistDetailPage = () => {
         </InfoBox>
         <PinContainer>
           {playlistData.pinList.length > 0 ? (
-            playlistData.pinList.map(pin => (
-              <PinComponent
-                key={pin.playlistPinId}
-                pin={pin}
-                selectable={false}
-                buttonVisible={playlistData.isMine}
-                pinId={pin.pinId}
-              />
-            ))
+            [...playlistData.pinList]
+              .sort((a, b) => b.pinIndex - a.pinIndex) // pinIndex를 기준으로 내림차순 정렬
+              .map(pin => (
+                <PinComponent
+                  key={pin.playlistPinId}
+                  pin={pin}
+                  selectable={false}
+                  buttonVisible={playlistData.isMine}
+                  pinId={pin.pinId}
+                />
+              ))
           ) : (
             <NoPin>아직 담긴 핀이 없습니다.</NoPin>
           )}
@@ -225,6 +241,7 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  cursor: pointer;
 `;
 
 const IconBox = styled.div`

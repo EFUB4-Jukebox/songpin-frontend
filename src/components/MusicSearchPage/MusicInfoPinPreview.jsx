@@ -4,6 +4,7 @@ import lockIcon from "../../assets/images/MyPage/lock.svg";
 import { useNavigate } from "react-router-dom";
 import PinModalBox from "../common/PinModalBox";
 import { postAllMarkers } from "../../services/api/map";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
 
 const MusicInfoPinPreview = ({ pin }) => {
   const [isTruncated, setIsTruncated] = useState(true);
@@ -11,6 +12,7 @@ const MusicInfoPinPreview = ({ pin }) => {
     pinId,
     creatorId,
     creatorNickname,
+    // creatorStatus,
     listenedDate,
     memo,
     visibility,
@@ -21,34 +23,26 @@ const MusicInfoPinPreview = ({ pin }) => {
   } = pin;
 
   const navigate = useNavigate();
-
+  const { setMyPageClick } = useMyPageClickStore();
   const goUsersPage = () => {
-    navigate(`/users/${creatorId}`);
+    // 주석 풀면 >>> <<<안의 나머지 코드는 지워주세요
+    // >>>
+    console.log(isMine);
+    if (isMine) {
+      setMyPageClick(false);
+      navigate(`/mypage`);
+    } else {
+      navigate(`/users/${creatorId}`);
+    }
+
+    // if (isMine) {
+    //   setMyPageClick(false);
+    //   navigate(`/mypage`);
+    // } else if (creatorStatus === "ACTIVE") {
+    //   navigate(`/users/${creatorId}`);
+    // }
+    // <<<
   };
-
-  // const moveToLocation = (latitude, longitude) => {
-  //   const request = {
-  //     boundCoords: {
-  //       swLat: latitude - 0.05, // 대략적인 예시 좌표
-  //       swLng: longitude - 0.05,
-  //       neLat: latitude + 0.05,
-  //       neLng: longitude + 0.05,
-  //     },
-  //     genreNameFilters: null,
-  //   };
-
-  //   postAllMarkers(request)
-  //     .then(data => {
-  //       console.log("Received pins data:", data);
-  //     })
-  //     .catch(error => {
-  //       console.error("Error loading pins:", error.message);
-  //     });
-  // };
-
-  // const goMapLocation = () => {
-  //   moveToLocation(latitude, longitude);
-  // };
 
   const goMapLocation = () => {
     const location = {
@@ -62,9 +56,11 @@ const MusicInfoPinPreview = ({ pin }) => {
   };
 
   const text = memo || "메모가 비어 있습니다";
-  const maxLength = 59;
-  const showMoreBtn = text.length > maxLength;
-  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
+  const maxLines = 2;
+  const showMoreBtn = text.split("\n").length > maxLines;
+  const displayText = isTruncated
+    ? text.split("\n").slice(0, maxLines).join("\n")
+    : text;
 
   const formatDate = dateString => {
     const date = new window.Date(dateString);
@@ -79,7 +75,14 @@ const MusicInfoPinPreview = ({ pin }) => {
       <PinPreview>
         <PinContent>
           <UserView>
-            <UserName onClick={goUsersPage}>{creatorNickname}</UserName>
+            {/* >>> */}
+            <UserName onClick={goUsersPage}>
+              {/* <UserName
+              onClick={goUsersPage}
+              clickable={creatorStatus === "ACTIVE"}> */}
+              {/* <<< */}
+              {creatorNickname}
+            </UserName>
             {isMine && (
               <PinModalBox top="32px" right="0px" pinId={pinId && pinId} />
             )}
@@ -145,7 +148,14 @@ const UserName = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 22.4px */
+  /* >>> */
   cursor: pointer;
+  /* cursor: ${props =>
+    props.clickable
+      ? "pointer"
+      : "not-allowed"};  // 상태에 따라 커서 스타일 변경
+   */
+  /* <<<  */
   width: auto;
   display: inline-block;
 `;

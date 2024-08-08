@@ -11,6 +11,7 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOption, setClickedOption] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handlePopup = () => {
     setIsOpen(!isOpen);
@@ -34,11 +35,10 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
     navigate(-1);
     setIsDeleteModalOpen(false);
     deletePlaylist(playlistId);
-
+    navigate("/mypage");
     // window.location.reload();
   };
 
-  const navigate = useNavigate();
   const goPlaylistEditPage = () => {
     navigate(`/playlist-edit/${playlistId}`);
   };

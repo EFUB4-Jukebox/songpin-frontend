@@ -31,13 +31,11 @@ const PinMemoComponent = ({
   };
 
   const text = memo || "메모가 비어 있습니다";
-  const maxLength = 59;
-  const showMoreBtn = text.length > maxLength;
-  const displayText = showMoreBtn && isTruncated ? text.substring(0, 55) : text;
-
-  // const getLineLength = event => {
-  //   const { lines } = event.nativeEvent;
-  // };
+  const maxLines = 2;
+  const showMoreBtn = text.split("\n").length > maxLines;
+  const displayText = isTruncated
+    ? text.split("\n").slice(0, maxLines).join("\n")
+    : text;
 
   const navigate = useNavigate();
   const goMusicInfoPage = () => {
@@ -50,8 +48,6 @@ const PinMemoComponent = ({
   const formattedDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
-
-  // const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
 
   const getGenreIcon = genreName => {
     const genre = GenreList.find(item => item.EngName === genreName);
@@ -92,7 +88,6 @@ const PinMemoComponent = ({
             visibility={visibility}
             isEmpty={!memo}
             style={{ whiteSpace: "pre-wrap" }}
-            // onTextLayout={getLineLength}
           >
             {visibility === "PRIVATE" && <SecretPin src={lockIcon} />}
             {displayText}
@@ -140,8 +135,8 @@ const AlbumImg = styled.img`
   height: 60px;
   flex-shrink: 0;
   border-radius: 4px;
-  padding-top: 1px;
-  padding-right: 12px;
+  margin-top: 1px;
+  margin-right: 12px;
 `;
 
 const SongInfo = styled.div`

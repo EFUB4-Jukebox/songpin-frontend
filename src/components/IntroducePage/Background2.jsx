@@ -106,7 +106,7 @@ const Background2 = () => {
     {
       x: 500,
       y: 340,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,
@@ -115,7 +115,7 @@ const Background2 = () => {
     {
       x: 350,
       y: 900,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,
@@ -124,7 +124,7 @@ const Background2 = () => {
     {
       x: 1550,
       y: 600,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,
@@ -158,13 +158,21 @@ const Background2 = () => {
         ctx.translate(x, y); // 캔버스 원점 이동
         ctx.rotate(angle); // 회전 적용
 
-        const scaledR = r * 1.2; // 이미지 크기 조정
+        const img = imgRef.current;
+        const imgWidth = img.naturalWidth;
+        const imgHeight = img.naturalHeight;
+        const imgRatio = imgWidth / imgHeight;
+
+        // 원의 크기를 비율에 맞게 조정
+        const scaledWidth = r * 1.2 * imgRatio;
+        const scaledHeight = r * 1.2;
+
         ctx.drawImage(
-          imgRef.current,
-          -scaledR / 2,
-          -scaledR / 2,
-          scaledR,
-          scaledR,
+          img,
+          -scaledWidth / 2,
+          -scaledHeight / 2,
+          scaledWidth,
+          scaledHeight,
         );
 
         ctx.restore(); // 원래 상태로 복구

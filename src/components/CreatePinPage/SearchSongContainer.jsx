@@ -32,6 +32,7 @@ const SearchSongContainer = ({ onPinSelect }) => {
       console.log(data);
       setSearchResults(data);
       setHasMore(data.length > 0);
+      setOffset(20);
       setIsLoading(false);
     } catch (error) {
       console.error("검색 에러: ", error);

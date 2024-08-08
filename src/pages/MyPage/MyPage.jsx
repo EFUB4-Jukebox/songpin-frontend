@@ -14,12 +14,16 @@ import {
 } from "../../services/api/myPage";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { useQuery } from "@tanstack/react-query";
+import useProfileEditStore from "../../store/useProfileEditStore";
+import useEditStore from "../../store/useProfileEditStore";
 
 const MyPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
+
+  const { edit, setEdit } = useEditStore();
 
   // const [myPinFeedData, setMypinFeedData] = useState();
   // const [myPlaylistData, setMyPlaylistData] = useState();
@@ -41,25 +45,51 @@ const MyPage = () => {
     }
   }, []);
 
-  const { data: myPlaylistData, refetch: refetchPlaylist } = useQuery({
+  const {
+    data: myPlaylistData,
+    refetch: refetchPlaylist,
+    isFetching: isPlaylistFetching,
+  } = useQuery({
     queryKey: ["getMyPlaylist"],
     queryFn: getMyPlaylist,
   });
 
-  const { data: myPinFeedData, refetch: refetchPinFeed } = useQuery({
+  const {
+    data: myPinFeedData,
+    refetch: refetchPinFeed,
+    isFetching: isPinFeedFetching,
+  } = useQuery({
     queryKey: ["getMyPinFeed"],
     queryFn: getMyPinFeed,
   });
 
-  const { data: myBookmarkData, refetch: refetchBookmark } = useQuery({
+  const {
+    data: myBookmarkData,
+    refetch: refetchBookmark,
+    isFetching: isBookmarkFetching,
+  } = useQuery({
     queryKey: ["getMyPlaylistBookmark"],
     queryFn: getMyPlaylistBookmark,
   });
-
-  const { data: myProfileData, refetch: refetchProfile } = useQuery({
+  const {
+    data: myProfileData,
+    refetch: refetchProfile,
+    isFetching: isProfileFetching,
+  } = useQuery({
     queryKey: ["getMyProfile"],
     queryFn: getMyProfile,
   });
+
+  // useEffect(() => {
+  //   const getProfile = async () => {
+  //     const res = await getMyProfile();
+  //     setNickname(res.nickname);
+  //     setHandle(res.handle);
+  //     setImgSrc(res.profileImg);
+  //     console.log(res);
+  //   };
+  //   getProfile();
+  // }, [!init]);
 
   // useEffect(() => {
   //   const getMyFeed = async () => {
@@ -96,11 +126,30 @@ const MyPage = () => {
     }
   }, [clickedPage, refetchPlaylist, refetchPinFeed, refetchBookmark]);
 
+  useEffect(() => {
+    refetchPlaylist();
+    setTimeout(() => {
+      setEdit(false);
+    }, 3000);
+    console.log(edit);
+  }, [edit, setEdit]);
+
+  useEffect(() => {
+    refetchPlaylist();
+  });
+
   return (
     <SideSection showSideBar={showSideBar}>
-      {myPinFeedData && myProfileData ? (
+      {!isProfileFetching && myPinFeedData && myProfileData && !edit ? (
         <>
-          <MyInfoTop myProfileData={myProfileData} />
+          <MyInfoTop
+            handle={myProfileData.handle}
+            nickname={myProfileData.nickname}
+            imgSrc={myProfileData.profileImg}
+            followerCount={myProfileData.followerCount}
+            followingCount={myProfileData.followingCount}
+            memberId={myProfileData.memberId}
+          />
           <TopBar>
             <PageSelect>
               <PageItem
