@@ -27,7 +27,6 @@ export default PlaceComponent;
 
 const PlaceBox = styled.div`
   &:hover {
-    opacity: 0.8;
     background: rgba(0, 0, 0, 0.2);
   }
 `;
