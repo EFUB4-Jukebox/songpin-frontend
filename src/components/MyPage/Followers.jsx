@@ -15,10 +15,10 @@ const Followers = () => {
     queryFn: getMyProfile,
   });
 
-  const followerCount = profileData.followerCount;
-  const followingCount = profileData.followingCount;
-  const memberId = profileData.memberId;
-  const handle = profileData.handle;
+  const followerCount = profileData && profileData.followerCount;
+  const followingCount = profileData && profileData.followingCount;
+  const memberId = profileData && profileData.memberId;
+  const handle = profileData && profileData.handle;
 
   // useEffect(() => {
   //   const getProfile = async () => {

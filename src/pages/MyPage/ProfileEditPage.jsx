@@ -18,6 +18,8 @@ const ProfileEditPage = () => {
   const [infoMsgHandle, setInfoMsgHandle] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [patchSuccess, setPatchSuccess] = useState(false);
+  const [init, setInit] = useState(true);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -68,9 +70,17 @@ const ProfileEditPage = () => {
         setInfoMsgHandle(message.slice(7));
       }
     }
-    if (!res.data) navigate("/mypage");
+    if (!res.data) setPatchSuccess(true);
   };
   //if (message.startsWith("handle"))
+
+  useEffect(() => {
+    if (init) {
+      setInit(false);
+      return;
+    }
+    if (patchSuccess) navigate("/mypage");
+  }, [patchSuccess]);
 
   useEffect(() => {
     const getProfile = async () => {

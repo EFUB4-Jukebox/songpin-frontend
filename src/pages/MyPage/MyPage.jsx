@@ -20,6 +20,9 @@ const MyPage = () => {
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
   );
+  const [nickname, setNickname] = useState("");
+  const [handle, setHandle] = useState("");
+  const [imgSrc, setImgSrc] = useState("");
 
   // const [myPinFeedData, setMypinFeedData] = useState();
   // const [myPlaylistData, setMyPlaylistData] = useState();
@@ -56,10 +59,16 @@ const MyPage = () => {
     queryFn: getMyPlaylistBookmark,
   });
 
-  const { data: myProfileData, refetch: refetchProfile } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-  });
+  useEffect(() => {
+    const getProfile = async () => {
+      const res = await getMyProfile();
+      setNickname(res.nickname);
+      setHandle(res.handle);
+      setImgSrc(res.profileImg);
+      console.log(res);
+    };
+    getProfile();
+  }, []);
 
   // useEffect(() => {
   //   const getMyFeed = async () => {
@@ -98,9 +107,9 @@ const MyPage = () => {
 
   return (
     <SideSection showSideBar={showSideBar}>
-      {myPinFeedData && myProfileData ? (
+      {myPinFeedData && handle && nickname && imgSrc ? (
         <>
-          <MyInfoTop myProfileData={myProfileData} />
+          <MyInfoTop handle={handle} nickname={nickname} imgSrc={imgSrc} />
           <TopBar>
             <PageSelect>
               <PageItem

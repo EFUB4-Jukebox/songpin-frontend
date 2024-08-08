@@ -13,7 +13,6 @@ const spin = keyframes`
 const LoadingSpinner = () => {
   return (
     <Loading>
-      데이터를 로딩중입니다.
       <Spinner src={spinner} />
     </Loading>
   );
