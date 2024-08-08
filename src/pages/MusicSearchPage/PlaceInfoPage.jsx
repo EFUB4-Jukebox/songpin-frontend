@@ -10,6 +10,7 @@ import SideSection from "../../components/common/SideSection";
 import { getPlaceDetails } from "../../services/api/place";
 import { GenreList } from "../../constants/GenreList";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const PlaceInfoPage = () => {
   const navigate = useNavigate();
@@ -70,7 +71,11 @@ const PlaceInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection showSideBar={showSideBar} />; // 로딩 중
+    return (
+      <SideSection showSideBar={showSideBar}>
+        <LoadingSpinner />
+      </SideSection>
+    ); // 로딩 중
   }
 
   return (

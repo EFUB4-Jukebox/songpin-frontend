@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import mapIconSparkBlack from "../../assets/images/MusicSearchPage/spark_black.svg";
 import uncheckedBox from "../../assets/images/MusicSearchPage/checkbox.svg";
@@ -10,6 +10,7 @@ import SideSection from "../../components/common/SideSection";
 import { getMySongPins, getSongDetails } from "../../services/api/song";
 import { getSongPins } from "../../services/api/song";
 import { GenreList } from "../../constants/GenreList";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const MusicInfoPage = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -24,6 +25,7 @@ const MusicInfoPage = () => {
   const [myPins, setMyPins] = useState([]);
   const [showSideBar, setShowSideBar] = useState(true);
   const location = useLocation();
+  const [pinLoading, setPinLoading] = useState(false);
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -41,17 +43,19 @@ const MusicInfoPage = () => {
   const handleCheckboxChange = async () => {
     setIsChecked(!isChecked);
     if (!isChecked) {
-      fetchMySongPins();
+      setPinLoading(true);
+      await fetchMySongPins();
+      setPinLoading(false);
     }
   };
 
-  const navigate = useNavigate();
   const goPreviousPage = () => {
     window.history.back();
   };
 
   useEffect(() => {
     const fetchSongDetails = async () => {
+      setLoading(true);
       if (songId) {
         try {
           const res = await getSongDetails(songId);
@@ -93,6 +97,10 @@ const MusicInfoPage = () => {
     }
   };
 
+  useEffect(() => {
+    setIsChecked(false); // Reset isChecked when songId or location changes
+  }, [songId]);
+
   const displayedPins = isChecked ? myPins : pins;
 
   const getGenreIcon = genreName => {
@@ -111,7 +119,11 @@ const MusicInfoPage = () => {
   };
 
   if (loading) {
-    return <SideSection showSideBar={showSideBar} />; // 로딩 중
+    return (
+      <SideSection showSideBar={showSideBar}>
+        <LoadingSpinner />
+      </SideSection>
+    ); // 로딩 중
   }
 
   return (
