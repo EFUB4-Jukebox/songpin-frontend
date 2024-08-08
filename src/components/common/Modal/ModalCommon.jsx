@@ -114,6 +114,7 @@ const ModalWrapper = styled.div`
   }
 `;
 const EditText = styled.input`
+  width: 400px;
   color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
