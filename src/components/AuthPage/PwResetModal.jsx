@@ -11,6 +11,7 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   const modalRef = useRef(null);
   const [email, setEmail] = useState("");
   const [mailMsg, setMailMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -22,6 +23,7 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   }, [setPwResetModal]);
 
   const handleSendMail = async () => {
+    setLoading(true);
     try {
       const response = await postMail(email);
       const responseMsg = response.data.message;
@@ -36,8 +38,10 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
           responseMsg || "비밀번호 재설정을 위한 메일이 발송되었습니다.",
         );
       }
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -64,6 +68,7 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
             active="true"
             name="비밀번호 재설정 메일 발송"
             onClick={handleSendMail}
+            loading={loading}
           />
         </InputWrapper>
         {mailMsg && <div className="pwResetMsg">{mailMsg}</div>}
