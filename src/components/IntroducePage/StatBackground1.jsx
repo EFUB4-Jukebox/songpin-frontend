@@ -9,7 +9,7 @@ const roll = keyframes`
   
   100% {
     opacity: 1;
-    transform: translateX(390%) rotate(300deg);
+    transform: translateX(390%) rotate(360deg);
   }
 `;
 const roll2 = keyframes`
@@ -20,7 +20,7 @@ const roll2 = keyframes`
   
   100% {
     opacity: 1;
-    transform: translateX(-390%) rotate(300deg);
+    transform: translateX(-390%) rotate(360deg);
   }
 `;
 const StatBackground1 = () => {
