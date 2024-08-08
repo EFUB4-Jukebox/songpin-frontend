@@ -106,7 +106,7 @@ const Background2 = () => {
     {
       x: 500,
       y: 340,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,
@@ -115,7 +115,7 @@ const Background2 = () => {
     {
       x: 350,
       y: 900,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,
@@ -124,7 +124,7 @@ const Background2 = () => {
     {
       x: 1550,
       y: 600,
-      r: 32,
+      r: 42,
       img: ballade,
       imgRef: useRef(null),
       angle: 0,

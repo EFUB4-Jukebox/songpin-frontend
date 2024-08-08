@@ -160,7 +160,7 @@ const Background = () => {
     {
       x: useRef(1200),
       y: useRef(300),
-      r: 32,
+      r: 42,
       vx: 3,
       vy: -3,
       img: ballade,
@@ -169,7 +169,7 @@ const Background = () => {
     {
       x: useRef(1500),
       y: useRef(100),
-      r: 32,
+      r: 42,
       vx: 4,
       vy: -4,
       img: ballade,
@@ -178,7 +178,7 @@ const Background = () => {
     {
       x: useRef(900),
       y: useRef(900),
-      r: 32,
+      r: 42,
       vx: 4,
       vy: -4,
       img: ballade,
@@ -187,7 +187,7 @@ const Background = () => {
     {
       x: useRef(300),
       y: useRef(800),
-      r: 32,
+      r: 42,
       vx: -3,
       vy: 2,
       img: ballade,
