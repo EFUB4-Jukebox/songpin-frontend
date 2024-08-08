@@ -3,7 +3,7 @@ import lofi from "../../assets/common/lo_fi_Icon.svg";
 import hiphop from "../../assets/common/hiphop_Icon.svg";
 import rock from "../../assets/common/rock_Icon.svg";
 import pop from "../../assets/common/pop_Icon.svg";
-import ballade from "../../assets/common/ballade_Icon.svg";
+import ballade from "../../assets/common/ballad.svg";
 
 const Background2 = () => {
   const canvasRef = useRef(null);

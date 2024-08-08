@@ -18,9 +18,10 @@ const ModalCommon = ({
   setInputValue,
   isPublic,
   setIsPublic,
+  handleCreatePlaylist,
 }) => {
   const modalRef = useRef(null);
-
+  const [create, setCreate] = useState(false);
   useEffect(() => {
     const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -70,7 +71,9 @@ const ModalCommon = ({
           )}
           <Button active={active} name={buttonName} onClick={handleButton} />
           {addPlaylist && (
-            <GotoCreatePlaylist>새 플레이리스트 만들기</GotoCreatePlaylist>
+            <GotoCreatePlaylist onClick={handleCreatePlaylist}>
+              새 플레이리스트 만들기
+            </GotoCreatePlaylist>
           )}
         </InputButton>
       </ModalWrapper>
@@ -173,5 +176,8 @@ const GotoCreatePlaylist = styled.div`
   font-weight: 400;
   line-height: 140%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 `;
 export default ModalCommon;
