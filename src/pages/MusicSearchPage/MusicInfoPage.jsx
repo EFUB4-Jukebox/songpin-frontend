@@ -26,6 +26,9 @@ const MusicInfoPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const location = useLocation();
   const [pinLoading, setPinLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const loaderRef = useRef(null);
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -74,8 +77,14 @@ const MusicInfoPage = () => {
     const fetchSongPins = async () => {
       if (songId) {
         try {
-          const pinsRes = await getSongPins(songId);
+          // setPinLoading(true);
+          setPage(0);
+
+          const pinsRes = await getSongPins({ songId, page: 0, size: 15 });
+
           setPins(pinsRes);
+          setPage(1);
+          setHasMore(pinsRes.length === 15);
         } catch (err) {
           console.error(err);
           setPins([]);
@@ -88,14 +97,62 @@ const MusicInfoPage = () => {
   const fetchMySongPins = async () => {
     if (songId) {
       try {
-        const myPinsRes = await getMySongPins(songId);
+        // setPinLoading(true);
+        setPage(0);
+
+        const myPinsRes = await getMySongPins({ songId, page: 0, size: 15 });
+
         setMyPins(myPinsRes);
+        setPage(1);
+        setHasMore(myPinsRes.length === 15);
       } catch (err) {
         console.error(err);
         setMyPins([]);
       }
     }
   };
+
+  const loadMoreResults = async () => {
+    if (!hasMore || pinLoading) return;
+
+    try {
+      const data = isChecked
+        ? await getMySongPins({ songId, page, size: 15 })
+        : await getSongPins({ songId, page, size: 15 });
+
+      isChecked
+        ? setMyPins(prevResults => [...prevResults, ...data])
+        : setPins(prevResults => [...prevResults, ...data]);
+      setPage(prevPage => prevPage + 1);
+      setHasMore(data.length === 15);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          loadMoreResults(); // 스크롤 끝까지 내릴 때 추가 데이터 요청
+        }
+      },
+      {
+        root: null, // 기본값 viewport
+        rootMargin: "100px 0px 0px 0px",
+        threshold: 1.0, // 100%에서 호출
+      },
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [page, pinLoading, hasMore]);
 
   useEffect(() => {
     setIsChecked(false);
@@ -131,7 +188,7 @@ const MusicInfoPage = () => {
       <MusicInfo>
         <SongInfo>
           <BackIcon src={backIcon} onClick={goPreviousPage} />
-          <AlbumImg src={songInfo.imgPath} alt="앨범 이미지" />
+          <AlbumImg src={songInfo?.imgPath} alt="앨범 이미지" />
           <SongDetail>
             <SongTitle>
               <MapIcon src={iconSrc} alt="장르 아이콘" />
@@ -149,15 +206,15 @@ const MusicInfoPage = () => {
                 {titleWidth > 424 && <FadeOut />}
               </RotateBox>
             </SongTitle>
-            <Singer>{songInfo.artist}</Singer>
+            <Singer>{songInfo?.artist}</Singer>
             <PinCount>
               <MapIconBlack src={mapIconSparkBlack} />
-              <Num>{songInfo.pinCount}</Num>
+              <Num>{songInfo?.pinCount}</Num>
             </PinCount>
           </SongDetail>
           <PinInfo>
             <ListenedTimes>
-              {songInfo.lastListenedDate
+              {songInfo?.lastListenedDate
                 ? `최근 들은 날짜: ${formatDate(songInfo.lastListenedDate)}`
                 : "아직 듣지 않았어요"}
             </ListenedTimes>
@@ -180,6 +237,7 @@ const MusicInfoPage = () => {
           )}
         </SongInfo>
       </MusicInfo>
+      <div ref={loaderRef} style={{ height: "5px" }}></div>
     </SideSection>
   );
 };

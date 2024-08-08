@@ -22,9 +22,11 @@ export const getSongDetails = async songId => {
   }
 };
 
-export const getSongPins = async songId => {
+export const getSongPins = async ({ songId, page, size }) => {
   try {
-    const res = await client.get(`/songs/${songId}/pins`);
+    const res = await client.get(
+      `/songs/${songId}/pins?page=${page}&size=${size}`,
+    );
     console.log(res);
     return res.data.songDetailsPinList || [];
   } catch (e) {
@@ -32,9 +34,11 @@ export const getSongPins = async songId => {
   }
 };
 
-export const getMySongPins = async songId => {
+export const getMySongPins = async ({ songId, page, size }) => {
   try {
-    const res = await client.get(`/songs/${songId}/pins/me`);
+    const res = await client.get(
+      `/songs/${songId}/pins/me?page=${page}&size=${size}`,
+    );
     console.log(res);
     return res.data.songDetailsPinList || [];
   } catch (e) {
