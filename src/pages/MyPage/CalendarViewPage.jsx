@@ -139,7 +139,7 @@ const CalendarViewPage = () => {
                 title={it.songInfo.title}
                 artist={it.songInfo.artist}
                 imgPath={it.songInfo.imgPath}
-                genre={it.genreName}
+                genreName={it.genreName}
                 listenedDate={it.listenedDate}
                 placeName={it.placeName}
                 songId={it.songInfo.songId}

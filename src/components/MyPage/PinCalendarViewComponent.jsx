@@ -1,4 +1,4 @@
-import react, { useEffect } from "react";
+import react, { useEffect, useState } from "react";
 import styled from "styled-components";
 import albumImgExample from "../../assets/images/MyPage/album-eg.png";
 import pinIcon from "../../assets/images/MyPage/vector-icon.svg";
@@ -14,9 +14,11 @@ const PinCalendarViewComponent = ({
   imgPath,
   listenedDate,
   placeName,
-  genre,
+  genreName,
   songId,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const formattedCalendarDate = format(new Date(listenedDate), "yyyy.MM.dd", {
     locale: ko,
   });
@@ -29,19 +31,34 @@ const PinCalendarViewComponent = ({
     // 지도 위치 이동 코드 추가
   };
 
-  const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
+  const getGenreIcon = genreName => {
+    const genre = GenreList.find(item => item.EngName === genreName);
+    return genre
+      ? {
+          imgSrc: genre.imgSrc,
+          iconSrc: genre.iconSrc,
+        }
+      : null;
+  };
+
+  const { imgSrc, iconSrc } = getGenreIcon(genreName || "");
+  const currentIconSrc = isHovered ? iconSrc : imgSrc;
+
   useEffect(() => {
     console.log(listenedDate);
   }, []);
 
   return (
-    <PinBox>
+    <PinBox
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <AlbumImg src={imgPath} />
       <Content>
         <TitleSection>
           <SongInfo onClick={() => goMusicInfoPage(songId)}>
             <SongTitle>
-              {genreIcon && <SongIcon src={genreIcon} />}
+              <SongIcon src={currentIconSrc} />
               <TitleText>{title}</TitleText>
             </SongTitle>
             <Singer>{artist}</Singer>
@@ -71,14 +88,14 @@ const PinBox = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
-  &:hover {
+  /* &:hover {
     background: linear-gradient(
         0deg,
         rgba(0, 0, 0, 0.2) 0%,
         rgba(0, 0, 0, 0.2) 100%
       ),
       var(--offwhite, #efefef);
-  }
+  } */
 `;
 
 const AlbumImg = styled.img`

@@ -79,8 +79,8 @@ const PinBox = styled.div`
 const PinImg = styled.img`
   width: 78px;
   height: 78px;
-  padding: 11px;
-  padding-left: 12px;
+  margin: 11px;
+  margin-left: 12px;
   border-radius: 4px;
 `;
 

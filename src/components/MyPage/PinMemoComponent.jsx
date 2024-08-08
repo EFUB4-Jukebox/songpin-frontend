@@ -51,8 +51,6 @@ const PinMemoComponent = ({
     locale: ko,
   });
 
-  // const genreIcon = GenreList.find(it => it.EngName === genre)?.imgSrc;
-
   const getGenreIcon = genreName => {
     const genre = GenreList.find(item => item.EngName === genreName);
     return genre
@@ -140,8 +138,8 @@ const AlbumImg = styled.img`
   height: 60px;
   flex-shrink: 0;
   border-radius: 4px;
-  padding-top: 1px;
-  padding-right: 12px;
+  margin-top: 1px;
+  margin-right: 12px;
 `;
 
 const SongInfo = styled.div`
