@@ -33,13 +33,15 @@ const LoginModal = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onLogin = async () => {
+    setLoading(true);
+
     const userData = {
       email,
       password,
     };
-
 
     try {
       const result = await postLogin(userData);
@@ -50,17 +52,19 @@ const LoginModal = ({
         window.location.href = "/home";
       } else {
         setInfoMsg("이메일 또는 비밀번호가 다릅니다.");
+        setLoading(false);
       }
     } catch (error) {
       console.error("로그인 실패", error);
       setInfoMsg("로그인에 실패했습니다.");
+      setLoading(false);
     }
   };
 
   return (
     <>
       {
-        <Wrapper>
+        <Wrapper onClick={e => e.stopPropagation()}>
           <LoginWrapper ref={modalRef}>
             <div className="login">로그인하세요</div>
             <Input
@@ -78,7 +82,12 @@ const LoginModal = ({
             />
             <Info>
               <div className="loginButton">
-                <Button active="true" onClick={onLogin} name="로그인" />
+                <Button
+                  active="true"
+                  onClick={onLogin}
+                  name="로그인"
+                  loading={loading}
+                />
               </div>
               <SignUpAndPWReSet>
                 <SignUpAndPWReSetText>

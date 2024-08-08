@@ -1,28 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, showSideBar }) => {
+const SideSection = ({ children, isNotLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [loginModal, setLoginModal] = useState(false);
 
   const handleSideBox = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    if (isNotLoggedIn) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [isNotLoggedIn]);
+
+  const handleSideBarClick = () => {
+    if (isNotLoggedIn) {
+      setLoginModal(true);
+    }
+  };
+
   return (
     <SideComponent>
       <SideBarContainer>
-        <SideBar />
+        <SideBar onClick={handleSideBarClick} />
       </SideBarContainer>
-      <SideBox isOpen={isOpen}>
-        <Content>{children}</Content>
-      </SideBox>
-      <BoxHandle>
-        <CloseBar onClick={handleSideBox}>
-          <Arrow src={arrowIcon} isOpen={isOpen} />
-        </CloseBar>
-      </BoxHandle>
+      {!isNotLoggedIn && (
+        <>
+          {isOpen && (
+            <SideBox isOpen={isOpen}>
+              <Content>{children}</Content>
+            </SideBox>
+          )}
+          <BoxHandle>
+            <CloseBar onClick={handleSideBox}>
+              <Arrow src={arrowIcon} isOpen={isOpen} />
+            </CloseBar>
+          </BoxHandle>
+        </>
+      )}
     </SideComponent>
   );
 };

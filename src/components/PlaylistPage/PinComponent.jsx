@@ -149,6 +149,10 @@ const PinSinger = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
+  max-width: 312px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoBox = styled.div`

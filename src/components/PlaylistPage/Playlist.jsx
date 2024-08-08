@@ -57,7 +57,7 @@ const Playlist = ({ playlist, onClick }) => {
           onMouseLeave={() => setIsHovered(false)}
           onClick={onClick}
         >
-          <PlaylistName ref={titleRef} isHovered={isHovered}>
+          <PlaylistName ref={titleRef} isHovered={isHovered} onClick={onClick}>
             {titleWidth > 210
               ? `${title} ${String.fromCharCode(8195)} ${String.fromCharCode(8195)} ${title}`
               : title}
@@ -82,8 +82,9 @@ export default Playlist;
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px;
+  /* margin: 15px; */
   cursor: pointer;
+  width: 212px;
 `;
 const PlaylistBox = styled.div`
   display: flex;
