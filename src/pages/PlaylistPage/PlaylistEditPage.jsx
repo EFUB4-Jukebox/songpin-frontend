@@ -81,12 +81,18 @@ const PlaylistEditPage = () => {
         selectedPins, // 수정된 핀 리스트
       );
       if (!res) {
-        navigate(-1);
+        setEdit(true);
       }
     } catch (error) {
       console.error("Error updating playlist:", error);
     }
   };
+
+  useEffect(() => {
+    if (edit) {
+      navigate(-1);
+    }
+  }, [edit]);
 
   const handlePinSelect = id => {
     setPinList(prev =>

@@ -128,11 +128,19 @@ const MyPage = () => {
 
   useEffect(() => {
     refetchPlaylist();
+    setTimeout(() => {
+      setEdit(false);
+    }, 3000);
+    console.log(edit);
+  }, [edit, setEdit]);
+
+  useEffect(() => {
+    refetchPlaylist();
   });
 
   return (
     <SideSection showSideBar={showSideBar}>
-      {!isProfileFetching && myPinFeedData && myProfileData ? (
+      {!isProfileFetching && myPinFeedData && myProfileData && !edit ? (
         <>
           <MyInfoTop
             handle={myProfileData.handle}
