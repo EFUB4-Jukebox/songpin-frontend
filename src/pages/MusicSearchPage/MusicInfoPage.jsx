@@ -12,7 +12,7 @@ import { getSongPins } from "../../services/api/song";
 import { GenreList } from "../../constants/GenreList";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const MusicInfoPage = () => {
+const MusicInfoPage = ({onSelectedLocation = () => {}}) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [title, setTitle] = useState("");
@@ -230,7 +230,7 @@ const MusicInfoPage = () => {
             <></>
           ) : displayedPins.length > 0 ? (
             displayedPins.map(pin => (
-              <MusicInfoPinPreview key={pin.pinId} pin={pin} />
+              <MusicInfoPinPreview key={pin.pinId} pin={pin} onSelectedLocation={onSelectedLocation} />
             ))
           ) : (
             <NoPinMessage>아직 생성된 핀이 없습니다.</NoPinMessage>

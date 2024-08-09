@@ -6,7 +6,11 @@ import Input from "../common/Input";
 import back from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import { postMail } from "../../services/api/auth";
 
-const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
+const PwResetModal = ({
+  setPwResetModal,
+  setLoginModal,
+  disableOutsideClick = false,
+}) => {
   const navigate = useNavigate();
   const modalRef = useRef(null);
   const [email, setEmail] = useState("");
@@ -14,13 +18,15 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleClickOutside = event => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setPwResetModal(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-  }, [setPwResetModal]);
+    if (!disableOutsideClick) {
+      const handleClickOutside = event => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+          setPwResetModal(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+  }, [setPwResetModal, disableOutsideClick]);
 
   const handleSendMail = async () => {
     setLoading(true);
@@ -51,7 +57,7 @@ const PwResetModal = ({ setPwResetModal, setLoginModal }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={e => e.stopPropagation()}>
       <PwResetWrapper ref={modalRef}>
         <div className="backImg">
           <img src={back} onClick={handleGotoLoginModal} />

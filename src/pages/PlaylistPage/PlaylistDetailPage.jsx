@@ -9,7 +9,7 @@ import PinComponent from "../../components/PlaylistPage/PinComponent";
 import SideSection from "../../components/common/SideSection";
 import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
-// import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
+import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useEditStore from "../../store/useProfileEditStore";
 import { getMyProfile } from "../../services/api/myPage";
@@ -21,6 +21,7 @@ const PlaylistDetailPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
   const { setMyPageClick } = useMyPageClickStore();
   const handleUserClick = async id => {
@@ -45,6 +46,14 @@ const PlaylistDetailPage = () => {
 
     fetchPlaylistDetail();
   }, [playlistId]);
+
+  useEffect(() => {
+    if (playlistData && playlistData.visibility === "PRIVATE") {
+      setIsPrivate(true);
+    } else {
+      setIsPrivate(false);
+    }
+  }, [playlistData, setPlaylistData]);
 
   const formatDate = dateString => {
     const date = new Date(dateString);
@@ -94,7 +103,7 @@ const PlaylistDetailPage = () => {
           </SmallBoxContainer>
         </PlaylistBox>
         <NameContainer>
-          {/* {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />} */}
+          {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
           <PlaylistName>{playlistData.playlistName}</PlaylistName>
         </NameContainer>
         <NameBox>
@@ -224,7 +233,6 @@ const PlaylistName = styled.div`
   line-height: 40px; /* 125% */
   width: 464px;
   padding-left: 3px;
-  margin-top: 19px;
 `;
 
 const NameBox = styled.div`
@@ -304,6 +312,8 @@ const NameContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  margin-top: 19px;
 `;
 const LockImg = styled.img`
   width: 40px;

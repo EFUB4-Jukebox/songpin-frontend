@@ -6,20 +6,25 @@ import { postLogin } from "../../services/api/auth";
 
 const LoginModal = ({
   setPwResetModal,
-  setCompleteLogin,
   setSignupModal,
   setLoginModal,
+  disableOutsideClick = false,
 }) => {
   const modalRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = event => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setLoginModal(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-  }, [setLoginModal]);
+    if (!disableOutsideClick) {
+      const handleClickOutside = event => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+          setLoginModal(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [setLoginModal, disableOutsideClick]);
 
   const handleSignup = () => {
     setLoginModal(false);

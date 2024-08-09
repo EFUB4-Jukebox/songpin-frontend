@@ -5,19 +5,26 @@ import Button from "../common/Button";
 import { postSignup } from "../../services/api/auth";
 import { postLogin } from "../../services/api/auth";
 
-const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
+const SignupModal = ({
+  setCompleteLogin,
+  setLoginModal,
+  setSignupModal,
+  disableOutsideClick = false,
+}) => {
   const modalRef = useRef(null);
   const [personalInfoConsent, setPersonalInfoConsent] = useState(false);
   const [redConsent, setRedConsent] = useState(false);
 
   useEffect(() => {
-    const handleClickOutside = event => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setSignupModal(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-  }, [setSignupModal]);
+    if (!disableOutsideClick) {
+      const handleClickOutside = event => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+          setSignupModal(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+  }, [setSignupModal, disableOutsideClick]);
 
   const handlePersonalInfoConsent = () => {
     setPersonalInfoConsent(!personalInfoConsent);
@@ -167,7 +174,7 @@ const SignupModal = ({ setCompleteLogin, setLoginModal, setSignupModal }) => {
   return (
     <>
       {
-        <Wrapper>
+        <Wrapper  onClick={e => e.stopPropagation()}>
           <SignupWrapper ref={modalRef}>
             <div className="signup">회원가입</div>
             <Input

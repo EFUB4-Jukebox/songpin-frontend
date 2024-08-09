@@ -33,6 +33,9 @@ const HomePage = () => {
     }
   };
 
+  const isModalOpen =
+    loginModal || signupModal || completeLogin || pwResetModal;
+
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
@@ -54,7 +57,11 @@ const HomePage = () => {
       onClick={handlePageClick}
       isNotLoggedIn={!isLoggedIn}
     >
-      <SideBar isNotLoggedIn={!isLoggedIn} setLoginModal={setLoginModal} />
+      <SideBar
+        isNotLoggedIn={!isLoggedIn}
+        setLoginModal={setLoginModal}
+        isModalOpen={isModalOpen}
+      />
       <SideSection isNotLoggedIn={!isLoggedIn}>
         <Title>
           {homeInfo}님, <br />
@@ -85,14 +92,13 @@ const HomePage = () => {
             ))}
         </PlaceListContainer>
       </SideSection>
-      {/* <MapFilter /> */}
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
-          setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
           onClick={e => e.stopPropagation()}
+          disableOutsideClick={true}
         />
       )}
       {signupModal && (
@@ -100,6 +106,8 @@ const HomePage = () => {
           setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
+          onClick={e => e.stopPropagation()}
+          disableOutsideClick={true}
         />
       )}
       {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
@@ -107,6 +115,8 @@ const HomePage = () => {
         <PwResetModal
           setPwResetModal={setPwResetModal}
           setLoginModal={setLoginModal}
+          onClick={e => e.stopPropagation()}
+          disableOutsideClick={true}
         />
       )}
     </div>

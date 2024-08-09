@@ -42,10 +42,11 @@ import {
   postAllMarkers,
   postRecentMarkers,
   postCustomPeriodMarkers,
-  getMyPins
+  getMyPins,
+  getPlaylistPins,
 } from "./services/api/map";
 
-import { getMyProfile } from "./services/api/myPage"
+import { getMyProfile } from "./services/api/myPage";
 
 import pop from "./assets/map/glowing_map_pop.svg";
 import ballad from "./assets/map/glowing_map_ballad.svg";
@@ -101,7 +102,16 @@ function App() {
   useEffect(() => {
     const fetchAllPinData = async () => {
       try {
-        const data = await postAllMarkers();
+        const request = {
+          boundCoords: {
+            swLat: 35,
+            swLng: 126,
+            neLat: 40,
+            neLng: 129,
+          },
+          genreNameFilters: null,
+        };
+        const data = await postAllMarkers(request);
         setAllPins(data.mapPlaceSet || []);
       } catch (error) {
         console.error("Error fetching all pin data:", error);
@@ -111,11 +121,23 @@ function App() {
   }, [lat, lng]);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === "All" || term === null) {
-      const data = await postAllMarkers();
+    if (term === "All") {
+      const genreNameFilters = genres.map(
+        genre => GenreList.find(g => g.id === genre).EngName,
+      );
+      const request = {
+        boundCoords: {
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
+        },
+        genreNameFilters,
+      };
+      const data = await postAllMarkers(request);
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
-    } else {
+    } else if (term === "1week" || term === "1month" || term === "3months") {
       const periodMap = {
         "1week": "week",
         "1month": "month",
@@ -127,10 +149,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 0,
-          swLng: 0,
-          neLat: 90,
-          neLng: 180,
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
         },
         genreNameFilters,
         periodFilter,
@@ -146,10 +168,10 @@ function App() {
     );
     const request = {
       boundCoords: {
-        swLat: 0,
-        swLng: 0,
-        neLat: 90,
-        neLng: 180,
+        swLat: 35,
+        swLng: 126,
+        neLat: 40,
+        neLng: 129,
       },
       genreNameFilters: genreNameFilters,
       startDate: startDate,
@@ -213,14 +235,13 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
-      <ReactQueryDevtools initialIsOpen={true} />
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
-          setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
           onClick={e => e.stopPropagation()}
+          disableOutsideClick={true}
         />
       )}
       {signupModal && (
@@ -228,6 +249,7 @@ function App() {
           setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
+          disableOutsideClick={true}
         />
       )}
       {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
@@ -235,6 +257,7 @@ function App() {
         <PwResetModal
           setPwResetModal={setPwResetModal}
           setLoginModal={setLoginModal}
+          disableOutsideClick={true}
         />
       )}
     </Router>
@@ -260,6 +283,14 @@ function MapLayout({
   const [fadeOut, setFadeOut] = useState(false);
   const [mapKey, setMapKey] = useState(Date.now());
   const [memberId, setMemberId] = useState(null);
+  const [playlistId, setPlaylistId] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  useEffect(() => {
+    if (location.pathname === "/home") {
+      handleFilterChange("All", []);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchPins = async () => {
@@ -280,19 +311,59 @@ function MapLayout({
     fetchPins();
   }, [memberId, allPins, recentPins]);
 
+  // 플레이리스트 핀 렌더링 코드
   useEffect(() => {
-    if (location.pathname.startsWith('/users/')) {
-      const memberIdFromUrl = location.pathname.split('/')[2];
+    const fetchPlaylistPins = async () => {
+      try {
+        if (playlistId) {
+          const data = await getPlaylistPins(playlistId);
+          setPinsToDisplay(data.mapPlaceSet || []);
+        }
+        setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchPlaylistPins();
+  }, [playlistId, allPins, recentPins]);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        if (selectedLocation) {
+          setLat(selectedLocation.lat);
+          setLng(selectedLocation.lng);
+          console.log("가져온 좌표", selectedLocation);
+        }
+        setMapKey(Date.now());
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchLocation();
+  }, [selectedLocation]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/users/")) {
+      const memberIdFromUrl = location.pathname.split("/")[2];
       setMemberId(memberIdFromUrl);
-    } else if (location.pathname.startsWith('/mypage')) {
+    } else if (location.pathname.startsWith("/mypage")) {
       const fetchMemberId = async () => {
-      const data = await getMyProfile();
-      setMemberId(data.memberId);
+        const data = await getMyProfile();
+        setMemberId(data.memberId);
       };
       fetchMemberId();
-    }
-    else {
+    } else {
       setMemberId(null);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/playlists/")) {
+      const playlistIdFromUrl = location.pathname.split("/")[2];
+      setPlaylistId(playlistIdFromUrl);
     }
   }, [location.pathname]);
 
@@ -357,13 +428,7 @@ function MapLayout({
   }, [isSnackbar]);
 
   return (
-    <div
-    // style={{
-    //   position: "relative",
-    //   width: "100vw",
-    //   height: "100vh",
-    // }}
-    >
+    <div>
       <Map
         key={mapKey}
         center={{ lat, lng }}
@@ -383,7 +448,10 @@ function MapLayout({
           ).length;
 
           return (
-            <Wrapper key={`${pin.latitude},${pin.longitude}`} onClick={() => handleMapClick(pin)}>
+            <Wrapper
+              key={`${pin.latitude},${pin.longitude}`}
+              onClick={() => handleMapClick(pin)}
+            >
               <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
                 <MapMarker
                   onClick={() => handleMapClick(pin)}
@@ -419,9 +487,21 @@ function MapLayout({
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/details-song/:songId" element={<MusicInfoPage />} />
+          <Route
+            path="/details-song/:songId"
+            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
-          <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng} setMapKey={setMapKey}/>} />
+          <Route
+            path="/create"
+            element={
+              <CreatePinPage
+                setLat={setLat}
+                setLng={setLng}
+                setMapKey={setMapKey}
+              />
+            }
+          />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
@@ -436,7 +516,10 @@ function MapLayout({
             path="/playlist-edit/:playlistId"
             element={<PlaylistEditPage />}
           />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/mypage"
+            element={<MyPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />
@@ -466,7 +549,7 @@ function MapLayout({
           className={fadeOut ? "fade-out" : ""}
         />
       )}
-      <Notification />
+      {isLoggedIn && <Notification />}
     </div>
   );
 }

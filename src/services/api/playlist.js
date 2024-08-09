@@ -26,12 +26,9 @@ export const createPlaylist = async createdPlaylist => {
 
 //특정 핀을 내 플레이리스트에 추가
 export const addPinPlaylist = async pinPlaylist => {
-  try {
-    const data = await post(`/playlists/pins`, pinPlaylist);
-    return data;
-  } catch (error) {
-    throw new Error("데이터 불러오기에 실패하였습니다.");
-  }
+  const data = await client.post(`/playlists/pins`, pinPlaylist);
+  console.log(data);
+  return data;
 };
 
 // 플레이리스트 메인 api 연결

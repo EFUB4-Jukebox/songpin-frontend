@@ -24,7 +24,7 @@ const PlaylistEditPage = () => {
   const [pinList, setPinList] = useState([]); // 추가: 핀 리스트 상태
   const [showSideBar, setShowSideBar] = useState(true);
   const [back, setBack] = useState(false);
-  const { edit, setEdit } = useEditStore();
+  const { setEdit } = useEditStore();
 
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
@@ -61,6 +61,7 @@ const PlaylistEditPage = () => {
     setIsOpen(true);
     setBack(true);
   };
+
   const handleCheckClicked = () => {
     const newIsChecked = !isChecked;
     setIsChecked(newIsChecked);
@@ -69,32 +70,37 @@ const PlaylistEditPage = () => {
 
   const handleEditPlaylist = async () => {
     try {
-      const selectedPins = pinList.map((pin, index) => ({
+      // const selectedPins = pinList.map((pin, index) => ({
+      //   playlistPinId: pin.playlistPinId,
+      //   pinIndex: pin.pinIndex,
+      // }));
+      const sortedPins = pinList.map((pin, index) => ({
         playlistPinId: pin.playlistPinId,
-        pinIndex: pin.pinIndex,
+        pinIndex: pinList.length - index - 1, // 내림차순으로 핀 인덱스를 설정
       }));
 
       const res = await editPlaylist(
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
-        selectedPins.length, // 선택된 핀의 개수
-        selectedPins, // 수정된 핀 리스트
+        sortedPins.length, // 선택된 핀의 개수
+        sortedPins, // 수정된 핀 리스트
       );
-      // console.log(pinList);
+      console.log(pinList);
       if (!res) {
         setEdit(true);
+        navigate(-1);
       }
     } catch (error) {
       console.error("Error updating playlist:", error);
     }
   };
 
-  useEffect(() => {
-    if (edit) {
-      navigate(-1);
-    }
-  }, [edit]);
+  // useEffect(() => {
+  //   if (edit) {
+  //     navigate(-1);
+  //   }
+  // }, [edit]);
 
   const handlePinSelect = id => {
     setPinList(prev =>

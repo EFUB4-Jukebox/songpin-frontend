@@ -10,17 +10,8 @@ const post = async (url, data) => {
     return res?.data;
 };
 
-export const postAllMarkers = async () => {
+export const postAllMarkers = async (request) => {
     try {
-        const request = {
-                "boundCoords": {
-                    "swLat": 35.0,
-                    "swLng": 126.0,
-                    "neLat": 40.0,
-                    "neLng": 129.0
-                },
-                "genreNameFilters": null
-        };
         const data = await post(`/map`, request);
         return data;
     } catch (error) {
@@ -53,9 +44,19 @@ export const postCustomPeriodMarkers = async (request) => {
 export const getMyPins = async (memberId) => {
     try {
         const data = await get(`/map/members/${memberId}`);
-        console.log('사용자 핀 보기:', data);
+        //onsole.log('사용자 핀 보기:', data);
         return data;
     } catch (error) {
         throw new Error("사용자 핀 로드 실패");
+    }
+};
+
+export const getPlaylistPins = async (playlistId) => {
+    try {
+        const data = await get(`/map/playlists/${playlistId}`);
+        //console.log('플리 핀 보기:', data);
+        return data;
+    } catch (error) {
+        throw new Error("플레이리스트 핀 로드 실패");
     }
 };
