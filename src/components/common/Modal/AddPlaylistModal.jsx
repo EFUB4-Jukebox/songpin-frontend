@@ -25,16 +25,18 @@ const AddPlaylistModal = ({
         playlistId: playlistId,
         pinId: pinId,
       };
+      console.log(pinPlaylist);
       const res = await addPinPlaylist(pinPlaylist);
       console.log(res);
-      if (res) {
-        setPlaylistInfoMsg(res.message);
+      if (res.data) {
+        console.log("error");
       } else {
         setIsSnackbar("핀을 플레이리스트에 담았습니다!");
         setModalCommon(false);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
+      setPlaylistInfoMsg(error.response.data.message);
     }
   };
 

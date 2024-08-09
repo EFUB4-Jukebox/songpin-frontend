@@ -115,7 +115,7 @@ const InfoWrapper = styled.div`
     margin-bottom: 5px;
     position: absolute;
     right: 120px;
-    bottom: 200px;
+    bottom: 240px;
   }
 `;
 const DropDownWrapper = styled.div`
