@@ -39,7 +39,11 @@ const Bookmarks = ({ myBookmarkData }) => {
           ) : (
             <PlaylistSection>
               {bookmarkList.map(it => (
-                <Playlist playlist={it} />
+                <Playlist
+                  bookmarkCount={bookmarkCount}
+                  setBookmarkCount={setBookmarkCount}
+                  playlist={it}
+                />
               ))}
             </PlaylistSection>
           )}

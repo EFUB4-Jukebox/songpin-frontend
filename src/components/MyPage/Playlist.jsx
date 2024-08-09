@@ -11,7 +11,12 @@ import { useNavigate } from "react-router-dom";
 import useEditStore from "../../store/useProfileEditStore";
 import useBookmarkStore from "../../store/useBookmarkStore";
 
-const Playlist = ({ playlist }) => {
+const Playlist = ({
+  isPlaylist,
+  playlist,
+  bookmarkCount,
+  setBookmarkCount,
+}) => {
   const {
     playlistName,
     creatorNickname,
@@ -39,6 +44,15 @@ const Playlist = ({ playlist }) => {
 
   const toggleBookmark = async event => {
     event.stopPropagation();
+    const newBookmarkStatus = !isBookmarked;
+    setIsBookmarked(newBookmarkStatus);
+    if (!isPlaylist) {
+      if (newBookmarkStatus) {
+        setBookmarkCount(prev => prev + 1);
+      } else {
+        setBookmarkCount(prev => prev - 1);
+      }
+    }
     setIsBookmarkClick(true);
     try {
       if (isBookmarked) {
@@ -49,7 +63,6 @@ const Playlist = ({ playlist }) => {
     } catch (error) {
       console.error("북마크 변경에 실패했습니다.", error);
     }
-    setIsBookmarked(!isBookmarked);
   };
 
   const handlePlaylistClick = () => {
