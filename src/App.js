@@ -549,7 +549,7 @@ function MapLayout({
           className={fadeOut ? "fade-out" : ""}
         />
       )}
-      <Notification />
+      {isLoggedIn && <Notification />}
     </div>
   );
 }
