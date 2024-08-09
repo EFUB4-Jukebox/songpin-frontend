@@ -106,7 +106,7 @@ const SideBarContainer = styled.div`
   width: 80px;
   height: 100%;
   background: var(--f8f8f8, #fcfcfc);
-  z-index: 100; // 지도 위로 출력
+  z-index: 10; // 지도 위로 출력
   background-color: ${props =>
     props.isModalOpen ? "#cacaca" : "var(--f8f8f8, #fcfcfc)"};
 `;
