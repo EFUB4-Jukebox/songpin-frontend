@@ -12,7 +12,7 @@ import { GenreList } from "../../constants/GenreList";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const PlaceInfoPage = () => {
+const PlaceInfoPage = ({ onSelectedLocation = () => {} }) => {
   const navigate = useNavigate();
   const { placeId } = useParams();
   const location = useLocation();
@@ -21,8 +21,8 @@ const PlaceInfoPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
-  const handleNavigate = () => {
-    navigate("/search");
+  const goPreviousPage = () => {
+    window.history.back();
   };
 
   useEffect(() => {
@@ -70,6 +70,16 @@ const PlaceInfoPage = () => {
       });
   };
 
+  const goMapLocation = () => {
+    const location = {
+      lat: placeInfo.latitude,
+      lng: placeInfo.longitude,
+    };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
+  };
+
   if (loading) {
     return (
       <SideSection showSideBar={showSideBar}>
@@ -81,9 +91,9 @@ const PlaceInfoPage = () => {
   return (
     <SideSection showSideBar={showSideBar} key={`${placeId}-${location.key}`}>
       <PlaceInfo>
-        <BackIcon src={backIcon} onClick={handleNavigate} />
+        <BackIcon src={backIcon} onClick={goPreviousPage} />
         <PlaceDetails>
-          <PlaceTitle>
+          <PlaceTitle onClick={goMapLocation}>
             <LocationIcon src={locationIcon} />
             <Name>{placeInfo.placeName}</Name>
           </PlaceTitle>
@@ -144,6 +154,7 @@ const PlaceTitle = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
+  cursor: pointer;
 `;
 
 const LocationIcon = styled.img`
