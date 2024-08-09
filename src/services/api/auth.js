@@ -52,18 +52,14 @@ export const postLogout = async () => {
     console.log("로그아웃 성공");
     alert("로그아웃 되었습니다.");
   } catch (e) {
-    if (e.response) {
-      if (e.response.status === 401) {
-        alert("로그인 상태가 아닙니다.");
-        console.error(e.response, "로그아웃 실패");
-        localStorage.clear();
-        window.location.href = "/";
-      }
+    if (e.response && e.response.status === 401) {
+      alert("로그인 상태가 아닙니다.");
+      console.error(e.response, "로그인 상태가 아님");
     } else {
       console.error(e, "로그아웃 실패");
-      localStorage.clear();
-      window.location.href = "/";
     }
+  } finally {
+    localStorage.clear();
   }
 };
 
