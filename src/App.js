@@ -61,6 +61,7 @@ import MapFilter from "./components/HomePage/MapFilter";
 import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "./store/useSnackbarStore";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Error404Page from "./pages/Error404Page";
 
 const genreImages = {
   POP: pop,
@@ -195,7 +196,7 @@ function App() {
           path="/resetPasswordComplete"
           element={<PwResetCompletePage />}
         />
-        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route path="*" element={<Error404Page />} />
 
         <Route
           element={
@@ -500,7 +501,10 @@ function MapLayout({
         }}
       >
         <Routes>
-          <Route path="/home" element={<HomePage onSelectedLocation={setSelectedLocation}/>} />
+          <Route
+            path="/home"
+            element={<HomePage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/details-song/:songId"
@@ -528,7 +532,9 @@ function MapLayout({
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
-            element={<PlaylistDetailPage onSelectedLocation={setSelectedLocation}/>}
+            element={
+              <PlaylistDetailPage onSelectedLocation={setSelectedLocation} />
+            }
           />
           <Route
             path="/playlist-edit/:playlistId"
