@@ -30,7 +30,6 @@ const Playlist = ({ playlist }) => {
   const [titleWidth, setTitleWidth] = useState(0);
   const titleRef = useRef(null);
   const { setIsBookmarkClick } = useBookmarkStore();
-  const { setEdit } = useEditStore();
   useEffect(() => {
     if (titleRef.current) {
       const width = titleRef.current.offsetWidth;

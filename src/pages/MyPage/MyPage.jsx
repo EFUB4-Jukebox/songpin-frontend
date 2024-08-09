@@ -25,7 +25,7 @@ const MyPage = () => {
   );
 
   const { edit, setEdit } = useEditStore();
-  const { setIsBookmarkClick } = useBookmarkStore();
+  const { setIsBookmarkClick, isBookmarkClick } = useBookmarkStore();
   // const [myPinFeedData, setMypinFeedData] = useState();
   // const [myPlaylistData, setMyPlaylistData] = useState();
   // const [myBookmarkData, setMyBookmarkData] = useState();
@@ -131,17 +131,13 @@ const MyPage = () => {
     refetchPlaylist();
     setTimeout(() => {
       setEdit(false);
-    }, 3000);
+    }, 2000);
     console.log(edit);
   }, [edit, setEdit]);
 
-  useEffect(() => {
-    refetchPlaylist();
-  }, []);
-
   return (
     <SideSection showSideBar={showSideBar}>
-      {!isProfileFetching && myPinFeedData && myProfileData && !edit ? (
+      {!isProfileFetching && myPinFeedData && myProfileData ? (
         <>
           <MyInfoTop
             handle={myProfileData.handle}
@@ -174,8 +170,14 @@ const MyPage = () => {
             </PageSelect>
             <Line />
           </TopBar>
-          {clickedPage === "playlist" && (
-            <MyPlaylists myPlaylistData={myPlaylistData && myPlaylistData} />
+          {!isPlaylistFetching && !edit ? (
+            clickedPage === "playlist" && (
+              <MyPlaylists myPlaylistData={myPlaylistData && myPlaylistData} />
+            )
+          ) : (
+            <LoadingWrapper>
+              <LoadingSpinner />
+            </LoadingWrapper>
           )}
           {clickedPage === "bookmark" && (
             <Bookmarks myBookmarkData={myBookmarkData && myBookmarkData} />
@@ -209,7 +211,11 @@ export default MyPage;
 //     display: none;
 //   }
 // `;
-
+const LoadingWrapper = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 125px;
+`;
 const TopBar = styled.div`
   display: flex;
   flex-direction: column;
