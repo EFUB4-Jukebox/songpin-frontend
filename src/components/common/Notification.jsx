@@ -3,15 +3,23 @@ import styled from "styled-components";
 import alarmIcon from "../../assets/notification/alarm.svg";
 import ColumnComponent from "./ColumnComponent";
 import { showAlarms, } from "../../services/api/alarm";
+import { useNavigate } from 'react-router-dom';
 
 const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState([]);
   const [isNewAlarm, setIsNewAlarm] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleNotice = () => {
     setIsOpen(!isOpen);
     setIsNewAlarm(false);
+  };
+
+  const goToProfile = (id) => {
+    navigate(`/users/${id}`);
+    console.log("프로필이동!", id);
   };
 
   useEffect(() => {
@@ -76,6 +84,7 @@ const Notification = () => {
                     message={alarm.message}
                     time={alarm.createdTime}
                     id={alarm.senderId}
+                    onClick={goToProfile(alarm.senderId)}
                   />
                 ))
               )}
