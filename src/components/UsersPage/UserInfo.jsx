@@ -27,7 +27,9 @@ const UserInfo = ({
   // const nickname = nickname || profileData.nickname;
   // const handle = handle || profileData.handle;
   return (
-    data && (
+    nickname &&
+    handle &&
+    profileImg && (
       <UserInfoBox onClick={onClick}>
         <UserLogo src={profileImg} alt="User logo pop" />
 
