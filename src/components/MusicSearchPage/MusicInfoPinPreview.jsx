@@ -92,10 +92,13 @@ const MusicInfoPinPreview = ({ pin }) => {
             isTruncated={isTruncated}
             visibility={visibility}
             isEmpty={!memo}
+            isMine={isMine}
             style={{ whiteSpace: "pre-wrap" }}
           >
             {visibility === "PRIVATE" && <SecretPin src={lockIcon} />}
-            {visibility === "PRIVATE" ? "비공개 메모입니다" : displayText}
+            {visibility === "PRIVATE" && !isMine
+              ? "비공개 메모입니다"
+              : displayText}
             {showMoreBtn && isTruncated && (
               <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
             )}
@@ -168,9 +171,9 @@ const PinMemo = styled(UserName)`
   width: 426px;
   min-height: 27px;
   color: ${props =>
-    props.visibility === "PRIVATE" || props.isEmpty
+    (props.visibility === "PRIVATE" && !props.isMine) || props.isEmpty
       ? "var(--gray02, #747474)"
-      : "#000"};
+      : "var(--light_black, #232323)"};
 `;
 
 const SecretPin = styled.img`
