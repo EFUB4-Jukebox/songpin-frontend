@@ -6,7 +6,7 @@ const fadeout = keyframes`
 }
 
 
-100%{
+80%{
   opacity:0
 }
 `;
@@ -35,6 +35,6 @@ const Wrapper = styled.div`
   transform: translateX(-50%);
   top: 100px;
   z-index: 1000;
-  animation: ${fadeout} 6s ease-in-out;
+  animation: ${fadeout} 7s ease-in-out;
 `;
 export default CommonSnackbar;
