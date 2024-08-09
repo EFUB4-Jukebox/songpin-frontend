@@ -65,7 +65,11 @@ const UsersPage = () => {
 
   return (
     <SideSection showSideBar={showSideBar}>
-      {userData && pins && totalElements && playlists ? (
+      {userData &&
+      pins &&
+      playlists &&
+      (totalElements === 0 || totalElements) &&
+      (playlistCount === 0 || playlistCount) ? (
         <>
           <ContentBox>
             <BackBtn src={backArrow} onClick={handleBackClick} />

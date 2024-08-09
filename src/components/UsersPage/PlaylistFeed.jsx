@@ -14,7 +14,6 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
     <PlaylistFeedContainer>
       <PinBox>
         <Img>
-          {" "}
           <PinImg src={pinImage} alt="핀이미지" />{" "}
         </Img>
         <PinNum>{playlistCount}</PinNum>
