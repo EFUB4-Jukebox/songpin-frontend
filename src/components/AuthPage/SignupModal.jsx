@@ -174,7 +174,7 @@ const SignupModal = ({
   return (
     <>
       {
-        <Wrapper>
+        <Wrapper  onClick={e => e.stopPropagation()}>
           <SignupWrapper ref={modalRef}>
             <div className="signup">회원가입</div>
             <Input
