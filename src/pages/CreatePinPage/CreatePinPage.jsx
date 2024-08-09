@@ -19,7 +19,7 @@ import { postNewPin } from "../../services/api/pin";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "../../store/useSnackbarStore";
 
-const CreatePinPage = () => {
+const CreatePinPage = ({ setLat, setLng }) => {
   const [inputCount, setInputCount] = useState(0);
   const [isSongSelected, setIsSongSelected] = useState(false);
   const [showSearchSongContainer, setShowSearchSongContainer] = useState(false);
@@ -104,6 +104,7 @@ const CreatePinPage = () => {
     console.log("Posting data:", request);
     const res = await postNewPin(request);
     setIsSnackbar("핀이 생성되었습니다!");
+
     console.log(res.headers.location.slice(7));
     const songInfo = res.headers.location.slice(7);
     if (songInfo) {
@@ -112,6 +113,10 @@ const CreatePinPage = () => {
 
       navigate(`/details-song/${songId}`);
     }
+
+    // 지도의 중심 좌표를 생성된 핀의 위치로 변경
+    setLat(parseFloat(selectedPlace.y));
+    setLng(parseFloat(selectedPlace.x));
   };
 
   useEffect(() => {
