@@ -19,7 +19,7 @@ import { postNewPin } from "../../services/api/pin";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "../../store/useSnackbarStore";
 
-const CreatePinPage = ({ setLat, setLng }) => {
+const CreatePinPage = ({ setLat, setLng, setMapKey }) => {
   const [inputCount, setInputCount] = useState(0);
   const [isSongSelected, setIsSongSelected] = useState(false);
   const [showSearchSongContainer, setShowSearchSongContainer] = useState(false);
@@ -38,12 +38,6 @@ const CreatePinPage = ({ setLat, setLng }) => {
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
-
-  const handleNavigate = location => {
-    const params = location.split("/");
-    const songId = params[2];
-    navigate(`/details-song/${songId}`);
-  };
 
   const onInputHandler = e => {
     setInputCount(e.target.value.length);
@@ -117,6 +111,7 @@ const CreatePinPage = ({ setLat, setLng }) => {
     // 지도의 중심 좌표를 생성된 핀의 위치로 변경
     setLat(parseFloat(selectedPlace.y));
     setLng(parseFloat(selectedPlace.x));
+    setMapKey(prevKey => prevKey + 1);
   };
 
   useEffect(() => {
