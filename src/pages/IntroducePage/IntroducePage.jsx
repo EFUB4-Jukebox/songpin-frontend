@@ -141,19 +141,19 @@ export default IntroducePage;
 const Background = styled.div`
   display: flex;
   justify-content: center;
-  min-width: 1920px;
+  /* min-width: 1920px; */
 `;
 const BackgroundWrapper = styled.div`
   position: absolute;
-  min-width: 1920px;
-
-  top: 0;
+  /* min-width: 1920px; */
+  transform: scale(0.85);
+  top: -70px;
   margin: auto;
   z-index: 0;
 `;
 
 const Wrapper = styled.div`
-  min-width: 1920px;
+  /* min-width: 1920px; */
   position: relative;
   z-index: 1;
   flex-direction: column;
@@ -163,7 +163,7 @@ const Wrapper = styled.div`
 `;
 
 const Center = styled.div`
-  min-width: 1920px;
+  /* min-width: 1920px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -172,7 +172,7 @@ const Center = styled.div`
 `;
 
 const CenterText = styled.div`
-  min-width: 1920px;
+  /* min-width: 1920px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
