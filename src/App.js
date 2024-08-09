@@ -77,6 +77,9 @@ function App() {
   const [signupModal, setSignupModal] = useState(false);
   const [completeLogin, setCompleteLogin] = useState(false);
   const [pwResetModal, setPwResetModal] = useState(false);
+  const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
+  const [lat, setLat] = useState(defaultCenter.lat);
+  const [lng, setLng] = useState(defaultCenter.lng);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -101,10 +104,10 @@ function App() {
       }
     };
     fetchAllPinData();
-  }, []);
+  }, [lat, lng]);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === "All") {
+    if (term === "All" || term === null) {
       const data = await postAllMarkers();
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
@@ -175,6 +178,8 @@ function App() {
               handleFilterChange2={handleFilterChange2}
               isLoggedIn={isLoggedIn}
               setLoginModal={setLoginModal}
+              setLat={setLat}
+              setLng={setLng}
             />
           }
         >
@@ -268,20 +273,6 @@ function MapLayout({
     }
   };
 
-  // const groupPinsByLocation = (pins) => {
-  //   const groupedPins = pins.reduce((acc, pin) => {
-  //     const key = `${pin.latitude},${pin.longitude}`;
-  //     if (!acc[key]) {
-  //       acc[key] = [];
-  //     }
-  //     acc[key].push(pin);
-  //     return acc;
-  //   }, {});
-  //   return groupedPins;
-  // };
-
-  // const groupedPins = groupPinsByLocation(pinsToDisplay);
-
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -346,10 +337,6 @@ function MapLayout({
           pointerEvents: "auto",
         }}
       >
-        {/* {Object.entries(groupedPins).map(([key, pins]) => {
-          if (pins.length === 0) return null; // 핀이 없으면 건너뜀
-          const pin = pins[0]; // 대표로 사용할 핀 데이터
-          const pinCount = pins.length; */}
         {pinsToDisplay.map(pin => {
           const pinCount = pinsToDisplay.filter(
             p => p.latitude === pin.latitude && p.longitude === pin.longitude,
@@ -394,7 +381,7 @@ function MapLayout({
           <Route path="/search" element={<SearchPage />} />
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
-          <Route path="/create" element={<CreatePinPage />} />
+          <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng}/>} />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
