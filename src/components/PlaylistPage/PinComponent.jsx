@@ -13,6 +13,7 @@ const PinComponent = ({
   buttonVisible,
   onSelect,
   pinId,
+  onSelectedLocation = () => {}
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { songInfo = {} } = pin;
@@ -30,6 +31,16 @@ const PinComponent = ({
     return genre
       ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
       : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+  
+  const goLocation = () => {
+    const location = {
+      lat: pin.latitude,
+      lng: pin.longitude,
+    };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
   };
 
   const { imgSrc, iconSrc } = getGenreIcon(pin.genreName || "");
@@ -66,7 +77,7 @@ const PinComponent = ({
           <PinSinger onClick={handleClick}>{songInfo.artist}</PinSinger>
           <InfoBox>
             <InfoText>{formatDate(pin.listenedDate)}</InfoText>
-            <PlaceText>{pin.placeName}</PlaceText>
+            <PlaceText onClick={goLocation}>{pin.placeName}</PlaceText>
             <InfoText>에서</InfoText>
           </InfoBox>
         </TitleBox>
