@@ -21,7 +21,8 @@ const PlaylistDetailPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
-  const isPrivate = playlistData.visibility === "PRIVATE";
+  const [isPrivate, setIsPrivate] = useState(false);
+  // const isPrivate = playlistData.visibility === "PRIVATE";
   const { setMyPageClick } = useMyPageClickStore();
   const handleUserClick = async id => {
     const res = await getMyProfile();
@@ -45,6 +46,14 @@ const PlaylistDetailPage = () => {
 
     fetchPlaylistDetail();
   }, [playlistId]);
+
+  useEffect(() => {
+    if (playlistData && playlistData.visibility === "PRIVATE") {
+      setIsPrivate(true);
+    } else {
+      setIsPrivate(false);
+    }
+  }, [playlistData, setPlaylistData]);
 
   const formatDate = dateString => {
     const date = new Date(dateString);
