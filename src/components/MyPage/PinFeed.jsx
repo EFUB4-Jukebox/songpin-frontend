@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyPinFeed } from "../../services/api/myPage";
 import { useQuery } from "@tanstack/react-query";
 
-const PinFeed = ({ myPinFeedData }) => {
+const PinFeed = ({ myPinFeedData, onSelectedLocation = () => {} }) => {
   const [totalPinNum, setTotalPinNum] = useState();
   const [pinFeedList, setPinFeedList] = useState([]);
   const [feedElementTitle, setFeedElementTitle] = useState();
@@ -73,6 +73,7 @@ const PinFeed = ({ myPinFeedData }) => {
                   visibility={it.visibility}
                   latitude={it.latitude}
                   longitude={it.longitude}
+                  onSelectedLocation={onSelectedLocation}
                 />
               ))}
             </PinsSection>

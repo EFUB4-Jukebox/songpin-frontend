@@ -262,6 +262,7 @@ function MapLayout({
   const [fadeOut, setFadeOut] = useState(false);
   const [mapKey, setMapKey] = useState(Date.now());
   const [memberId, setMemberId] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   useEffect(() => {
     const fetchPins = async () => {
@@ -281,6 +282,43 @@ function MapLayout({
 
     fetchPins();
   }, [memberId, allPins, recentPins]);
+
+  // 플레이리스트 핀 렌더링 코드
+  // useEffect(() => {
+  //   const fetchPlaylistPins = async () => {
+  //     try {
+  //       if (memberId) {
+  //         const data = await getMyPins(memberId);
+  //         setPinsToDisplay(data.mapPlaceSet || []);
+  //       } else {
+  //         const pins = recentPins.length > 0 ? recentPins : allPins;
+  //         setPinsToDisplay(pins);
+  //       }
+  //       setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+  //     } catch (error) {
+  //       console.error("Error fetching pins:", error);
+  //     }
+  //   };
+
+  //   fetchPins();
+  // }, [memberId, allPins, recentPins]);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        if (selectedLocation) {
+          setLat(selectedLocation.lat);
+          setLng(selectedLocation.lng);
+          console.log("가져온 좌표", selectedLocation);
+        }
+        setMapKey(Date.now());
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchLocation();
+  }, [selectedLocation]);
 
   useEffect(() => {
     if (location.pathname.startsWith("/users/")) {
@@ -423,7 +461,7 @@ function MapLayout({
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/details-song/:songId" element={<MusicInfoPage />} />
+          <Route path="/details-song/:songId" element={<MusicInfoPage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route
             path="/create"
@@ -449,7 +487,7 @@ function MapLayout({
             path="/playlist-edit/:playlistId"
             element={<PlaylistEditPage />}
           />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />

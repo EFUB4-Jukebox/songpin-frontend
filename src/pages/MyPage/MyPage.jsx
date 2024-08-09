@@ -18,7 +18,7 @@ import useProfileEditStore from "../../store/useProfileEditStore";
 import useEditStore from "../../store/useProfileEditStore";
 import useBookmarkStore from "../../store/useBookmarkStore";
 
-const MyPage = () => {
+const MyPage = ({onSelectedLocation = () => {}}) => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
@@ -183,7 +183,7 @@ const MyPage = () => {
             <Bookmarks myBookmarkData={myBookmarkData && myBookmarkData} />
           )}
           {clickedPage === "pinfeed" && (
-            <PinFeed myPinFeedData={myPinFeedData && myPinFeedData} />
+            <PinFeed myPinFeedData={myPinFeedData && myPinFeedData} onSelectedLocation={onSelectedLocation} />
           )}
         </>
       ) : (
