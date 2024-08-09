@@ -503,14 +503,14 @@ function MapLayout({
             }
           />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
-          <Route path="/playlists" element={<PlaylistPage onSelectedLocation={setSelectedLocation}/>} />
+          <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route path="/users/:memberId" element={<UsersPage />} />
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
-            element={<PlaylistDetailPage />}
+            element={<PlaylistDetailPage onSelectedLocation={setSelectedLocation}/>}
           />
           <Route
             path="/playlist-edit/:playlistId"
