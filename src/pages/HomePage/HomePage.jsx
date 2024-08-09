@@ -89,10 +89,10 @@ const HomePage = () => {
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
-          setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
           onClick={e => e.stopPropagation()}
+          disableOutsideClick={true}
         />
       )}
       {signupModal && (
@@ -100,6 +100,7 @@ const HomePage = () => {
           setCompleteLogin={setCompleteLogin}
           setLoginModal={setLoginModal}
           setSignupModal={setSignupModal}
+          disableOutsideClick={true}
         />
       )}
       {completeLogin && <CompleteLogin setCompleteLogin={setCompleteLogin} />}
@@ -107,6 +108,7 @@ const HomePage = () => {
         <PwResetModal
           setPwResetModal={setPwResetModal}
           setLoginModal={setLoginModal}
+          disableOutsideClick={true}
         />
       )}
     </div>
