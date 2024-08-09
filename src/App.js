@@ -127,10 +127,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 0,
-          swLng: 0,
-          neLat: 90,
-          neLng: 180,
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
         },
         genreNameFilters,
         periodFilter,
@@ -146,10 +146,10 @@ function App() {
     );
     const request = {
       boundCoords: {
-        swLat: 0,
-        swLng: 0,
-        neLat: 90,
-        neLng: 180,
+        swLat: 35,
+        swLng: 126,
+        neLat: 40,
+        neLng: 129,
       },
       genreNameFilters: genreNameFilters,
       startDate: startDate,
