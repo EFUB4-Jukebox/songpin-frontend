@@ -120,7 +120,7 @@ export default PlaylistSearchPage;
 const ContentBox = styled.div`
   padding: 33px;
   padding-top: 40px;
-  padding-bottom: 15px;
+  padding-bottom: 0px;
 `;
 
 const PlaylistFeed = styled.div`
@@ -203,7 +203,7 @@ const DropdownList = styled.div`
   background: var(--f8f8f8, #fcfcfc);
   z-index: 1000;
   position: absolute;
-  top: 100%;
+  top: 36.5px;
 `;
 
 const ListItem = styled.div`
