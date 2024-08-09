@@ -281,6 +281,26 @@ function MapLayout({
     fetchPins();
   }, [memberId, allPins, recentPins]);
 
+  // 플레이리스트 핀 렌더링 코드
+  // useEffect(() => {
+  //   const fetchPlaylistPins = async () => {
+  //     try {
+  //       if (memberId) {
+  //         const data = await getMyPins(memberId);
+  //         setPinsToDisplay(data.mapPlaceSet || []);
+  //       } else {
+  //         const pins = recentPins.length > 0 ? recentPins : allPins;
+  //         setPinsToDisplay(pins);
+  //       }
+  //       setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+  //     } catch (error) {
+  //       console.error("Error fetching pins:", error);
+  //     }
+  //   };
+
+  //   fetchPins();
+  // }, [memberId, allPins, recentPins]);
+
   useEffect(() => {
     const fetchLocation = async () => {
       try {
