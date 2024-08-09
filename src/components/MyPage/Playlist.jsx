@@ -9,6 +9,7 @@ import { ko } from "date-fns/locale";
 import { addBookmarkOne, deleteBookmarkOne } from "../../services/api/myPage";
 import { useNavigate } from "react-router-dom";
 import useEditStore from "../../store/useProfileEditStore";
+import useBookmarkStore from "../../store/useBookmarkStore";
 
 const Playlist = ({ playlist }) => {
   const {
@@ -28,7 +29,7 @@ const Playlist = ({ playlist }) => {
   const [title, setTitle] = useState(playlistName);
   const [titleWidth, setTitleWidth] = useState(0);
   const titleRef = useRef(null);
-  const { setEdit } = useEditStore();
+  const { setIsBookmarkClick } = useBookmarkStore();
   useEffect(() => {
     if (titleRef.current) {
       const width = titleRef.current.offsetWidth;
@@ -38,6 +39,7 @@ const Playlist = ({ playlist }) => {
 
   const toggleBookmark = async event => {
     event.stopPropagation();
+    setIsBookmarkClick(true);
     try {
       if (isBookmarked) {
         await deleteBookmarkOne(bookmarkId);

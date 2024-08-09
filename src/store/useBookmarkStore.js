@@ -1,8 +1,8 @@
 import create from "zustand";
 
 const useBookmarkStore = create(set => ({
-  isBookmarked: false,
-  setIsBookmarked: newState => set({ bookmarkId: newState }),
+  isBookmarkClick: false,
+  setIsBookmarkClick: newState => set({ isBookmarkClick: newState }),
 }));
 
 export default useBookmarkStore;

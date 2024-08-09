@@ -42,7 +42,10 @@ import {
   postAllMarkers,
   postRecentMarkers,
   postCustomPeriodMarkers,
+  getMyPins
 } from "./services/api/map";
+
+import { getMyProfile } from "./services/api/myPage"
 
 import pop from "./assets/map/glowing_map_pop.svg";
 import ballad from "./assets/map/glowing_map_ballad.svg";
@@ -69,6 +72,8 @@ const genreImages = {
   EXTRA: extra,
 };
 
+const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
+
 function App() {
   const [allPins, setAllPins] = useState([]);
   const [recentPins, setRecentPins] = useState([]);
@@ -77,7 +82,6 @@ function App() {
   const [signupModal, setSignupModal] = useState(false);
   const [completeLogin, setCompleteLogin] = useState(false);
   const [pwResetModal, setPwResetModal] = useState(false);
-  const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
   const [lat, setLat] = useState(defaultCenter.lat);
   const [lng, setLng] = useState(defaultCenter.lng);
 
@@ -248,14 +252,49 @@ function MapLayout({
   setLoginModal,
 }) {
   const navigate = useNavigate();
-  const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
   const [lat, setLat] = useState(defaultCenter.lat);
   const [lng, setLng] = useState(defaultCenter.lng);
-
+  const [pinsToDisplay, setPinsToDisplay] = useState([]);
   const location = useLocation();
-  const pinsToDisplay = recentPins.length > 0 ? recentPins : allPins;
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
   const [fadeOut, setFadeOut] = useState(false);
+  const [mapKey, setMapKey] = useState(Date.now());
+  const [memberId, setMemberId] = useState(null);
+
+  useEffect(() => {
+    const fetchPins = async () => {
+      try {
+        if (memberId) {
+          const data = await getMyPins(memberId);
+          setPinsToDisplay(data.mapPlaceSet || []);
+        } else {
+          const pins = recentPins.length > 0 ? recentPins : allPins;
+          setPinsToDisplay(pins);
+        }
+        setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchPins();
+  }, [memberId, allPins, recentPins]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/users/')) {
+      const memberIdFromUrl = location.pathname.split('/')[2];
+      setMemberId(memberIdFromUrl);
+    } else if (location.pathname.startsWith('/mypage')) {
+      const fetchMemberId = async () => {
+      const data = await getMyProfile();
+      setMemberId(data.memberId);
+      };
+      fetchMemberId();
+    }
+    else {
+      setMemberId(null);
+    }
+  }, [location.pathname]);
 
   const handleMapClick = pin => {
     if (!isLoggedIn) {
@@ -326,6 +365,7 @@ function MapLayout({
     // }}
     >
       <Map
+        key={mapKey}
         center={{ lat, lng }}
         style={{
           position: "absolute",
@@ -343,7 +383,7 @@ function MapLayout({
           ).length;
 
           return (
-            <Wrapper onClick={() => handleMapClick(pin)}>
+            <Wrapper key={`${pin.latitude},${pin.longitude}`} onClick={() => handleMapClick(pin)}>
               <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
                 <MapMarker
                   onClick={() => handleMapClick(pin)}
@@ -381,7 +421,7 @@ function MapLayout({
           <Route path="/search" element={<SearchPage />} />
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
-          <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng}/>} />
+          <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng} setMapKey={setMapKey}/>} />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
