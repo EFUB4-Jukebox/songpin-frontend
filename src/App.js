@@ -43,6 +43,7 @@ import {
   postRecentMarkers,
   postCustomPeriodMarkers,
   getMyPins,
+  getPlaylistPins
 } from "./services/api/map";
 
 import { getMyProfile } from "./services/api/myPage";
@@ -262,6 +263,7 @@ function MapLayout({
   const [fadeOut, setFadeOut] = useState(false);
   const [mapKey, setMapKey] = useState(Date.now());
   const [memberId, setMemberId] = useState(null);
+  const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   useEffect(() => {
@@ -284,24 +286,21 @@ function MapLayout({
   }, [memberId, allPins, recentPins]);
 
   // 플레이리스트 핀 렌더링 코드
-  // useEffect(() => {
-  //   const fetchPlaylistPins = async () => {
-  //     try {
-  //       if (memberId) {
-  //         const data = await getMyPins(memberId);
-  //         setPinsToDisplay(data.mapPlaceSet || []);
-  //       } else {
-  //         const pins = recentPins.length > 0 ? recentPins : allPins;
-  //         setPinsToDisplay(pins);
-  //       }
-  //       setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
-  //     } catch (error) {
-  //       console.error("Error fetching pins:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchPlaylistPins = async () => {
+      try {
+        if (playlistId) {
+          const data = await getPlaylistPins(playlistId);
+          setPinsToDisplay(data.mapPlaceSet || []);
+        }
+        setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
 
-  //   fetchPins();
-  // }, [memberId, allPins, recentPins]);
+    fetchPlaylistPins();
+  }, [playlistId, allPins, recentPins]);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -333,6 +332,13 @@ function MapLayout({
     } else {
       setMemberId(null);
     }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/playlists/")) {
+      const playlistIdFromUrl = location.pathname.split("/")[2];
+      setPlaylistId(playlistIdFromUrl);
+    } 
   }, [location.pathname]);
 
   const handleMapClick = pin => {
