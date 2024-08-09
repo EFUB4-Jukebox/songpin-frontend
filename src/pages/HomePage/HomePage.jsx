@@ -85,7 +85,6 @@ const HomePage = () => {
             ))}
         </PlaceListContainer>
       </SideSection>
-      {/* <MapFilter /> */}
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}

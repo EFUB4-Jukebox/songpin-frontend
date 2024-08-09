@@ -429,13 +429,7 @@ function MapLayout({
   }, [isSnackbar]);
 
   return (
-    <div
-    // style={{
-    //   position: "relative",
-    //   width: "100vw",
-    //   height: "100vh",
-    // }}
-    >
+    <div>
       <Map
         key={mapKey}
         center={{ lat, lng }}
