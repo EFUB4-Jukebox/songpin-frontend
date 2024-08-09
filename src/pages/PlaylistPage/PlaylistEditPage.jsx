@@ -70,19 +70,23 @@ const PlaylistEditPage = () => {
 
   const handleEditPlaylist = async () => {
     try {
-      const selectedPins = pinList.map((pin, index) => ({
+      // const selectedPins = pinList.map((pin, index) => ({
+      //   playlistPinId: pin.playlistPinId,
+      //   pinIndex: pin.pinIndex,
+      // }));
+      const sortedPins = pinList.map((pin, index) => ({
         playlistPinId: pin.playlistPinId,
-        pinIndex: pin.pinIndex,
+        pinIndex: pinList.length - index - 1, // 내림차순으로 핀 인덱스를 설정
       }));
 
       const res = await editPlaylist(
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
-        selectedPins.length, // 선택된 핀의 개수
-        selectedPins, // 수정된 핀 리스트
+        sortedPins.length, // 선택된 핀의 개수
+        sortedPins, // 수정된 핀 리스트
       );
-      // console.log(pinList);
+      console.log(pinList);
       if (!res) {
         setEdit(true);
         navigate(-1);
