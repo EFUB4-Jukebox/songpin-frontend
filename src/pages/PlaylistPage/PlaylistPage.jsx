@@ -5,7 +5,8 @@ import SideSection from "../../components/common/SideSection";
 import SearchBar from "../../components/UsersPage/SearchBar";
 import Playlist from "../../components/PlaylistPage/Playlist";
 import { getPlaylists } from "../../services/api/playlist";
-const PlaylistPage = () => {
+
+const PlaylistPage = (onSelectedLocation = () => {}) => {
   const navigate = useNavigate();
   const [recentPlaylists, setRecentPlaylists] = useState([]);
   const [followingPlaylists, setFollowingPlaylists] = useState([]);

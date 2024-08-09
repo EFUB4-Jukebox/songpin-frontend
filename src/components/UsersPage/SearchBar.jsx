@@ -73,6 +73,7 @@ const InputBox = styled.div`
 
 const Input = styled.input`
   color: var(--light_black, #232323);
+  width: 414px;
 
   &::placeholder {
     color: var(--gray, #bcbcbc);
