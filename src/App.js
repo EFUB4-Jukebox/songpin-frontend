@@ -235,7 +235,6 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
-      <ReactQueryDevtools initialIsOpen={true} />
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
