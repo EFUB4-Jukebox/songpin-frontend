@@ -43,6 +43,7 @@ import {
   postRecentMarkers,
   postCustomPeriodMarkers,
   getMyPins,
+  getPlaylistPins,
 } from "./services/api/map";
 
 import { getMyProfile } from "./services/api/myPage";
@@ -101,7 +102,16 @@ function App() {
   useEffect(() => {
     const fetchAllPinData = async () => {
       try {
-        const data = await postAllMarkers();
+        const request = {
+          boundCoords: {
+            swLat: 35,
+            swLng: 126,
+            neLat: 40,
+            neLng: 129,
+          },
+          genreNameFilters: null,
+        };
+        const data = await postAllMarkers(request);
         setAllPins(data.mapPlaceSet || []);
       } catch (error) {
         console.error("Error fetching all pin data:", error);
@@ -111,11 +121,23 @@ function App() {
   }, [lat, lng]);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === "All" || term === null) {
-      const data = await postAllMarkers();
+    if (term === "All") {
+      const genreNameFilters = genres.map(
+        genre => GenreList.find(g => g.id === genre).EngName,
+      );
+      const request = {
+        boundCoords: {
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
+        },
+        genreNameFilters,
+      };
+      const data = await postAllMarkers(request);
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
-    } else {
+    } else if (term === "1week" || term === "1month" || term === "3months") {
       const periodMap = {
         "1week": "week",
         "1month": "month",
@@ -127,10 +149,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 0,
-          swLng: 0,
-          neLat: 90,
-          neLng: 180,
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
         },
         genreNameFilters,
         periodFilter,
@@ -146,10 +168,10 @@ function App() {
     );
     const request = {
       boundCoords: {
-        swLat: 0,
-        swLng: 0,
-        neLat: 90,
-        neLng: 180,
+        swLat: 35,
+        swLng: 126,
+        neLat: 40,
+        neLng: 129,
       },
       genreNameFilters: genreNameFilters,
       startDate: startDate,
@@ -213,7 +235,6 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
-      <ReactQueryDevtools initialIsOpen={true} />
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
@@ -262,7 +283,14 @@ function MapLayout({
   const [fadeOut, setFadeOut] = useState(false);
   const [mapKey, setMapKey] = useState(Date.now());
   const [memberId, setMemberId] = useState(null);
+  const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+
+  useEffect(() => {
+    if (location.pathname === "/home") {
+      handleFilterChange("All", []);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchPins = async () => {
@@ -284,24 +312,21 @@ function MapLayout({
   }, [memberId, allPins, recentPins]);
 
   // 플레이리스트 핀 렌더링 코드
-  // useEffect(() => {
-  //   const fetchPlaylistPins = async () => {
-  //     try {
-  //       if (memberId) {
-  //         const data = await getMyPins(memberId);
-  //         setPinsToDisplay(data.mapPlaceSet || []);
-  //       } else {
-  //         const pins = recentPins.length > 0 ? recentPins : allPins;
-  //         setPinsToDisplay(pins);
-  //       }
-  //       setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
-  //     } catch (error) {
-  //       console.error("Error fetching pins:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchPlaylistPins = async () => {
+      try {
+        if (playlistId) {
+          const data = await getPlaylistPins(playlistId);
+          setPinsToDisplay(data.mapPlaceSet || []);
+        }
+        setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
 
-  //   fetchPins();
-  // }, [memberId, allPins, recentPins]);
+    fetchPlaylistPins();
+  }, [playlistId, allPins, recentPins]);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -332,6 +357,13 @@ function MapLayout({
       fetchMemberId();
     } else {
       setMemberId(null);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/playlists/")) {
+      const playlistIdFromUrl = location.pathname.split("/")[2];
+      setPlaylistId(playlistIdFromUrl);
     }
   }, [location.pathname]);
 
@@ -396,13 +428,7 @@ function MapLayout({
   }, [isSnackbar]);
 
   return (
-    <div
-    // style={{
-    //   position: "relative",
-    //   width: "100vw",
-    //   height: "100vh",
-    // }}
-    >
+    <div>
       <Map
         key={mapKey}
         center={{ lat, lng }}

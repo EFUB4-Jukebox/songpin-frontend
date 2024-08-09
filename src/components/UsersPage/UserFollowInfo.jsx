@@ -18,21 +18,21 @@ const UserFollowInfo = ({
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const navigate = useNavigate();
   const handleFollow = async () => {
+    // UI 먼저 업데이트
+    setIsFollowing(prevIsFollowing => !prevIsFollowing);
+
     try {
       if (isFollowing) {
-        const res = await deleteFollowing(followId);
-        console.log(res, " 팔로잉 삭제");
-        setIsFollowing(!isFollowing);
+        await deleteFollowing(followId);
       } else {
         const addFollowingId = {
           targetMemberId: memberId,
         };
-        const res = await addFollowing(addFollowingId);
-        console.log(res, "팔로잉 추가");
-        setIsFollowing(!isFollowing);
+        await addFollowing(addFollowingId);
       }
     } catch (error) {
       console.error("Error", error);
+      setIsFollowing(prevIsFollowing => !prevIsFollowing);
     }
   };
 

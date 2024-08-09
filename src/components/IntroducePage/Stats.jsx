@@ -206,7 +206,7 @@ const Stats = () => {
                 가장 많이 등록된 노래는
                 <Song>
                   <br /> {popularSongArtist && popularSongArtist} -<br />“
-                  {popularSongTitle && popularSongTitle}”예요.
+                  {popularSongTitle && popularSongTitle}”이에요.
                 </Song>
               </div>
               <div>
