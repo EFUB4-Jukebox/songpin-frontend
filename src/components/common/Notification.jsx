@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import alarmIcon from "../../assets/notification/alarm.svg";
 import ColumnComponent from "./ColumnComponent";
-import { showAlarms, postNewAlarms } from "../../services/api/alarm";
+import { showAlarms, } from "../../services/api/alarm";
 
 const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,36 +25,36 @@ const Notification = () => {
     };
     fetchAlarmData();
 
-    const eventSource = new EventSource(
-      "https://api.songpin.n-e.kr/alarms/subscribe",
-    );
+    // const eventSource = new EventSource(
+    //   "https://api.songpin.n-e.kr/alarms/subscribe",
+    // );
 
-    eventSource.onopen = async () => {
-      console.log("sse opened!");
-    };
+    // eventSource.onopen = async () => {
+    //   console.log("sse opened!");
+    // };
 
-    eventSource.addEventListener("sse-alarm", async event => {
-      console.log("sse-alarm");
-      const data = JSON.parse(event.data);
-      console.log(data);
+    // eventSource.addEventListener("sse-alarm", async event => {
+    //   console.log("sse-alarm");
+    //   const data = JSON.parse(event.data);
+    //   console.log(data);
 
-      try {
-        const newAlarmData = await postNewAlarms();
-        if (newAlarmData.someCondition) {
-          setIsNewAlarm(true);
-        }
-      } catch (error) {
-        console.error("Error checking new alarms:", error);
-      }
-    });
+    //   try {
+    //     const newAlarmData = await postNewAlarms();
+    //     if (newAlarmData.someCondition) {
+    //       setIsNewAlarm(true);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error checking new alarms:", error);
+    //   }
+    // });
 
-    eventSource.onerror = async e => {
-      console.log(e);
-    };
+    // eventSource.onerror = async e => {
+    //   console.log(e);
+    // };
 
-    return () => {
-      eventSource.close();
-    };
+    // return () => {
+    //   eventSource.close();
+    // };
   }, []);
 
   return (
