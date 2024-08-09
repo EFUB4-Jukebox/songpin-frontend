@@ -288,6 +288,12 @@ function MapLayout({
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   useEffect(() => {
+    if (location.pathname === "/home") {
+      handleFilterChange("All", []);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
     const fetchPins = async () => {
       try {
         if (memberId) {
