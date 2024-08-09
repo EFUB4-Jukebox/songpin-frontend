@@ -8,10 +8,10 @@ import SideSection from "../../components/common/SideSection";
 import { searchPlaylists } from "../../services/api/playlist";
 import queryString from "query-string";
 
-const values = ["정확도순", "핀 등록 많은순", "업데이트순"];
+const values = ["정확도순", "담긴 핀 많은순", "업데이트순"];
 const sortByMap = {
   정확도순: "ACCURACY",
-  "핀 등록 많은순": "COUNT",
+  "담긴 핀 많은순": "COUNT",
   업데이트순: "NEWEST",
 };
 const PlaylistSearchPage = () => {

@@ -19,11 +19,11 @@ export const showAlarms = async () => {
     }
 };
 
-export const postNewAlarms = async () => {
-    try {
-        const data = await post(`/alarms/subscribe`);
-        return data;
-    } catch (error) {
-        throw new Error("실시간 새 알림 정보 로드 실패");
-    }
-};
+// export const postNewAlarms = async () => {
+//     try {
+//         const data = await post(`/alarms/subscribe`);
+//         return data;
+//     } catch (error) {
+//         throw new Error("실시간 새 알림 정보 로드 실패");
+//     }
+// };

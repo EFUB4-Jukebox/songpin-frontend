@@ -40,11 +40,9 @@ const Followers = ({ userData }) => {
       const checkFollowing = async () => {
         const res = await getFollowingList(myId);
         const followingList = res.followingList;
-        console.log(memberId);
         const isFollow =
           followingList &&
           followingList.find(it => it.memberId === Number(memberId));
-        console.log(isFollow);
 
         if (isFollow) {
           setIsFollowing(true);
@@ -56,28 +54,26 @@ const Followers = ({ userData }) => {
   }, [myId]);
 
   const handleFollow = async () => {
-    console.log(isFollowing);
+    // 클릭 시 UI 먼저 업데이트
+    setIsFollowing(prev => !prev);
+    setFollowerCount(prevCount => prevCount + (isFollowing ? -1 : 1));
+
     try {
       if (isFollowing) {
-        console.log(followId);
-        const res = await deleteFollowing(followId);
-        console.log(res, " 팔로잉 삭제");
-        setIsFollowing(!isFollowing);
-        setFollowerCount(prevCount => prevCount - 1);
+        // 팔로우 상태에서 언팔로우 요청
+        await deleteFollowing(followId);
+        setFollowId(null);
       } else {
-        const addFollowingId = {
-          targetMemberId: memberId,
-        };
-        console.log(addFollowingId);
+        // 언팔로우 상태에서 팔로우 요청
+        const addFollowingId = { targetMemberId: memberId };
         const res = await addFollowing(addFollowingId);
-        console.log(res, "팔로잉 추가");
-        setIsFollowing(!isFollowing);
-        setFollowerCount(prevCount => prevCount + 1);
+        setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
       }
-
-      console.log(followerCount, followingCount);
     } catch (error) {
       console.error("Error", error);
+      // 에러 발생 시, UI를 원래 상태로 롤백
+      setIsFollowing(prev => !prev);
+      setFollowerCount(prevCount => prevCount + (isFollowing ? 1 : -1));
     }
   };
 
