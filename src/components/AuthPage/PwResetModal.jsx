@@ -57,7 +57,7 @@ const PwResetModal = ({
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={e => e.stopPropagation()}>
       <PwResetWrapper ref={modalRef}>
         <div className="backImg">
           <img src={back} onClick={handleGotoLoginModal} />

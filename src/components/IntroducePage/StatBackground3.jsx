@@ -25,7 +25,7 @@ const StatBackground3 = () => {
 const First = styled.div`
   display: flex;
   width: 100vw;
-  min-width: 1920px;
+  /* min-width: 1920px; */
   justify-content: space-between;
 `;
 const Second = styled.div`

@@ -1,5 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
+const fadeout = keyframes`
+0%{
+  opacity:1;
+}
+
+
+100%{
+  opacity:0
+}
+`;
 const CommonSnackbar = ({ text }) => {
   return <Wrapper>{text}</Wrapper>;
 };
@@ -25,11 +35,6 @@ const Wrapper = styled.div`
   transform: translateX(-50%);
   top: 100px;
   z-index: 1000;
-  opacity: 1;
-  transition: opacity 1.5s ease-in-out;
-
-  &.fade-out {
-    opacity: 0;
-  }
+  animation: ${fadeout} 6s ease-in-out;
 `;
 export default CommonSnackbar;

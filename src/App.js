@@ -43,7 +43,7 @@ import {
   postRecentMarkers,
   postCustomPeriodMarkers,
   getMyPins,
-  getPlaylistPins
+  getPlaylistPins,
 } from "./services/api/map";
 
 import { getMyProfile } from "./services/api/myPage";
@@ -235,7 +235,6 @@ function App() {
           <Route path="/mypin-search" element={<MyPinSearchPage />} />
         </Route>
       </Routes>
-      <ReactQueryDevtools initialIsOpen={true} />
       {loginModal && (
         <LoginModal
           setPwResetModal={setPwResetModal}
@@ -365,7 +364,7 @@ function MapLayout({
     if (location.pathname.startsWith("/playlists/")) {
       const playlistIdFromUrl = location.pathname.split("/")[2];
       setPlaylistId(playlistIdFromUrl);
-    } 
+    }
   }, [location.pathname]);
 
   const handleMapClick = pin => {
@@ -488,7 +487,10 @@ function MapLayout({
         <Routes>
           <Route path="/home" element={<HomePage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/details-song/:songId" element={<MusicInfoPage onSelectedLocation={setSelectedLocation}/>} />
+          <Route
+            path="/details-song/:songId"
+            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route
             path="/create"
@@ -514,7 +516,10 @@ function MapLayout({
             path="/playlist-edit/:playlistId"
             element={<PlaylistEditPage />}
           />
-          <Route path="/mypage" element={<MyPage onSelectedLocation={setSelectedLocation}/>} />
+          <Route
+            path="/mypage"
+            element={<MyPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />
@@ -544,7 +549,7 @@ function MapLayout({
           className={fadeOut ? "fade-out" : ""}
         />
       )}
-      <Notification />
+      {isLoggedIn && <Notification />}
     </div>
   );
 }

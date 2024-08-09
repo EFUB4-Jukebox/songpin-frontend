@@ -10,11 +10,12 @@ import sidebar_usersearch from "../../assets/sidebar/sidebar_usersearch.svg";
 import sidebar_mypage from "../../assets/sidebar/sidebar_mypage.svg";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
-const SideBar = ({ isNotLoggedIn, setLoginModal }) => {
+const SideBar = ({ isNotLoggedIn, setLoginModal, isModalOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activePath, setActivePath] = React.useState(location.pathname);
   const { setMyPageClick } = useMyPageClickStore();
+
   React.useEffect(() => {
     setActivePath(location.pathname);
   }, [location]);
@@ -39,7 +40,7 @@ const SideBar = ({ isNotLoggedIn, setLoginModal }) => {
   };
 
   return (
-    <SideBarContainer>
+    <SideBarContainer isModalOpen={isModalOpen}>
       <PinFeatures>
         <StyledButton
           onClick={() => onFirstItemClick("/")}
@@ -105,7 +106,9 @@ const SideBarContainer = styled.div`
   width: 80px;
   height: 100%;
   background: var(--f8f8f8, #fcfcfc);
-  z-index: 100; // 지도 위로 출력
+  z-index: 10; // 지도 위로 출력
+  background-color: ${props =>
+    props.isModalOpen ? "#cacaca" : "var(--f8f8f8, #fcfcfc)"};
 `;
 
 const PinFeatures = styled.div`
