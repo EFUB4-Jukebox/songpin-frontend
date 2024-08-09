@@ -49,3 +49,13 @@ export const postCustomPeriodMarkers = async (request) => {
         throw new Error("사용자 설정 기간 핀 로드 실패");
     }
 };
+
+export const getMyPins = async (memberId) => {
+    try {
+        const data = await get(`/map/members/${memberId}`);
+        console.log('사용자 핀 보기:', data);
+        return data;
+    } catch (error) {
+        throw new Error("사용자 핀 로드 실패");
+    }
+};
