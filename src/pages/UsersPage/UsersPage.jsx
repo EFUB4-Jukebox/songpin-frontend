@@ -16,7 +16,7 @@ import PlaylistFeed from "../../components/UsersPage/PlaylistFeed";
 import SideSection from "../../components/common/SideSection";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const UsersPage = () => {
+const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const { memberId } = useParams();
   const [userData, setUserData] = useState(null);
   const [playlists, setPlaylists] = useState([]);
@@ -105,7 +105,11 @@ const UsersPage = () => {
           <Line />
           <FeedBox>
             {selectedMenu === "pinFeed" ? (
-              <PinFeed totalElements={totalElements} pins={pins} />
+              <PinFeed
+                totalElements={totalElements}
+                pins={pins}
+                onSelectedLocation={onSelectedLocation}
+              />
             ) : (
               <PlaylistFeed
                 playlistCount={playlistCount}

@@ -367,7 +367,7 @@ function MapLayout({
     }
   }, [location.pathname]);
 
-  const handleMapCenterChange = (map) => {
+  const handleMapCenterChange = map => {
     const center = map.getCenter();
     setLat(center.getLat());
     setLng(center.getLng());
@@ -527,7 +527,10 @@ function MapLayout({
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
-          <Route path="/users/:memberId" element={<UsersPage />} />
+          <Route
+            path="/users/:memberId"
+            element={<UsersPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route

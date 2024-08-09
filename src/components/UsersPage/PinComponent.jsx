@@ -6,7 +6,7 @@ import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
 import lock from "../../assets/images/UsersPage/lock.svg";
 import { GenreList } from "../../constants/GenreList";
 
-const PinComponent = ({ pin }) => {
+const PinComponent = ({ pin, onSelectedLocation = () => {} }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
@@ -48,6 +48,16 @@ const PinComponent = ({ pin }) => {
     return `${year}.${month}.${day}`;
   };
 
+  const goMapLocation = () => {
+    const location = {
+      lat: pin.latitude,
+      lng: pin.longitude,
+    };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
+  };
+
   return (
     <PinBox
       onMouseEnter={() => setIsHovered(true)}
@@ -79,7 +89,7 @@ const PinComponent = ({ pin }) => {
               <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
             )}
           </LyricText>
-          <InfoBox>
+          <InfoBox onClick={goMapLocation}>
             <InfoText>{formatDate(pin.listenedDate)}</InfoText>
             <PlaceText>{pin.placeName}</PlaceText>
             <InfoText>에서</InfoText>
