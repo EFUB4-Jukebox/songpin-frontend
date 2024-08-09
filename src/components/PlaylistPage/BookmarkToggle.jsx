@@ -15,23 +15,34 @@ const BookmarkToggle = ({ playlistId, initialBookmarkId, color }) => {
 
   const toggleBookmark = async event => {
     event.stopPropagation();
+
+    // 로컬 상태를 즉시 변경
+    const newBookmarkStatus = !isBookmarked;
+    setIsBookmarked(newBookmarkStatus);
+
+    // API 요청
     setEdit(true);
     try {
-      if (isBookmarked) {
-        if (bookmarkId) {
-          await deleteBookmark(bookmarkId);
-          setIsBookmarked(false);
-          setBookmarkId(null);
-        }
-      } else {
+      if (newBookmarkStatus) {
         const response = await addBookmark(playlistId);
         if (response?.bookmarkId) {
-          setIsBookmarked(true);
           setBookmarkId(response.bookmarkId);
+        } else {
+          // 실패 시 상태 롤백
+          setIsBookmarked(false);
+        }
+      } else {
+        if (bookmarkId) {
+          await deleteBookmark(bookmarkId);
+          setBookmarkId(null);
+        } else {
+          // 실패 시 상태 롤백
+          setIsBookmarked(true);
         }
       }
     } catch (error) {
       console.error("Error toggling bookmark:", error);
+      setIsBookmarked(!newBookmarkStatus);
     }
   };
 

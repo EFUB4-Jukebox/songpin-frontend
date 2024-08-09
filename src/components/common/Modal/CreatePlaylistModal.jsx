@@ -2,14 +2,17 @@ import { useState } from "react";
 import ModalCommon from "./ModalCommon";
 import { createPlaylist } from "../../../services/api/playlist";
 import useSnackbarStore from "../../../store/useSnackbarStore";
+import useEditStore from "../../../store/useProfileEditStore";
 
 const CreatePlaylistModal = ({ setModalCommon, setIsAddPlaylistModalOpen }) => {
   const [inputValue, setInputValue] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [active, setActive] = useState(false);
   const { setIsSnackbar } = useSnackbarStore();
+  const { setEdit } = useEditStore();
   const handleCreatePlaylist = async () => {
     const isVisibility = isPublic ? "PUBLIC" : "PRIVATE";
+    setEdit(true);
     try {
       const createdPlaylist = {
         playlistName: inputValue,

@@ -21,8 +21,8 @@ const LoadingSpinner = () => {
 const Loading = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   height: 100vh;
+  justify-content: center;
   align-items: center;
   gap: 20px;
   color: var(--gray02, rgb(116, 116, 116));
