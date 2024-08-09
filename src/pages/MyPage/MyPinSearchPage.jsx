@@ -8,7 +8,7 @@ import PinCalendarViewComponent from "../../components/MyPage/PinCalendarViewCom
 import { useQuery } from "@tanstack/react-query";
 import { searchPin } from "../../services/api/myPage";
 
-const MyPinSearchPage = () => {
+const MyPinSearchPage = ({ onSelectedLocation = () => {} }) => {
   const [inputValue, setInputValue] = useState();
   const [showSideBar, setShowSideBar] = useState(true);
   const [pinList, setPinList] = useState();
@@ -62,9 +62,13 @@ const MyPinSearchPage = () => {
               title={it.songInfo.title}
               artist={it.songInfo.artist}
               imgPath={it.songInfo.imgPath}
-              genre={it.genreName}
+              genreName={it.genreName}
               listenedDate={it.listenedDate}
               placeName={it.placeName}
+              songId={it.songInfo.songId}
+              latitude={it.latitude}
+              longitude={it.longitude}
+              onSelectedLocation={onSelectedLocation}
             />
           ))
         ) : (

@@ -7,12 +7,28 @@ const MyPageSearchBar = ({ inputValue, setInputValue, completeSearch }) => {
     setInputValue(event.target.value);
   };
 
+  const handleSearchClick = () => {
+    completeSearch(inputValue);
+  };
+
+  const handleEnterKeySearch = event => {
+    if (event.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   return (
     <SearchBarComponent>
       <SearchBox>
         <Search>
           <InputBox>
-            <Input type="text" value={inputValue} onChange={handleChange} />
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
+              placeholder="노래 제목, 가수명, 장소명을 검색"
+              onKeyPress={handleEnterKeySearch}
+            />
           </InputBox>
         </Search>
         <SearchIcon onClick={completeSearch} src={search} alt="검색 아이콘" />
@@ -58,6 +74,10 @@ const Input = styled.input`
   line-height: normal;
   border: none;
   outline: none;
+  width: 414px;
+  &::placeholder {
+    color: var(--gray, #bcbcbc);
+  }
 `;
 
 const SearchIcon = styled.img`
