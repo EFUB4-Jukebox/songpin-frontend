@@ -107,7 +107,7 @@ function App() {
   }, [lat, lng]);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === "All") {
+    if (term === "All" || term === null) {
       const data = await postAllMarkers();
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
