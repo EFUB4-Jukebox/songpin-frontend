@@ -14,7 +14,7 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
     <PlaylistFeedContainer>
       <PinBox>
         <Img>
-          <PinImg src={pinImage} alt="핀이미지" />
+          <PinImg src={pinImage} alt="핀이미지" />{" "}
         </Img>
         <PinNum>{playlistCount}</PinNum>
       </PinBox>
@@ -40,27 +40,28 @@ export default PlaylistFeed;
 const PlaylistFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
 `;
 
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 30px;
-  margin-left: 10px;
+  /* margin-left: 34px; */
   align-items: center;
   gap: 10px;
-  /* width: 528px; */
+  width: 454px;
 `;
+
+const PinImg = styled.img`
+  flex-shrink: 0;
+`;
+
 const Img = styled.div`
   width: 20px;
   height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-const PinImg = styled.img`
-  flex-shrink: 0;
 `;
 
 const PinNum = styled.div`
@@ -73,24 +74,17 @@ const PinNum = styled.div`
 `;
 
 const PlaylistContainer = styled.div`
-  /* display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin: 0px 20px 70px 20px; */
-  margin: auto;
-  width: 480px;
-  /* margin-top: 34px; */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 28px 0;
   justify-items: center;
   align-items: center;
-  margin-bottom: 78px;
 `;
+
 const PlaylistListEmpty = styled.div`
-  width: 528px;
   display: flex;
   justify-content: center;
-  margin-top: 230px;
+  margin-top: 250px;
   color: var(--gray02, #747474);
   text-align: center;
   font-family: Pretendard;

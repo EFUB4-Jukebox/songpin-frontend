@@ -125,7 +125,7 @@ const NoUser = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 28px */
-  margin-top: 448px;
+  margin-top: 365px;
 `;
 
 const Line = styled.div`

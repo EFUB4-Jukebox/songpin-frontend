@@ -14,6 +14,7 @@ import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import PinFeed from "../../components/UsersPage/PinFeed";
 import PlaylistFeed from "../../components/UsersPage/PlaylistFeed";
 import SideSection from "../../components/common/SideSection";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const UsersPage = () => {
   const { memberId } = useParams();
@@ -32,6 +33,7 @@ const UsersPage = () => {
     const fetchUserData = async () => {
       try {
         const response = await getUserDetail(memberId);
+        console.log(response);
         setUserData(response.data);
 
         // 타 유저 플레이리스트 가져오기
@@ -60,49 +62,61 @@ const UsersPage = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
+
   return (
     <SideSection showSideBar={showSideBar}>
-      <ContentBox>
-        <BackBtn src={backArrow} onClick={handleBackClick} />
-      </ContentBox>
-      <ContentBox2>
-        {userData ? (
-          <>
-            <UserInfo
-              nickname={userData.nickname}
-              handle={userData.handle}
-              profileImg={userData.profileImg}
-            />
-            <Followers myFollowId={userData.followId} userData={userData} />
-          </>
-        ) : (
-          <div></div>
-        )}
-      </ContentBox2>
-      <ContentBox>
-        <MenuBox>
-          <MenuText
-            isSelected={selectedMenu === "pinFeed"}
-            onClick={() => setSelectedMenu("pinFeed")}
-          >
-            핀 피드
-          </MenuText>
-          <MenuText
-            isSelected={selectedMenu === "playlist"}
-            onClick={() => setSelectedMenu("playlist")}
-          >
-            플레이리스트
-          </MenuText>
-        </MenuBox>
-      </ContentBox>
-      <Line />
-      <FeedBox>
-        {selectedMenu === "pinFeed" ? (
-          <PinFeed totalElements={totalElements} pins={pins} />
-        ) : (
-          <PlaylistFeed playlistCount={playlistCount} playlists={playlists} />
-        )}
-      </FeedBox>
+      {userData &&
+      pins &&
+      playlists &&
+      (totalElements === 0 || totalElements) &&
+      (playlistCount === 0 || playlistCount) ? (
+        <>
+          <ContentBox>
+            <BackBtn src={backArrow} onClick={handleBackClick} />
+          </ContentBox>
+          <ContentBox2>
+            {userData && (
+              <>
+                <UserInfo
+                  nickname={userData.nickname}
+                  handle={userData.handle}
+                  profileImg={userData.profileImg}
+                />
+                <Followers myFollowId={userData.followId} userData={userData} />
+              </>
+            )}
+          </ContentBox2>
+          <ContentBox>
+            <MenuBox>
+              <MenuText
+                isSelected={selectedMenu === "pinFeed"}
+                onClick={() => setSelectedMenu("pinFeed")}
+              >
+                핀 피드
+              </MenuText>
+              <MenuText
+                isSelected={selectedMenu === "playlist"}
+                onClick={() => setSelectedMenu("playlist")}
+              >
+                플레이리스트
+              </MenuText>
+            </MenuBox>
+          </ContentBox>
+          <Line />
+          <FeedBox>
+            {selectedMenu === "pinFeed" ? (
+              <PinFeed totalElements={totalElements} pins={pins} />
+            ) : (
+              <PlaylistFeed
+                playlistCount={playlistCount}
+                playlists={playlists}
+              />
+            )}
+          </FeedBox>
+        </>
+      ) : (
+        <LoadingSpinner />
+      )}
     </SideSection>
   );
 };

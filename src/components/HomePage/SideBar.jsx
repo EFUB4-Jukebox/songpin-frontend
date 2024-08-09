@@ -172,7 +172,7 @@ const Home = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 
@@ -183,7 +183,7 @@ const Search = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 
@@ -193,7 +193,7 @@ const Create = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 
@@ -203,7 +203,7 @@ const Playlist = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 
@@ -213,7 +213,7 @@ const UserSearch = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 
@@ -223,7 +223,7 @@ const MyPage = styled.img`
   transition: filter 0.3s ease;
 
   ${StyledButton}:focus & {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(0.7);
   }
 `;
 

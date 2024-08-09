@@ -45,6 +45,7 @@ const HomePage = () => {
       }
     };
     fetchHomeData();
+    console.log("핀내용", recentPins);
   }, []);
 
   return (
@@ -68,6 +69,7 @@ const HomePage = () => {
                 pin={pin}
                 selectable={false}
                 buttonVisible={pin.isMine}
+                pinId={pin.pinId}
               />
             ))}
         </SongListContainer>
