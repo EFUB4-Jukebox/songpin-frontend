@@ -56,9 +56,13 @@ export const postLogout = async () => {
       if (e.response.status === 401) {
         alert("로그인 상태가 아닙니다.");
         console.error(e.response, "로그아웃 실패");
+        localStorage.clear();
+        window.location.href = "/";
       }
     } else {
       console.error(e, "로그아웃 실패");
+      localStorage.clear();
+      window.location.href = "/";
     }
   }
 };
