@@ -461,7 +461,10 @@ function MapLayout({
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/details-song/:songId" element={<MusicInfoPage onSelectedLocation={setSelectedLocation}/>} />
+          <Route
+            path="/details-song/:songId"
+            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route
             path="/create"
@@ -487,7 +490,10 @@ function MapLayout({
             path="/playlist-edit/:playlistId"
             element={<PlaylistEditPage />}
           />
-          <Route path="/mypage" element={<MyPage onSelectedLocation={setSelectedLocation}/>} />
+          <Route
+            path="/mypage"
+            element={<MyPage onSelectedLocation={setSelectedLocation} />}
+          />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />
@@ -517,7 +523,7 @@ function MapLayout({
           className={fadeOut ? "fade-out" : ""}
         />
       )}
-      <Notification />
+      {isLoggedIn && <Notification />}
     </div>
   );
 }
