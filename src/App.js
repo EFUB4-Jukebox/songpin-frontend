@@ -42,10 +42,10 @@ import {
   postAllMarkers,
   postRecentMarkers,
   postCustomPeriodMarkers,
-  getMyPins
+  getMyPins,
 } from "./services/api/map";
 
-import { getMyProfile } from "./services/api/myPage"
+import { getMyProfile } from "./services/api/myPage";
 
 import pop from "./assets/map/glowing_map_pop.svg";
 import ballad from "./assets/map/glowing_map_ballad.svg";
@@ -281,17 +281,16 @@ function MapLayout({
   }, [memberId, allPins, recentPins]);
 
   useEffect(() => {
-    if (location.pathname.startsWith('/users/')) {
-      const memberIdFromUrl = location.pathname.split('/')[2];
+    if (location.pathname.startsWith("/users/")) {
+      const memberIdFromUrl = location.pathname.split("/")[2];
       setMemberId(memberIdFromUrl);
-    } else if (location.pathname.startsWith('/mypage')) {
+    } else if (location.pathname.startsWith("/mypage")) {
       const fetchMemberId = async () => {
-      const data = await getMyProfile();
-      setMemberId(data.memberId);
+        const data = await getMyProfile();
+        setMemberId(data.memberId);
       };
       fetchMemberId();
-    }
-    else {
+    } else {
       setMemberId(null);
     }
   }, [location.pathname]);
@@ -383,7 +382,10 @@ function MapLayout({
           ).length;
 
           return (
-            <Wrapper key={`${pin.latitude},${pin.longitude}`} onClick={() => handleMapClick(pin)}>
+            <Wrapper
+              key={`${pin.latitude},${pin.longitude}`}
+              onClick={() => handleMapClick(pin)}
+            >
               <React.Fragment key={`${pin.latitude},${pin.longitude}`}>
                 <MapMarker
                   onClick={() => handleMapClick(pin)}
@@ -421,7 +423,16 @@ function MapLayout({
           <Route path="/search" element={<SearchPage />} />
           <Route path="/details-song/:songId" element={<MusicInfoPage />} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
-          <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng} setMapKey={setMapKey}/>} />
+          <Route
+            path="/create"
+            element={
+              <CreatePinPage
+                setLat={setLat}
+                setLng={setLng}
+                setMapKey={setMapKey}
+              />
+            }
+          />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
