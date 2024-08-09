@@ -75,6 +75,7 @@ const genreImages = {
 };
 
 const defaultCenter = { lat: 37.55745148592845, lng: 126.92525404340768 }; //홍대입구역
+const defaultLevel = 3;
 
 function App() {
   const [allPins, setAllPins] = useState([]);
@@ -86,6 +87,7 @@ function App() {
   const [pwResetModal, setPwResetModal] = useState(false);
   const [lat, setLat] = useState(defaultCenter.lat);
   const [lng, setLng] = useState(defaultCenter.lng);
+  const [level, setLevel] = useState(defaultLevel);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -119,7 +121,7 @@ function App() {
       }
     };
     fetchAllPinData();
-  }, [lat, lng]);
+  }, [lat, lng, level]);
 
   const handleFilterChange = async (term, genres) => {
     if (term === "All") {
@@ -278,6 +280,7 @@ function MapLayout({
   const navigate = useNavigate();
   const [lat, setLat] = useState(defaultCenter.lat);
   const [lng, setLng] = useState(defaultCenter.lng);
+  const [level, setLevel] = useState(defaultLevel);
   const [pinsToDisplay, setPinsToDisplay] = useState([]);
   const location = useLocation();
   const { isSnackbar, setIsSnackbar } = useSnackbarStore();
@@ -289,6 +292,9 @@ function MapLayout({
 
   useEffect(() => {
     if (location.pathname === "/home") {
+      setLat(defaultCenter.lat);
+      setLng(defaultCenter.lng);
+      setLevel(defaultLevel);
       handleFilterChange("All", []);
     }
   }, [location.pathname]);
@@ -360,6 +366,13 @@ function MapLayout({
       setMemberId(null);
     }
   }, [location.pathname]);
+
+  const handleMapCenterChange = (map) => {
+    const center = map.getCenter();
+    setLat(center.getLat());
+    setLng(center.getLng());
+    setLevel(map.getLevel());
+  };
 
   useEffect(() => {
     if (location.pathname.startsWith("/playlists/")) {
@@ -442,6 +455,8 @@ function MapLayout({
           zIndex: 0,
           pointerEvents: "auto",
         }}
+        level={level}
+        onCenterChanged={handleMapCenterChange}
       >
         {pinsToDisplay.map(pin => {
           const pinCount = pinsToDisplay.filter(
