@@ -7,6 +7,7 @@ import UserInfo from "../../components/UsersPage/UserInfo";
 import { searchUsers, getUserDetail } from "../../services/api/user";
 import { getMyProfile } from "../../services/api/myPage";
 import Main from "../IntroducePage/Main";
+import useMyPageClickStore from "../../store/useMyPageClickStore";
 
 const UserSearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -15,6 +16,7 @@ const UserSearchPage = () => {
   const [searched, setSearched] = useState(false);
   const [showSideBar, setShowSideBar] = useState(true);
   const navigate = useNavigate();
+  const { setMyPageClick } = useMyPageClickStore();
 
   const handleUserClick = async memberId => {
     try {
@@ -26,7 +28,13 @@ const UserSearchPage = () => {
       const userDetail = isMe ? myProfile : await getUserDetail(memberId);
 
       // 해당 유저 페이지로 이동
-      navigate(`/users/${memberId}`, { state: { isMe } });
+      if (isMe) {
+        setMyPageClick(false);
+
+        navigate("/mypage");
+      } else {
+        navigate(`/users/${memberId}`, { state: { isMe } });
+      }
     } catch (err) {
       console.error("Error fetching user detail:", err);
     }
@@ -125,7 +133,7 @@ const NoUser = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 28px */
-  margin-top: 448px;
+  margin-top: 365px;
 `;
 
 const Line = styled.div`

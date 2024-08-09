@@ -16,6 +16,7 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { useQuery } from "@tanstack/react-query";
 import useProfileEditStore from "../../store/useProfileEditStore";
 import useEditStore from "../../store/useProfileEditStore";
+import useBookmarkStore from "../../store/useBookmarkStore";
 
 const MyPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
@@ -24,7 +25,7 @@ const MyPage = () => {
   );
 
   const { edit, setEdit } = useEditStore();
-
+  const { setIsBookmarkClick } = useBookmarkStore();
   // const [myPinFeedData, setMypinFeedData] = useState();
   // const [myPlaylistData, setMyPlaylistData] = useState();
   // const [myBookmarkData, setMyBookmarkData] = useState();
@@ -136,7 +137,7 @@ const MyPage = () => {
 
   useEffect(() => {
     refetchPlaylist();
-  });
+  }, []);
 
   return (
     <SideSection showSideBar={showSideBar}>

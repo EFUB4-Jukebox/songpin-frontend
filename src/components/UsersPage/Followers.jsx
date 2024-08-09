@@ -36,21 +36,23 @@ const Followers = ({ userData }) => {
   }, []);
 
   useEffect(() => {
-    const checkFollowing = async () => {
-      const res = await getFollowingList(myId);
-      const followingList = res.followingList;
-      console.log(memberId);
-      const isFollow =
-        followingList &&
-        followingList.find(it => it.memberId === Number(memberId));
-      console.log(isFollow);
+    if (myId) {
+      const checkFollowing = async () => {
+        const res = await getFollowingList(myId);
+        const followingList = res.followingList;
+        console.log(memberId);
+        const isFollow =
+          followingList &&
+          followingList.find(it => it.memberId === Number(memberId));
+        console.log(isFollow);
 
-      if (isFollow) {
-        setIsFollowing(true);
-        setFollowId(isFollow.followId);
-      }
-    };
-    checkFollowing();
+        if (isFollow) {
+          setIsFollowing(true);
+          setFollowId(isFollow.followId);
+        }
+      };
+      checkFollowing();
+    }
   }, [myId]);
 
   const handleFollow = async () => {

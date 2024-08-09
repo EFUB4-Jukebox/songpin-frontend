@@ -5,14 +5,17 @@ import yesBookmarkWhite from "../../assets/images/PlaylistPage/bookmark-yes.svg"
 import noBookmarkBlack from "../../assets/images/PlaylistPage/nobookmark_black.svg";
 import yesBookmarkBlack from "../../assets/images/PlaylistPage/yesbookmark_black.svg";
 import { addBookmark, deleteBookmark } from "../../services/api/playlist";
+import useEditStore from "../../store/useProfileEditStore";
 
 const BookmarkToggle = ({ playlistId, initialBookmarkId, color }) => {
   const [isBookmarked, setIsBookmarked] = useState(!!initialBookmarkId);
   const [bookmarkId, setBookmarkId] = useState(initialBookmarkId);
+  const { setEdit } = useEditStore();
   const isWhite = color === "white";
 
   const toggleBookmark = async event => {
     event.stopPropagation();
+    setEdit(true);
     try {
       if (isBookmarked) {
         if (bookmarkId) {

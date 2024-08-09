@@ -207,9 +207,7 @@ const Text = styled.div`
   width: 426px;
   min-height: 27px;
   color: ${props =>
-    props.visibility === "PRIVATE" || props.isEmpty
-      ? "var(--gray02, #747474)"
-      : "#000"};
+    props.isEmpty ? "var(--gray02, #747474)" : "var(--light_black, #232323)"};
 `;
 
 const SecretPin = styled.img`
