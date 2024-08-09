@@ -112,8 +112,20 @@ function App() {
   }, [lat, lng]);
 
   const handleFilterChange = async (term, genres) => {
-    if (term === "All" || term === null) {
-      const data = await postAllMarkers();
+    if (term === "All") {
+      const genreNameFilters = genres.map(
+        genre => GenreList.find(g => g.id === genre).EngName,
+      );
+      const request = {
+        boundCoords: {
+          swLat: 35,
+          swLng: 126,
+          neLat: 40,
+          neLng: 129,
+        },
+        genreNameFilters,
+      };
+      const data = await postAllMarkers(request);
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
     } else {

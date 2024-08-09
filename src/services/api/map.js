@@ -10,17 +10,8 @@ const post = async (url, data) => {
     return res?.data;
 };
 
-export const postAllMarkers = async () => {
+export const postAllMarkers = async (request) => {
     try {
-        const request = {
-                "boundCoords": {
-                    "swLat": 35.0,
-                    "swLng": 126.0,
-                    "neLat": 40.0,
-                    "neLng": 129.0
-                },
-                "genreNameFilters": null
-        };
         const data = await post(`/map`, request);
         return data;
     } catch (error) {
