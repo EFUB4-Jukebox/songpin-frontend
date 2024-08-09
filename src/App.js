@@ -531,8 +531,18 @@ function MapLayout({
           />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/calendar" element={<CalendarViewPage />} />
-          <Route path="/mypin-search" element={<MyPinSearchPage />} />
+          <Route
+            path="/calendar"
+            element={
+              <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+            }
+          />
+          <Route
+            path="/mypin-search"
+            element={
+              <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+            }
+          />
         </Routes>
       </div>
       <div

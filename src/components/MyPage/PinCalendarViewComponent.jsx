@@ -16,6 +16,9 @@ const PinCalendarViewComponent = ({
   placeName,
   genreName,
   songId,
+  latitude,
+  longitude,
+  onSelectedLocation = () => {},
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -27,8 +30,15 @@ const PinCalendarViewComponent = ({
   const goMusicInfoPage = songId => {
     navigate(`/details-song/${songId}`);
   };
-  const goLocation = () => {
-    // 지도 위치 이동 코드 추가
+
+  const goMapLocation = () => {
+    const location = {
+      lat: latitude,
+      lng: longitude,
+    };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
   };
 
   const getGenreIcon = genreName => {
@@ -41,7 +51,7 @@ const PinCalendarViewComponent = ({
       : null;
   };
 
-  const { imgSrc, iconSrc } = getGenreIcon(genreName || "");
+  const { imgSrc, iconSrc } = getGenreIcon(genreName) || "";
   const currentIconSrc = isHovered ? iconSrc : imgSrc;
 
   useEffect(() => {
@@ -65,7 +75,7 @@ const PinCalendarViewComponent = ({
           </SongInfo>
           <PinModalBox top="48px" right="12px" padding="31px" />
         </TitleSection>
-        <Info onClick={goLocation}>
+        <Info onClick={goMapLocation}>
           <CalendarDate>{formattedCalendarDate}</CalendarDate>
           <Place>{placeName}</Place>
           <PlaceText>에서</PlaceText>

@@ -16,7 +16,7 @@ const years = [...Array(startYear - endYear + 1).keys()].map(
 );
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-const CalendarViewPage = () => {
+const CalendarViewPage = ({ onSelectedLocation = () => {} }) => {
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // 현재 날짜 반영
@@ -143,6 +143,9 @@ const CalendarViewPage = () => {
                 listenedDate={it.listenedDate}
                 placeName={it.placeName}
                 songId={it.songInfo.songId}
+                latitude={it.latitude}
+                longitude={it.longitude}
+                onSelectedLocation={onSelectedLocation}
               />
             ))
           )}
