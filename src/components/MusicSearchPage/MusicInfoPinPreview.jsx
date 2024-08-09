@@ -6,7 +6,7 @@ import PinModalBox from "../common/PinModalBox";
 import { postAllMarkers } from "../../services/api/map";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
-const MusicInfoPinPreview = ({ pin }) => {
+const MusicInfoPinPreview = ({ pin, onSelectedLocation = () => {} }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const {
     pinId,
@@ -47,8 +47,11 @@ const MusicInfoPinPreview = ({ pin }) => {
   const goMapLocation = () => {
     const location = {
       lat: latitude,
-      long: longitude,
+      lng: longitude,
     };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
   };
 
   const toggleTruncation = () => {

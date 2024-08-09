@@ -260,6 +260,7 @@ function MapLayout({
   const [fadeOut, setFadeOut] = useState(false);
   const [mapKey, setMapKey] = useState(Date.now());
   const [memberId, setMemberId] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   useEffect(() => {
     const fetchPins = async () => {
@@ -279,6 +280,23 @@ function MapLayout({
 
     fetchPins();
   }, [memberId, allPins, recentPins]);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        if (selectedLocation) {
+          setLat(selectedLocation.lat);
+          setLng(selectedLocation.lng);
+          console.log("가져온 좌표", selectedLocation);
+        }
+        setMapKey(Date.now());
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchLocation();
+  }, [selectedLocation]);
 
   useEffect(() => {
     if (location.pathname.startsWith('/users/')) {
@@ -419,7 +437,7 @@ function MapLayout({
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/details-song/:songId" element={<MusicInfoPage />} />
+          <Route path="/details-song/:songId" element={<MusicInfoPage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/details-place/:placeId" element={<PlaceInfoPage />} />
           <Route path="/create" element={<CreatePinPage setLat={setLat} setLng={setLng} setMapKey={setMapKey}/>} />
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
@@ -436,7 +454,7 @@ function MapLayout({
             path="/playlist-edit/:playlistId"
             element={<PlaylistEditPage />}
           />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />

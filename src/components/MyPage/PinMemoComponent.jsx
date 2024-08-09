@@ -22,6 +22,7 @@ const PinMemoComponent = ({
   pinId,
   memo,
   visibility,
+  onSelectedLocation = () => {}
 }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -42,7 +43,13 @@ const PinMemoComponent = ({
     navigate(`/details-song/${songId}`);
   };
   const goLocation = () => {
-    // 지도 위치 이동 코드 추가
+    const location = {
+      lat: latitude,
+      lng: longitude,
+    };
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
   };
 
   const formattedDate = format(new Date(listenedDate), "yyyy.MM.dd", {
