@@ -6,7 +6,7 @@ EFUB 4기 SWS 3팀 "SongPin" 프로젝트 프론트엔드 레포지토리입니�
 
 <br>
 
-<img src="src/main/resources/static/검정로고.png" width="300">
+<img src="src/assets/images/readme/검정로고.png" width="300">
 
 **나의 음악지도, SongPin**
 
@@ -36,10 +36,10 @@ EFUB 4기 SWS 3팀 "SongPin" 프로젝트 프론트엔드 레포지토리입니�
 - 24.07.01 - 24.08.09
 
 ## 📍 주요 기능
-<img src="src/main/resources/static/프로젝트 소개2.png" width="500">
-<img src="src/main/resources/static/프로젝트 소개3.png" width="500">
-<img src="src/main/resources/static/프로젝트 소개4.png" width="500">
-<img src="src/main/resources/static/프로젝트 소개5.png" width="500">
+<img src="src/assets/images/readme/프로젝트 소개2.png" width="500">
+<img src="src/assets/images/readme/프로젝트 소개3.png" width="500">
+<img src="src/assets/images/readme/프로젝트 소개4.png" width="500">
+<img src="src/assets/images/readme/프로젝트 소개5.png" width="500">
 
 ## 🌟 팀원 소개
 
