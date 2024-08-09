@@ -137,7 +137,7 @@ function App() {
       const data = await postAllMarkers(request);
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
-    } else {
+    } else if (term === "1week" || term === "1month" || term === "3months") {
       const periodMap = {
         "1week": "week",
         "1month": "month",
