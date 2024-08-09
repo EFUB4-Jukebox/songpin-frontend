@@ -64,6 +64,7 @@ const MyPlaylists = ({ myPlaylistData }) => {
                   // pinCount={it.pinCount}
                   // updateDate={it.updatedDate}
                   // bookmarkId={it.bookmarkId}
+                  isPlaylist={true}
                   key={playlist.playlistId}
                   playlist={playlist}
                   onClick={() => handlePlaylistClick(playlist.playlistId)}

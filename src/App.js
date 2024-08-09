@@ -485,7 +485,7 @@ function MapLayout({
         }}
       >
         <Routes>
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<HomePage onSelectedLocation={setSelectedLocation}/>} />
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/details-song/:songId"
@@ -513,7 +513,7 @@ function MapLayout({
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
-            element={<PlaylistDetailPage />}
+            element={<PlaylistDetailPage onSelectedLocation={setSelectedLocation}/>}
           />
           <Route
             path="/playlist-edit/:playlistId"

@@ -4,7 +4,7 @@ import mapIconBallad from "../../assets/images/MusicSearchPage/flower.svg";
 import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
 import mapIconGray from "../../assets/images/MusicSearchPage/flower_gray.svg";
 import PinModalBox from "../common/PinModalBox";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { GenreList } from "../../constants/GenreList";
 
 const PinComponent = ({
@@ -13,6 +13,7 @@ const PinComponent = ({
   buttonVisible,
   onSelect,
   pinId,
+  onSelectedLocation = () => {}
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { songInfo = {} } = pin;
@@ -30,6 +31,23 @@ const PinComponent = ({
     return genre
       ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
       : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
+  };
+  
+  const goLocation = () => {
+    var location = {
+      lat: pin.latitude,
+      lng: pin.longitude,
+    };
+    if (pin.playlistPinId)
+    {
+      location ={
+        lat: pin.placeLatitude,
+        lng: pin.placeLongitude,
+      }
+    }
+
+    onSelectedLocation(location);
+    console.log("보내는 좌표", location);
   };
 
   const { imgSrc, iconSrc } = getGenreIcon(pin.genreName || "");
@@ -66,7 +84,7 @@ const PinComponent = ({
           <PinSinger onClick={handleClick}>{songInfo.artist}</PinSinger>
           <InfoBox>
             <InfoText>{formatDate(pin.listenedDate)}</InfoText>
-            <PlaceText>{pin.placeName}</PlaceText>
+            <PlaceText onClick={goLocation}>{pin.placeName}</PlaceText>
             <InfoText>에서</InfoText>
           </InfoBox>
         </TitleBox>

@@ -14,7 +14,8 @@ import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useEditStore from "../../store/useProfileEditStore";
 import { getMyProfile } from "../../services/api/myPage";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
-const PlaylistDetailPage = () => {
+
+const PlaylistDetailPage = ({onSelectedLocation = () => {}}) => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
   const [playlistData, setPlaylistData] = useState(null);
@@ -144,6 +145,7 @@ const PlaylistDetailPage = () => {
                   selectable={false}
                   buttonVisible={playlistData.isMine}
                   pinId={pin.pinId}
+                  onSelectedLocation={onSelectedLocation}
                 />
               ))
           ) : (
