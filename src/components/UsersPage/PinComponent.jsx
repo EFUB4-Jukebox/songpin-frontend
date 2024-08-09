@@ -70,6 +70,8 @@ const PinComponent = ({ pin }) => {
             onClick={isTruncated && !isPrivate ? () => {} : toggleTruncation}
             isTruncated={isTruncated}
             style={{ whiteSpace: "pre-wrap" }}
+            isPrivate={isPrivate}
+            isMine={pin.isMine}
           >
             {isPrivate && <LockImg src={lock} alt="나만보기 아이콘" />}
             {displayText}
@@ -200,12 +202,6 @@ const LyricText = styled.div`
   flex-shrink: 0;
 
   overflow: hidden;
-  color: var(--light_black, #232323);
-  /* text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; */
-  /* -webkit-box-orient: vertical;
-  white-space: normal; */
 
   font-family: Pretendard;
   font-size: 16px;
@@ -215,6 +211,10 @@ const LyricText = styled.div`
 
   margin-top: 11px;
   cursor: ${props => (props.isTruncated ? "auto" : "pointer")};
+  color: ${props =>
+    (props.isPrivate && !props.isMine) || props.isEmpty
+      ? "var(--gray02, #747474)"
+      : "var(--light_black, #232323)"};
 `;
 
 const ContentBox = styled.div`
