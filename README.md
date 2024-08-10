@@ -63,7 +63,7 @@ EFUB 4기 SWS 3팀 "SongPin" 프로젝트 프론트엔드 레포지토리입니�
 **Development**
 
 <img src="https://img.shields.io/badge/react-61DBFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/ReactQuery-FF4154?style=for-the-badge&logo=reactQuery&logoColor=white"> <img src="https://img.shields.io/badge/KAKAO Map API-FAE100?style=for-the-badge&logo=kakao&logoColor=black"> <br>
-<img src="https://img.shields.io/badge/StyledComponents-DB7093?style=for-the-badge&logo=styledComponents&logoColor=white"> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white"> <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"><img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"><img src="https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white"/>
+<img src="https://img.shields.io/badge/StyledComponents-DB7093?style=for-the-badge&logo=styledComponents&logoColor=white"> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white"> <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"><img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB">
 
 **Deploy**
 
