@@ -54,7 +54,7 @@ export const GenreList = [
   },
   {
     id: 1,
-    name: "락/메탈",
+    name: "록/메탈",
     EngName: "ROCK",
     imgSrc: smallRockIcon,
     whiteImgSrc: whiteRockIcon,

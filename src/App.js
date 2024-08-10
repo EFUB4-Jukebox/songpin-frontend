@@ -62,6 +62,7 @@ import CommonSnackbar from "./components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "./store/useSnackbarStore";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Error404Page from "./pages/Error404Page";
+import ProtectedRoute from "./components/AuthPage/ProtectedRoute";
 
 const genreImages = {
   POP: pop,
@@ -357,13 +358,15 @@ function MapLayout({
       const memberIdFromUrl = location.pathname.split("/")[2];
       setMemberId(memberIdFromUrl);
     } else if (location.pathname.startsWith("/mypage")) {
-      const fetchMemberId = async () => {
-        const data = await getMyProfile();
-        setMemberId(data.memberId);
-      };
-      fetchMemberId();
-    } else {
-      setMemberId(null);
+      if (localStorage.getItem("accessToken")) {
+        const fetchMemberId = async () => {
+          const data = await getMyProfile();
+          setMemberId(data.memberId);
+        };
+        fetchMemberId();
+      } else {
+        setMemberId(null);
+      }
     }
   }, [location.pathname]);
 
@@ -545,7 +548,11 @@ function MapLayout({
           />
           <Route
             path="/mypage"
-            element={<MyPage onSelectedLocation={setSelectedLocation} />}
+            element={
+              <ProtectedRoute
+                element={<MyPage onSelectedLocation={setSelectedLocation} />}
+              />
+            }
           />
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
