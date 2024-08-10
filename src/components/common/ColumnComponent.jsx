@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 const ColumnComponent = (alarm ={}) => {
   const [isClicked, setIsClicked] = useState(false);
-  const handleClick = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (id) => {
     setIsClicked(true);
+  };
+
+  const goToProfile = (id) => {
+    console.log("프로필이동!", id);
+    navigate(`/users/${id}`);
   };
 
   const formatTimeAgo = (time) => {
@@ -27,7 +35,7 @@ const ColumnComponent = (alarm ={}) => {
   
   return (
     <Column onClick={handleClick} isClicked={isClicked} read={alarm.read}>
-      <Alarm isClicked={isClicked} read={alarm.read}>
+      <Alarm isClicked={isClicked} read={alarm.read} onClick={() => goToProfile(alarm.id)}>
         {alarm.message}
       </Alarm>
       <Time>{formattedTime}</Time>
