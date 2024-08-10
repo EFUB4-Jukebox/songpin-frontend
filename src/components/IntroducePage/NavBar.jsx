@@ -30,9 +30,12 @@ const NavBar = () => {
   };
 
   const handleLogout = async () => {
-    await postLogout();
-    setIsLoggedIn(false);
-    window.location.reload();
+    try {
+      await postLogout();
+    } finally {
+      setIsLoggedIn(false);
+      window.location.reload();
+    }
   };
 
   return (

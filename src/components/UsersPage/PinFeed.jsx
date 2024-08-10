@@ -3,7 +3,11 @@ import styled from "styled-components";
 import PinComponent from "./PinComponent";
 import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
 
-const PinFeed = ({ pins = [], totalElements }) => {
+const PinFeed = ({
+  pins = [],
+  totalElements,
+  onSelectedLocation = () => {},
+}) => {
   return (
     <div>
       <PinFeedContainer>
@@ -20,6 +24,7 @@ const PinFeed = ({ pins = [], totalElements }) => {
                 key={pin.pinId}
                 // onClick={() => handlePlaylistClick(playlist.playlistId)}
                 pin={pin} // 플레이리스트 정보를 전달
+                onSelectedLocation={onSelectedLocation}
               />
             ))}
           </PinsSection>
