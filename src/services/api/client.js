@@ -49,6 +49,8 @@ client.interceptors.response.use(
         return client(originalRequest);
       } catch (tokenError) {
         console.error("토큰 재발급 실패", tokenError);
+        localStorage.clear();
+        window.location.href = "/";
         return Promise.reject(tokenError);
       }
     }
