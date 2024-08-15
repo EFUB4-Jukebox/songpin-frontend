@@ -31,6 +31,7 @@ const SearchBar = ({ optionChange, onSearch }) => {
   };
 
   const handleSearchClick = () => {
+    console.log(inputValue);
     onSearch(inputValue);
   };
 
