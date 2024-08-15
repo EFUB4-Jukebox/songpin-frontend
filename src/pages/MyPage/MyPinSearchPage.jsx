@@ -42,7 +42,10 @@ const MyPinSearchPage = ({ onSelectedLocation = () => {} }) => {
 
   const completeSearch = async () => {
     setInit(false);
-    const res = await searchPin({ keyword: inputValue });
+    console.log(inputValue);
+    const encodedKeyword = encodeURIComponent(inputValue);
+    console.log(encodedKeyword);
+    const res = await searchPin({ keyword: encodedKeyword });
     console.log(res);
     setPinList(res.myPinList);
   };
