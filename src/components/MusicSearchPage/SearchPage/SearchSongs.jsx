@@ -10,7 +10,9 @@ const SearchSongs = ({ keyword, sortBy }) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const loaderRef = useRef(null);
-
+  useEffect(() => {
+    console.log(keyword);
+  }, []);
   useEffect(() => {
     const fetchSongs = async () => {
       if (keyword.trim()) {
@@ -19,7 +21,8 @@ const SearchSongs = ({ keyword, sortBy }) => {
           setIsInitialSearch(false);
           setIsLoading(true);
           setPage(0);
-
+          console.log(keyword);
+          console.log(sortBy);
           const data = await getSongs({
             keyword,
             sortBy,

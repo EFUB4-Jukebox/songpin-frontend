@@ -23,7 +23,7 @@ const ProfileEditPage = () => {
   const navigate = useNavigate();
 
   const validateForm = () => {
-    const nicknameRegex = /^[가-힣a-zA-Z0-9]{1,8}$/;
+    const nicknameRegex = /^[가-힣a-zㄱ-ㅎA-Z0-9]{1,8}$/;
     const handleRegex = /^[a-z0-9_]{3,12}$/;
 
     // 닉네임 검증
