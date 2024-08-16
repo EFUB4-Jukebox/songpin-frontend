@@ -15,6 +15,7 @@ import PinFeed from "../../components/UsersPage/PinFeed";
 import PlaylistFeed from "../../components/UsersPage/PlaylistFeed";
 import SideSection from "../../components/common/SideSection";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import UserModalBox from "../../components/UsersPage/UserModalBox";
 
 const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const { memberId } = useParams();
@@ -27,6 +28,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const [followersData, setFollowersData] = useState(null);
   const [followingsData, setFollowingsData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
+  const [isMyFollower, setIsMyFollower] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,8 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         const response = await getUserDetail(memberId);
         console.log(response);
         setUserData(response.data);
+
+        setIsMyFollower(response.data.isFollower);
 
         // 타 유저 플레이리스트 가져오기
         const playlistsResponse = await getUserPlaylists(memberId);
@@ -73,6 +77,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         <>
           <ContentBox>
             <BackBtn src={backArrow} onClick={handleBackClick} />
+            <UserModalBox isMyFollower={isMyFollower} />
           </ContentBox>
           <ContentBox2>
             {userData && (
