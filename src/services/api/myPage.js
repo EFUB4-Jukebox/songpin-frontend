@@ -55,9 +55,9 @@ export const getMyPlaylistBookmark = async () => {
   }
 };
 
-export const addFollowing = async followId => {
+export const addFollowing = async addFollowingId => {
   try {
-    const data = await post("/follows", followId);
+    const data = await client.put("/follows", addFollowingId);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
@@ -83,9 +83,9 @@ export const getFollowingList = async memberId => {
   }
 };
 
-export const deleteFollowing = async followId => {
+export const deleteFollowing = async deleteFollowingId => {
   try {
-    const data = await client.delete(`/follows/${followId}`);
+    const data = await client.put(`/follows`, deleteFollowingId);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
