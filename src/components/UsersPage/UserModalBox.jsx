@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moreButton from "../../assets/images/PlaylistPage/more_vert.svg";
 import SmallModal from "../common/Modal/SmallModal";
-import AddPlaylistModal from "../common/Modal/AddPlaylistModal";
 import { useNavigate, useParams } from "react-router-dom";
-import { deletePin } from "../../services/api/pin";
 import CommonSnackbar from "../common/snackbar/CommonSnackbar";
-import useIsCreatePlaylistStore from "../../store/useIsCreatePlaylistStore";
-import CreatePlaylistModal from "../common/Modal/CreatePlaylistModal";
-import { getFollowerList, getMyProfile } from "../../services/api/myPage";
+import { deleteFollower } from "../../services/api/myPage";
 
 const options = ["팔로워 삭제", "사용자 신고"];
 const options2 = ["사용자 신고"];
 
-const UserModalBox = ({ isMyFollower, pinId }) => {
+const UserModalBox = ({ isMyFollower }) => {
+  const { memberId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOption, setClickedOption] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -21,9 +18,6 @@ const UserModalBox = ({ isMyFollower, pinId }) => {
   const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] =
     useState(false);
 
-  useEffect(() => {
-    console.log(isMyFollower);
-  }, []);
   const handlePopup = () => {
     setIsOpen(!isOpen);
   };
@@ -44,8 +38,9 @@ const UserModalBox = ({ isMyFollower, pinId }) => {
 
   const handleDeletePin = async () => {
     setIsDeleteModalOpen(false);
-    await deletePin(pinId);
-    window.location.reload();
+
+    const res = await deleteFollower(Number(memberId));
+    console.log(res);
   };
 
   const handleReport = () => {
@@ -53,9 +48,6 @@ const UserModalBox = ({ isMyFollower, pinId }) => {
   };
 
   const navigate = useNavigate();
-  const goPinEditPage = () => {
-    navigate(`/pin-edit/${pinId}`);
-  };
 
   return (
     <PinModal>
@@ -83,18 +75,16 @@ const UserModalBox = ({ isMyFollower, pinId }) => {
       )}
       {isDeleteModalOpen && clickedOption === "팔로워 삭제" && (
         <SmallModal
-          text="핀을 삭제할까요?"
+          text="팔로워를 삭제할까요?"
           onClose={handleDeleteModal}
           onDecide={handleDeletePin}
         />
       )}
-      {clickedOption === "사용자 신고" && isReporttModalOpen && (
+      {/* {clickedOption === "사용자 신고" && isReporttModalOpen && (
         <SmallModal
-          text="핀을 삭제할까요?"
-          onClose={handleDeleteModal}
-          onDecide={handleDeletePin}
+        
         />
-      )}
+      )} */}
     </PinModal>
   );
 };

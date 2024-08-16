@@ -149,3 +149,17 @@ export const withdrawal = async passwordConfirm => {
     throw new Error("데이터 불러오기에 실패하였습니다.");
   }
 };
+
+//팔로워 삭제
+
+export const deleteFollower = async memberId => {
+  try {
+    const data = await client.delete(`/follows/followers`, {
+      data: { memberId: memberId },
+    });
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error(`데이터 불러오기에 실패하였습니다., ${error}`);
+  }
+};
