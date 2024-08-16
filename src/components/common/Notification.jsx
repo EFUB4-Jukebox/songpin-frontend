@@ -2,59 +2,82 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import alarmIcon from "../../assets/notification/alarm.svg";
 import ColumnComponent from "./ColumnComponent";
-import { showAlarms, } from "../../services/api/alarm";
+import { showAlarms, getNewAlarms } from "../../services/api/alarm";
+import { getMyProfile } from '../../services/api/myPage';
 
 const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState([]);
   const [isNewAlarm, setIsNewAlarm] = useState(false);
+  const [memberId, setMemberId] = useState(null);
 
   const handleNotice = () => {
     setIsOpen(!isOpen);
     setIsNewAlarm(false);
   };
 
+  // useEffect(() => {
+  //   const fetchMemberId = async () => {
+  //     const data = await getMyProfile();
+  //         setMemberId(data.memberId);
+  //       };
+  //       fetchMemberId();
+  //       console.log("내 멤버아이디", memberId);
+  // }, []);
+
   useEffect(() => {
-    const fetchAlarmData = async () => {
+    const initialize = async () => {
       try {
-        const Data = await showAlarms();
-        setAlarms(Data.data.alarmList);
+        const profileData = await getMyProfile();
+        const fetchedMemberId = profileData.memberId;
+        setMemberId(fetchedMemberId);
+        console.log("내 멤버아이디", fetchedMemberId);
+
+        const alarmData = await showAlarms();
+        setAlarms(alarmData.data.alarmList);
+
+        const eventSource = new EventSource(
+          `https://api.songpin.n-e.kr/alarms/subscribe/${fetchedMemberId}`,
+        );
+
+        eventSource.onopen = () => {
+          console.log("sse opened!");
+        };
+
+        eventSource.addEventListener("sse-alarm", async event => {
+          console.log("sse-alarm");
+          const data = JSON.parse(event.data);
+          console.log(data);
+
+          try {
+            const newAlarmData = await getNewAlarms(fetchedMemberId);
+            console.log("새로운 알림 데이터:", newAlarmData);
+            if (data.isNewAlarm === true) { 
+              setIsNewAlarm(true);
+              console.log("isNewAlarm set to true");
+            }
+            else if (data.isNewAlarm === false) {
+              setIsNewAlarm(false);
+              console.log("isNewAlarm set to false");
+            }
+          } catch (error) {
+            console.error("Error checking new alarms:", error);
+          }
+        });
+
+        eventSource.onerror = e => {
+          console.error("SSE Error:", e);
+        };
+
+        return () => {
+          eventSource.close();
+        };
       } catch (error) {
-        console.error("Error fetching alarm data:", error);
+        console.error("Error during initialization:", error);
       }
     };
-    fetchAlarmData();
 
-    // const eventSource = new EventSource(
-    //   "https://api.songpin.n-e.kr/alarms/subscribe",
-    // );
-
-    // eventSource.onopen = async () => {
-    //   console.log("sse opened!");
-    // };
-
-    // eventSource.addEventListener("sse-alarm", async event => {
-    //   console.log("sse-alarm");
-    //   const data = JSON.parse(event.data);
-    //   console.log(data);
-
-    //   try {
-    //     const newAlarmData = await postNewAlarms();
-    //     if (newAlarmData.someCondition) {
-    //       setIsNewAlarm(true);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error checking new alarms:", error);
-    //   }
-    // });
-
-    // eventSource.onerror = async e => {
-    //   console.log(e);
-    // };
-
-    // return () => {
-    //   eventSource.close();
-    // };
+    initialize();
   }, []);
 
   return (
