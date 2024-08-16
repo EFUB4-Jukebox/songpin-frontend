@@ -13,8 +13,9 @@ export const searchUsers = async (keyword, page = 0, size = 20) => {
 };
 
 //유저 상세정보 api
-export const getUserDetail = async memberId => {
-  const url = `/members/${memberId}`;
+export const getUserDetail = async handle => {
+  console.log(handle);
+  const url = `/members/${handle}`;
   try {
     const result = await client.get(url);
     return result;
@@ -25,8 +26,9 @@ export const getUserDetail = async memberId => {
 };
 
 //타유저 플레이리스트 조회 api
-export const getUserPlaylists = async memberId => {
-  const url = `/members/${memberId}/playlists`;
+export const getUserPlaylists = async handle => {
+  console.log(handle);
+  const url = `/members/${handle}/playlists`;
   try {
     const result = await client.get(url);
     return result?.data;
@@ -37,8 +39,8 @@ export const getUserPlaylists = async memberId => {
 };
 
 //타유저 핀피드 조회 api
-export const getUserPins = async memberId => {
-  const url = `/members/${memberId}/feed`;
+export const getUserPins = async handle => {
+  const url = `/members/${handle}/feed`;
   try {
     const result = await client.get(url);
     return result?.data;
@@ -49,8 +51,10 @@ export const getUserPins = async memberId => {
 };
 
 // 유저의 팔로워 목록 조회 API
-export const getUserFollowers = async memberId => {
-  const url = `/members/${memberId}/followers`;
+export const getUserFollowers = async handle => {
+  console.log(handle);
+
+  const url = `/members/${handle}/followers`;
   try {
     const result = await client.get(url);
     return result?.data;
@@ -61,8 +65,10 @@ export const getUserFollowers = async memberId => {
 };
 
 // 유저의 팔로잉 목록 조회 API
-export const getUserFollowings = async memberId => {
-  const url = `/members/${memberId}/followings`;
+export const getUserFollowings = async handle => {
+  console.log(handle);
+
+  const url = `/members/${handle}/followings`;
   try {
     const result = await client.get(url);
     return result?.data;

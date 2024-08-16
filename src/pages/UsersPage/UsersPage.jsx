@@ -18,7 +18,7 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import UserModalBox from "../../components/UsersPage/UserModalBox";
 
 const UsersPage = ({ onSelectedLocation = () => {} }) => {
-  const { memberId } = useParams();
+  const { handle } = useParams();
   const [userData, setUserData] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [playlistCount, setPlaylistCount] = useState(0);
@@ -34,26 +34,26 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getUserDetail(memberId);
+        const response = await getUserDetail(handle);
         console.log(response);
         setUserData(response.data);
 
         setIsMyFollower(response.data.isFollower);
 
         // 타 유저 플레이리스트 가져오기
-        const playlistsResponse = await getUserPlaylists(memberId);
+        const playlistsResponse = await getUserPlaylists(handle);
         setPlaylists(playlistsResponse.playlistList); // 플레이리스트 상태 업데이트
         setPlaylistCount(playlistsResponse.playlistCount);
 
         //타유저 핀피드 가져오기
-        const pinsResponse = await getUserPins(memberId);
+        const pinsResponse = await getUserPins(handle);
         setPins(pinsResponse.pinFeedList);
         setTotalElements(pinsResponse.totalElements);
 
-        const followersResponse = await getUserFollowers(memberId); // 추가된 API 호출
+        const followersResponse = await getUserFollowers(handle); // 추가된 API 호출
         setFollowersData(followersResponse);
 
-        const followingsResponse = await getUserFollowings(memberId); // 추가된 API 호출
+        const followingsResponse = await getUserFollowings(handle); // 추가된 API 호출
         setFollowingsData(followingsResponse);
       } catch (err) {
         console.error("Error fetching user data:", err);
@@ -61,7 +61,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
     };
 
     fetchUserData();
-  }, [memberId]);
+  }, [handle]);
 
   const handleBackClick = () => {
     navigate(-1);
