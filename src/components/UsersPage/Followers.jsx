@@ -61,11 +61,14 @@ const Followers = ({ userData }) => {
     try {
       if (isFollowing) {
         // 팔로우 상태에서 언팔로우 요청
-        await deleteFollowing(followId);
+        const deleteFollowingId = {
+          memberId: memberId,
+        };
+        await deleteFollowing(deleteFollowingId);
         setFollowId(null);
       } else {
         // 언팔로우 상태에서 팔로우 요청
-        const addFollowingId = { targetMemberId: memberId };
+        const addFollowingId = { memberId: memberId };
         const res = await addFollowing(addFollowingId);
         setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
       }

@@ -23,10 +23,13 @@ const UserFollowInfo = ({
 
     try {
       if (isFollowing) {
-        await deleteFollowing(followId);
+        const deleteFollowingId = {
+          memberId: memberId,
+        };
+        await deleteFollowing(deleteFollowingId);
       } else {
         const addFollowingId = {
-          targetMemberId: memberId,
+          memberId: memberId,
         };
         await addFollowing(addFollowingId);
       }

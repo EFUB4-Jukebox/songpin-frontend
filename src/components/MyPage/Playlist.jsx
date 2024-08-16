@@ -23,13 +23,13 @@ const Playlist = ({
     pinCount,
     updatedDate,
     imgPathList,
-    bookmarkId,
+    isBookmarked,
     playlistId,
   } = playlist;
 
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(bookmarkId ? true : false);
+  const [Bookmarked, setBookmarked] = useState(isBookmarked ? true : false);
   const isPrivate = playlist.visibility === "PRIVATE";
   const [title, setTitle] = useState(playlistName);
   const [titleWidth, setTitleWidth] = useState(0);
@@ -44,8 +44,8 @@ const Playlist = ({
 
   const toggleBookmark = async event => {
     event.stopPropagation();
-    const newBookmarkStatus = !isBookmarked;
-    setIsBookmarked(newBookmarkStatus);
+    const newBookmarkStatus = !Bookmarked;
+    setBookmarked(newBookmarkStatus);
     if (!isPlaylist) {
       if (newBookmarkStatus) {
         setBookmarkCount(prev => prev + 1);
@@ -56,7 +56,7 @@ const Playlist = ({
     setIsBookmarkClick(true);
     try {
       if (isBookmarked) {
-        await deleteBookmarkOne(bookmarkId);
+        await deleteBookmarkOne({ playlistId });
       } else {
         await addBookmarkOne({ playlistId });
       }
@@ -78,7 +78,7 @@ const Playlist = ({
       <PlaylistBox onClick={handlePlaylistClick}>
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkBtn
-            src={isBookmarked ? yesbookmark : nobookmark}
+            src={Bookmarked ? yesbookmark : nobookmark}
             alt="북마크 버튼"
             onClick={toggleBookmark}
           />
