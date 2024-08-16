@@ -4,52 +4,36 @@ import noBookmarkWhite from "../../assets/images/PlaylistPage/bookmark-no.svg";
 import yesBookmarkWhite from "../../assets/images/PlaylistPage/bookmark-yes.svg";
 import noBookmarkBlack from "../../assets/images/PlaylistPage/nobookmark_black.svg";
 import yesBookmarkBlack from "../../assets/images/PlaylistPage/yesbookmark_black.svg";
-import { addBookmark, deleteBookmark } from "../../services/api/playlist";
+import { toggleBookmark } from "../../services/api/playlist";
 import useEditStore from "../../store/useProfileEditStore";
 
-const BookmarkToggle = ({ playlistId, initialBookmarkId, color }) => {
-  const [isBookmarked, setIsBookmarked] = useState(!!initialBookmarkId);
-  const [bookmarkId, setBookmarkId] = useState(initialBookmarkId);
+const BookmarkToggle = ({ playlistId, isBookmarked, color }) => {
+  const [Bookmarked, setBookmarked] = useState(isBookmarked);
   const { setEdit } = useEditStore();
   const isWhite = color === "white";
 
-  const toggleBookmark = async event => {
-    event.stopPropagation();
+  const handleToggleBookmark = async event => {
+    event.stopPropagation(); // 이벤트 버블링 방지
 
-    // 로컬 상태를 즉시 변경
-    const newBookmarkStatus = !isBookmarked;
-    setIsBookmarked(newBookmarkStatus);
+    // 북마크 상태 즉시 변경
+    const newBookmarkStatus = !Bookmarked;
+    setBookmarked(newBookmarkStatus);
 
     // API 요청
     setEdit(true);
     try {
-      if (newBookmarkStatus) {
-        const response = await addBookmark(playlistId);
-        if (response?.bookmarkId) {
-          setBookmarkId(response.bookmarkId);
-        } else {
-          // 실패 시 상태 롤백
-          setIsBookmarked(false);
-        }
-      } else {
-        if (bookmarkId) {
-          await deleteBookmark(bookmarkId);
-          setBookmarkId(null);
-        } else {
-          // 실패 시 상태 롤백
-          setIsBookmarked(true);
-        }
-      }
+      await toggleBookmark(playlistId);
     } catch (error) {
       console.error("Error toggling bookmark:", error);
-      setIsBookmarked(!newBookmarkStatus);
+      // API 요청이 실패하면 상태를 되돌림.
+      setBookmarked(!newBookmarkStatus);
     }
   };
 
   return (
     <BookmarkBtn
       src={
-        isBookmarked
+        Bookmarked
           ? isWhite
             ? yesBookmarkWhite
             : yesBookmarkBlack
@@ -58,7 +42,7 @@ const BookmarkToggle = ({ playlistId, initialBookmarkId, color }) => {
             : noBookmarkBlack
       }
       alt="Bookmark Button"
-      onClick={toggleBookmark}
+      onClick={handleToggleBookmark}
       isWhite={isWhite}
     />
   );
