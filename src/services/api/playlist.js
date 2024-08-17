@@ -125,26 +125,15 @@ export const editPlaylist = async (
   }
 };
 
-//북마크 추가
-export const addBookmark = async playlistId => {
+// 북마크 상태 변경
+export const toggleBookmark = async playlistId => {
   const url = "/bookmarks";
   const data = { playlistId };
   try {
-    const response = await client.post(url, data);
+    const response = await client.put(url, data);
     return response?.data;
   } catch (error) {
-    console.error("Error adding bookmark:", error);
-    throw error;
-  }
-};
-
-//북마크 취소
-export const deleteBookmark = async bookmarkId => {
-  const url = `/bookmarks/${bookmarkId}`;
-  try {
-    await client.delete(url);
-  } catch (error) {
-    console.error("Error deleting bookmark:", error);
+    console.error("Error toggling bookmark:", error);
     throw error;
   }
 };

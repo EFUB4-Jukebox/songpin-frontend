@@ -30,7 +30,7 @@ export const getSongPins = async ({ songId, page, size }) => {
     console.log(res);
     return res.data.songDetailsPinList || [];
   } catch (e) {
-    console.erroe(e);
+    console.error(e);
   }
 };
 
@@ -42,6 +42,6 @@ export const getMySongPins = async ({ songId, page, size }) => {
     console.log(res);
     return res.data.songDetailsPinList || [];
   } catch (e) {
-    console.erroe(e);
+    console.error(e);
   }
 };

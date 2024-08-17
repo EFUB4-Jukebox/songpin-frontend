@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import moreButton from "../../assets/images/MyPage/more-icon.svg";
 import SmallModal from "./Modal/SmallModal";
@@ -19,8 +19,11 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
   const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] =
     useState(false);
 
+  const popupRef = useRef(null);
+  const buttonRef = useRef(null);
+
   const handlePopup = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(prev => !prev);
   };
 
   const handleOptionClick = option => {
@@ -58,11 +61,39 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
     navigate(`/pin-edit/${pinId}`);
   };
 
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <PinModal>
-      <MoreBtn src={moreButton} onClick={handlePopup} setPadding={padding} />
+      <MoreBtn
+        ref={buttonRef}
+        src={moreButton}
+        onClick={handlePopup}
+        setPadding={padding}
+      />
       {isOpen && (
-        <MorePopup positionTop={top} positionRight={right}>
+        <MorePopup ref={popupRef} positionTop={top} positionRight={right}>
           {options.map(option => (
             <ListItem key={option} onClick={() => handleOptionClick(option)}>
               {option}

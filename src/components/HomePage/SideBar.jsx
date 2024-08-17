@@ -157,6 +157,7 @@ const StyledButton = styled.button`
             filter: brightness(0) invert(1);
         }
     `}
+
   ${props =>
     props.isNotLoggedIn &&
     `cursor: default;

@@ -55,18 +55,19 @@ export const getMyPlaylistBookmark = async () => {
   }
 };
 
-export const addFollowing = async followId => {
+export const addFollowing = async addFollowingId => {
   try {
-    const data = await post("/follows", followId);
+    const data = await client.put("/follows", addFollowingId);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
   }
 };
 
-export const getFollowerList = async memberId => {
+export const getFollowerList = async handle => {
   try {
-    const data = await get(`/members/${memberId}/followers`);
+    console.log(handle);
+    const data = await get(`/members/${handle}/followers`);
     console.log(data);
     return data;
   } catch (error) {
@@ -74,18 +75,19 @@ export const getFollowerList = async memberId => {
   }
 };
 
-export const getFollowingList = async memberId => {
+export const getFollowingList = async handle => {
   try {
-    const data = await get(`/members/${memberId}/followings`);
+    console.log(handle);
+    const data = await get(`/members/${handle}/followings`);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
   }
 };
 
-export const deleteFollowing = async followId => {
+export const deleteFollowing = async deleteFollowingId => {
   try {
-    const data = await client.delete(`/follows/${followId}`);
+    const data = await client.put(`/follows`, deleteFollowingId);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
@@ -104,7 +106,7 @@ export const getCalendarPin = async ({ year, month }) => {
 //북마크 추가
 export const addBookmarkOne = async playlistId => {
   try {
-    const data = await post(`/bookmarks`, playlistId);
+    const data = await client.put(`/bookmarks`, playlistId);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
@@ -112,9 +114,9 @@ export const addBookmarkOne = async playlistId => {
 };
 
 //북마크 취소
-export const deleteBookmarkOne = async bookmarkId => {
+export const deleteBookmarkOne = async playlistId => {
   try {
-    const data = await client.delete(`/bookmarks/${bookmarkId}`);
+    const data = await client.put(`/bookmarks`, playlistId);
     console.log("북마크 삭제 성공:", data);
     return data;
   } catch (error) {
@@ -147,5 +149,19 @@ export const withdrawal = async passwordConfirm => {
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
+  }
+};
+
+//팔로워 삭제
+
+export const deleteFollower = async memberId => {
+  try {
+    const data = await client.delete(`/follows/followers`, {
+      data: { memberId: memberId },
+    });
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error(`데이터 불러오기에 실패하였습니다., ${error}`);
   }
 };
