@@ -3,42 +3,39 @@ import styled from "styled-components";
 import alarmIcon from "../../assets/notification/alarm.svg";
 import ColumnComponent from "./ColumnComponent";
 import { showAlarms, getNewAlarms } from "../../services/api/alarm";
-import { getMyProfile } from '../../services/api/myPage';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState([]);
   const [isNewAlarm, setIsNewAlarm] = useState(false);
-  const [memberId, setMemberId] = useState(null);
 
   const handleNotice = () => {
     setIsOpen(!isOpen);
     setIsNewAlarm(false);
   };
 
-  // useEffect(() => {
-  //   const fetchMemberId = async () => {
-  //     const data = await getMyProfile();
-  //         setMemberId(data.memberId);
-  //       };
-  //       fetchMemberId();
-  //       console.log("내 멤버아이디", memberId);
-  // }, []);
+  const EventSource = EventSourcePolyfill;
 
   useEffect(() => {
     const initialize = async () => {
-      try {
-        const profileData = await getMyProfile();
-        const fetchedMemberId = profileData.memberId;
-        setMemberId(fetchedMemberId);
-        console.log("내 멤버아이디", fetchedMemberId);
+      const accessKey = localStorage.getItem("accessToken");
 
+      try {
         const alarmData = await showAlarms();
         setAlarms(alarmData.data.alarmList);
 
         const eventSource = new EventSource(
-          `https://api.songpin.n-e.kr/alarms/subscribe/${fetchedMemberId}`,
+          `https://api.songpin.n-e.kr/alarms/subscribe`,
+          {
+              headers: {
+                ACCESS_KEY: accessKey,
+                //REFRESH_KEY: `${Refresh_key}`,
+              },
+              withCredentials: true,
+            }
         );
+
 
         eventSource.onopen = () => {
           console.log("sse opened!");
@@ -50,7 +47,7 @@ const Notification = () => {
           console.log(data);
 
           try {
-            const newAlarmData = await getNewAlarms(fetchedMemberId);
+            const newAlarmData = await getNewAlarms();
             console.log("새로운 알림 데이터:", newAlarmData);
             if (data.isNewAlarm === true) { 
               setIsNewAlarm(true);
