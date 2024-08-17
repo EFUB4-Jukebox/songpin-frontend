@@ -19,9 +19,9 @@ export const showAlarms = async () => {
     }
 };
 
-export const getNewAlarms = async (memberId) => {
+export const getNewAlarms = async () => {
     try {
-        const data = await get(`/alarms/subscribe/${memberId}`);
+        const data = await get(`/alarms/subscribe`);
         return data;
     } catch (error) {
         throw new Error("실시간 새 알림 정보 로드 실패");
