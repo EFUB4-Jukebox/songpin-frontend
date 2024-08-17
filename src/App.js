@@ -221,8 +221,8 @@ function App() {
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
-          <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+          <Route path="/users/:handle" element={<UsersPage />} />
+          <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -233,6 +233,7 @@ function App() {
             element={<PlaylistEditPage />}
           />
           <Route path="/mypage" element={<MyPage />} />
+
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />
@@ -290,6 +291,16 @@ function MapLayout({
   const [memberId, setMemberId] = useState(null);
   const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [myHandle, setMyHandle] = useState();
+
+  useEffect(() => {
+    const getMyHandle = async () => {
+      const res = await getMyProfile();
+      console.log(res.handle);
+      setMyHandle(res.handle);
+    };
+    getMyHandle();
+  }, []);
 
   useEffect(() => {
     if (location.pathname === "/home") {
@@ -355,13 +366,14 @@ function MapLayout({
 
   useEffect(() => {
     if (location.pathname.startsWith("/users/")) {
-      const memberIdFromUrl = location.pathname.split("/")[2];
-      setMemberId(memberIdFromUrl);
+      const handle = location.pathname.split("/")[2];
+
+      setMemberId(handle);
     } else if (location.pathname.startsWith("/mypage")) {
       if (localStorage.getItem("accessToken")) {
         const fetchMemberId = async () => {
           const data = await getMyProfile();
-          setMemberId(data.memberId);
+          setMemberId(data.handle);
         };
         fetchMemberId();
       } else {
@@ -531,10 +543,10 @@ function MapLayout({
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
-            path="/users/:memberId"
+            path="/users/:handle"
             element={<UsersPage onSelectedLocation={setSelectedLocation} />}
           />
-          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+          <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -548,6 +560,14 @@ function MapLayout({
           />
           <Route
             path="/mypage"
+            element={
+              <ProtectedRoute
+                element={<MyPage onSelectedLocation={setSelectedLocation} />}
+              />
+            }
+          />
+          <Route
+            path={`/users/${myHandle}`}
             element={
               <ProtectedRoute
                 element={<MyPage onSelectedLocation={setSelectedLocation} />}

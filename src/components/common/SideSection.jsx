@@ -6,6 +6,7 @@ import SideBar from "../HomePage/SideBar";
 const SideSection = ({ children, isNotLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [loginModal, setLoginModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const handleSideBox = () => {
     setIsOpen(!isOpen);
@@ -19,6 +20,15 @@ const SideSection = ({ children, isNotLoggedIn }) => {
     }
   }, [isNotLoggedIn]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
+
   const handleSideBarClick = () => {
     if (isNotLoggedIn) {
       setLoginModal(true);
@@ -28,7 +38,7 @@ const SideSection = ({ children, isNotLoggedIn }) => {
   return (
     <SideComponent>
       <SideBarContainer>
-        <SideBar onClick={handleSideBarClick} />
+        <SideBar onClick={handleSideBarClick} isNotLoggedIn={!isLogin} />
       </SideBarContainer>
       {!isNotLoggedIn && (
         <>

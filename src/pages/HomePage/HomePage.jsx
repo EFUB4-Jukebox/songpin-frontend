@@ -10,7 +10,7 @@ import SignupModal from "../../components/AuthPage/SignupModal";
 import PwResetModal from "../../components/AuthPage/PwResetModal";
 import CompleteLogin from "../../components/AuthPage/CompleteLogin";
 
-const HomePage = ({onSelectedLocation = () => {}}) => {
+const HomePage = ({ onSelectedLocation = () => {} }) => {
   const [homeInfo, setHomeInfo] = useState(null);
   const [recentPins, setRecentPins] = useState([]);
   const [recentPlaces, setRecentPlaces] = useState([]);
@@ -24,6 +24,8 @@ const HomePage = ({onSelectedLocation = () => {}}) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
   }, []);
 

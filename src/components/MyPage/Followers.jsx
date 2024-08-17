@@ -42,8 +42,7 @@ const Followers = ({ memberId, followerCount, followingCount, handle }) => {
   // }, [setFollowerCount, setFollowingCount]);
 
   const handleNavigation = menu => {
-    if (memberId)
-      navigate(`/users/${memberId}/follows?menu=${menu}&handle=${handle}`);
+    if (handle) navigate(`/users/follows?menu=${menu}&handle=${handle}`);
   };
 
   const goEditPage = () => {

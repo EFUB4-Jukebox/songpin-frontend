@@ -10,39 +10,36 @@ import {
 
 const Followers = ({ userData }) => {
   const navigate = useNavigate();
-  const { memberId } = useParams();
-  const [myId, setMyId] = useState();
+  const { handle } = useParams();
+  const [myHandle, setMyHandle] = useState();
   const [isFollowing, setIsFollowing] = useState();
   const [followId, setFollowId] = useState();
   const [followerCount, setFollowerCount] = useState(userData.followerCount);
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
   const handleNavigation = menu => {
-    navigate(
-      `/users/${memberId}/follows?menu=${menu}&handle=${userData.handle}`,
-    );
+    navigate(`/users/follows?menu=${menu}&handle=${userData.handle}`);
   };
 
   useEffect(() => {
-    const checkMyId = async () => {
+    const checkMyHandle = async () => {
       try {
         const res = await getMyProfile();
-        setMyId(res.memberId);
+        setMyHandle(res.handle);
       } catch (error) {
         console.error("Error fetching my profile:", error);
       }
     };
-    checkMyId();
+    checkMyHandle();
   }, []);
 
   useEffect(() => {
-    if (myId) {
+    if (myHandle) {
       const checkFollowing = async () => {
-        const res = await getFollowingList(myId);
+        const res = await getFollowingList(myHandle);
         const followingList = res.followingList;
         const isFollow =
-          followingList &&
-          followingList.find(it => it.memberId === Number(memberId));
+          followingList && followingList.find(it => it.handle === handle);
 
         if (isFollow) {
           setIsFollowing(true);
@@ -51,7 +48,7 @@ const Followers = ({ userData }) => {
       };
       checkFollowing();
     }
-  }, [myId]);
+  }, [myHandle]);
 
   const handleFollow = async () => {
     // 클릭 시 UI 먼저 업데이트
@@ -61,11 +58,14 @@ const Followers = ({ userData }) => {
     try {
       if (isFollowing) {
         // 팔로우 상태에서 언팔로우 요청
-        await deleteFollowing(followId);
+        const deleteFollowingId = {
+          memberId: userData.memberId,
+        };
+        await deleteFollowing(deleteFollowingId);
         setFollowId(null);
       } else {
         // 언팔로우 상태에서 팔로우 요청
-        const addFollowingId = { targetMemberId: memberId };
+        const addFollowingId = { memberId: userData.memberId };
         const res = await addFollowing(addFollowingId);
         setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
       }

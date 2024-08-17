@@ -195,7 +195,6 @@ const Background2 = () => {
         height="1080px"
         style={{
           border: "none",
-
           margin: "auto",
         }}
       />

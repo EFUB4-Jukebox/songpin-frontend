@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import SmallModal from "../common/Modal/SmallModal";
 import moreButton from "../../assets/images/MyPage/more-icon.svg";
@@ -12,9 +12,11 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
   const [clickedOption, setClickedOption] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
+  const popupRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const handlePopup = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(prev => !prev);
   };
 
   const handleOptionClick = option => {
@@ -43,11 +45,39 @@ const PlaylistModalBox = ({ top, right, padding, playlistId }) => {
     navigate(`/playlist-edit/${playlistId}`);
   };
 
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <PlaylistModal>
-      <MoreBtn src={moreButton} onClick={handlePopup} setPadding={padding} />
+      <MoreBtn
+        ref={buttonRef}
+        src={moreButton}
+        onClick={handlePopup}
+        setPadding={padding}
+      />
       {isOpen && (
-        <MorePopup positionTop={top} positionRight={right}>
+        <MorePopup ref={popupRef} positionTop={top} positionRight={right}>
           {options.map(option => (
             <ListItem key={option} onClick={() => handleOptionClick(option)}>
               {option}

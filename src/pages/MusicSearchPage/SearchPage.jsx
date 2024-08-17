@@ -33,7 +33,9 @@ const SearchContainer = () => {
   };
 
   const handleSearch = newKeyword => {
-    setKeyword(newKeyword);
+    const encodedKeyword = encodeURIComponent(newKeyword);
+    setKeyword(encodedKeyword);
+    console.log(keyword);
     setSelectedValue("정확도순");
   };
 
@@ -70,13 +72,13 @@ const SearchContainer = () => {
           </DropdownSorting>
         </Sorting>
         <SearchResult>
-          {selectedOption === "노래" && (
+          {selectedOption === "노래" && keyword && (
             <SearchSongs
               keyword={keyword}
               sortBy={sortOptions[selectedValue]}
             />
           )}
-          {selectedOption === "장소" && (
+          {selectedOption === "장소" && keyword && (
             <SearchPlaces
               keyword={keyword}
               sortBy={sortOptions[selectedValue]}

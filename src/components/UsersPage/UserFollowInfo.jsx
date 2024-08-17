@@ -23,10 +23,13 @@ const UserFollowInfo = ({
 
     try {
       if (isFollowing) {
-        await deleteFollowing(followId);
+        const deleteFollowingId = {
+          memberId: memberId,
+        };
+        await deleteFollowing(deleteFollowingId);
       } else {
         const addFollowingId = {
-          targetMemberId: memberId,
+          memberId: memberId,
         };
         await addFollowing(addFollowingId);
       }
@@ -36,17 +39,17 @@ const UserFollowInfo = ({
     }
   };
 
-  const handleUserClick = async memberId => {
+  const handleUserClick = async handle => {
     try {
       // 로그인된 사용자 ID 가져오기
       const myProfile = await getMyProfile();
-      const isMe = myProfile.memberId === memberId;
+      const isMe = myProfile.handle === handle;
 
       // 프로필 정보를 가져오는 API 호출
-      const userDetail = isMe ? myProfile : await getUserDetail(memberId);
+      const userDetail = isMe ? myProfile : await getUserDetail(handle);
 
       // 해당 유저 페이지로 이동
-      navigate(`/users/${memberId}`, { state: { isMe } });
+      navigate(`/users/${handle}`, { state: { isMe } });
     } catch (err) {
       console.error("Error fetching user detail:", err);
     }
@@ -59,7 +62,7 @@ const UserFollowInfo = ({
         profileImg={profileImg}
         nickname={nickname}
         handle={handle}
-        onClick={() => handleUserClick(memberId)}
+        onClick={() => handleUserClick(handle)}
       />
       {isFollowing !== null && (
         <FollowBtn onClick={handleFollow} isFollowing={isFollowing}>

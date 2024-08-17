@@ -10,11 +10,11 @@ import {
   getFollowingList,
   getMyProfile,
 } from "../../services/api/myPage";
+import { getUserDetail } from "../../services/api/user";
 
 const UserFollowPage = () => {
   const navigate = useNavigate();
-  const { memberId: urlMemberId } = useParams();
-
+  const handle = new URL(window.location.href).searchParams.get("handle");
   const [selectedMenu, setSelectedMenu] = useState(
     new URL(window.location.href).searchParams.get("menu"),
   );
@@ -37,20 +37,18 @@ const UserFollowPage = () => {
   // }, [urlMemberId]);
 
   const { data: followerData } = useQuery({
-    queryKey: ["getFollowerList", urlMemberId],
-    queryFn: () => getFollowerList(urlMemberId),
+    queryKey: ["getFollowerList", handle],
+    queryFn: () => getFollowerList(handle),
     enabled: selectedMenu === "followers",
   });
 
   const { data: followingData } = useQuery({
-    queryKey: ["getFollowingList", urlMemberId],
-    queryFn: () => getFollowingList(urlMemberId),
+    queryKey: ["getFollowingList", handle],
+    queryFn: () => getFollowingList(handle),
     enabled: selectedMenu === "following",
   });
-
-  const followerList = followerData?.followingList || [];
-  const followingList = followingData?.followingList || [];
-  const handle = new URL(window.location.href).searchParams.get("handle");
+  const followerList = followerData?.followList || [];
+  const followingList = followingData?.followList || [];
 
   // useEffect(() => {
   //   const fetchFollowersOrFollowing =  () => {
@@ -118,7 +116,7 @@ const UserFollowPage = () => {
         )}
       <FollowList
         followerList={followerList && followerList}
-        followingList={followerList && followingList}
+        followingList={followingList && followingList}
         selectedMenu={selectedMenu}
       />
     </SideSection>
