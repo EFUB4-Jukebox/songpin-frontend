@@ -11,8 +11,8 @@ const Playlist = ({ playlist, onClick }) => {
     pinCount,
     updatedDate,
     imgPathList,
-    bookmarkId,
     playlistId,
+    isBookmarked,
   } = playlist;
   const [isHovered, setIsHovered] = useState(false);
   const [title, setTitle] = useState(playlistName);
@@ -39,7 +39,7 @@ const Playlist = ({ playlist, onClick }) => {
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkToggle
             playlistId={playlistId}
-            initialBookmarkId={bookmarkId}
+            isBookmarked={isBookmarked}
             color="white"
           />
         </BigBox>

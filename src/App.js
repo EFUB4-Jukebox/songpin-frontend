@@ -221,8 +221,8 @@ function App() {
           <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
-          <Route path="/users/:memberId" element={<UsersPage />} />
-          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+          <Route path="/users/:handle" element={<UsersPage />} />
+          <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
@@ -355,13 +355,14 @@ function MapLayout({
 
   useEffect(() => {
     if (location.pathname.startsWith("/users/")) {
-      const memberIdFromUrl = location.pathname.split("/")[2];
-      setMemberId(memberIdFromUrl);
+      const handle = location.pathname.split("/")[2];
+
+      setMemberId(handle);
     } else if (location.pathname.startsWith("/mypage")) {
       if (localStorage.getItem("accessToken")) {
         const fetchMemberId = async () => {
           const data = await getMyProfile();
-          setMemberId(data.memberId);
+          setMemberId(data.handle);
         };
         fetchMemberId();
       } else {
@@ -531,10 +532,10 @@ function MapLayout({
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
-            path="/users/:memberId"
+            path="/users/:handle"
             element={<UsersPage onSelectedLocation={setSelectedLocation} />}
           />
-          <Route path="/users/:memberId/follows" element={<UserFollowPage />} />
+          <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"

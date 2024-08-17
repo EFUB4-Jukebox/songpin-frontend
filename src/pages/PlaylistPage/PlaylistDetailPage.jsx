@@ -15,7 +15,7 @@ import useEditStore from "../../store/useProfileEditStore";
 import { getMyProfile } from "../../services/api/myPage";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
-const PlaylistDetailPage = ({onSelectedLocation = () => {}}) => {
+const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
   const [playlistData, setPlaylistData] = useState(null);
@@ -114,7 +114,7 @@ const PlaylistDetailPage = ({onSelectedLocation = () => {}}) => {
           <IconBox>
             <BookmarkToggle
               playlistId={playlistId}
-              initialBookmarkId={playlistData.bookmarkId}
+              isBookmarked={playlistData.isBookmarked}
               color="black"
             />
             <ShareBtn
