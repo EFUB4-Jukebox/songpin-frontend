@@ -3,6 +3,7 @@ import styled from "styled-components";
 import alarmIcon from "../../assets/notification/alarm.svg";
 import ColumnComponent from "./ColumnComponent";
 import { showAlarms, getNewAlarms } from "../../services/api/alarm";
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,15 +15,27 @@ const Notification = () => {
     setIsNewAlarm(false);
   };
 
+  const EventSource = EventSourcePolyfill;
+
   useEffect(() => {
     const initialize = async () => {
+      const accessKey = localStorage.getItem("accessToken");
+
       try {
         const alarmData = await showAlarms();
         setAlarms(alarmData.data.alarmList);
 
         const eventSource = new EventSource(
           `https://api.songpin.n-e.kr/alarms/subscribe`,
+          {
+              headers: {
+                ACCESS_KEY: accessKey,
+                //REFRESH_KEY: `${Refresh_key}`,
+              },
+              withCredentials: true,
+            }
         );
+
 
         eventSource.onopen = () => {
           console.log("sse opened!");
