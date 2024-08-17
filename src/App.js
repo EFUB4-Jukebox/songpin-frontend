@@ -233,6 +233,7 @@ function App() {
             element={<PlaylistEditPage />}
           />
           <Route path="/mypage" element={<MyPage />} />
+
           <Route path="/edit" element={<ProfileEditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarViewPage />} />
@@ -290,6 +291,16 @@ function MapLayout({
   const [memberId, setMemberId] = useState(null);
   const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [myHandle, setMyHandle] = useState();
+
+  useEffect(() => {
+    const getMyHandle = async () => {
+      const res = await getMyProfile();
+      console.log(res.handle);
+      setMyHandle(res.handle);
+    };
+    getMyHandle();
+  }, []);
 
   useEffect(() => {
     if (location.pathname === "/home") {
@@ -549,6 +560,14 @@ function MapLayout({
           />
           <Route
             path="/mypage"
+            element={
+              <ProtectedRoute
+                element={<MyPage onSelectedLocation={setSelectedLocation} />}
+              />
+            }
+          />
+          <Route
+            path={`/users/${myHandle}`}
             element={
               <ProtectedRoute
                 element={<MyPage onSelectedLocation={setSelectedLocation} />}
