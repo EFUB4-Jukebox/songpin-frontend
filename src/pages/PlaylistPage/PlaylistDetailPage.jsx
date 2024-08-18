@@ -11,7 +11,6 @@ import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
-import useEditStore from "../../store/useProfileEditStore";
 import { getMyProfile } from "../../services/api/myPage";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
@@ -258,12 +257,12 @@ const IconBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 20px;
 `;
 
 const ShareBtn = styled.img`
   width: 30px;
   height: 30px;
-  padding-left: 13px;
   flex-shrink: 0;
   cursor: pointer;
 `;
@@ -273,12 +272,13 @@ const InfoBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 13px;
+  margin-top: 18px;
 `;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 8px;
 `;
 
 const PinImg = styled.img`
@@ -293,7 +293,6 @@ const PinNum = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding-left: 5px;
 `;
 
 const UpdatedDate = styled.div`
