@@ -127,7 +127,7 @@ export default UserFollowPage;
 
 const ContentBox = styled.div`
   padding: 34px;
-  padding-top: 36px;
+  padding-top: 40px;
   padding-bottom: 0px;
   border-bottom: 1px solid var(--gray, #bcbcbc);
 `;
