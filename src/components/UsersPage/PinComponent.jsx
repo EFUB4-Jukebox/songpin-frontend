@@ -156,9 +156,6 @@ const MapIcon = styled.img`
   width: 20px;
   height: 22.252px;
   padding-right: 8px;
-  /* &:hover {
-    fill: #1ddfec;
-  } */
 `;
 
 const TitleText = styled.div`
@@ -190,12 +187,6 @@ const PinSinger = styled.div`
   text-overflow: ellipsis;
 `;
 
-const MoreIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  padding-right: 12px;
-`;
-
 const LockImg = styled.img`
   width: 13px;
   height: 16px;
@@ -207,7 +198,6 @@ const LockImg = styled.img`
 `;
 
 const LyricText = styled.div`
-  width: 426px;
   min-height: 48px;
   flex-shrink: 0;
 
@@ -230,7 +220,8 @@ const LyricText = styled.div`
 const ContentBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 426px;
+  /* width: 426px; */
+  width: 100%;
 `;
 const InfoBox = styled.div`
   display: flex;
@@ -253,7 +244,7 @@ const InfoText = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  padding-right: 12px;
+  padding-right: 8px;
   white-space: nowrap;
   flex-shrink: 0;
 `;
