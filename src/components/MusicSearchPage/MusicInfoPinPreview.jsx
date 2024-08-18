@@ -10,7 +10,7 @@ const MusicInfoPinPreview = ({ pin, onSelectedLocation = () => {} }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const {
     pinId,
-    creatorId,
+    creatorHandle,
     creatorNickname,
     // creatorStatus,
     listenedDate,
@@ -21,7 +21,9 @@ const MusicInfoPinPreview = ({ pin, onSelectedLocation = () => {} }) => {
     longitude,
     isMine,
   } = pin;
-
+  useEffect(() => {
+    console.log(pin);
+  }, []);
   const navigate = useNavigate();
   const { setMyPageClick } = useMyPageClickStore();
   const goUsersPage = () => {
@@ -32,7 +34,7 @@ const MusicInfoPinPreview = ({ pin, onSelectedLocation = () => {} }) => {
       setMyPageClick(false);
       navigate(`/mypage`);
     } else {
-      navigate(`/users/${creatorId}`);
+      navigate(`/users/${creatorHandle}`);
     }
 
     // if (isMine) {
