@@ -95,9 +95,14 @@ const SearchSongs = ({ keyword, sortBy }) => {
     };
   }, [page, keyword, isLoading, hasMore]);
 
+  useEffect(() => {
+    console.log(searchResults.length);
+    console.log(searchResults);
+  }, []);
+
   return (
     <SongsList>
-      {searchResults.length === 0 ? (
+      {searchResults.length === 0 || !searchResults ? (
         isInitialSearch ? (
           <EmptySearchResult>
             <BeforeMessage>

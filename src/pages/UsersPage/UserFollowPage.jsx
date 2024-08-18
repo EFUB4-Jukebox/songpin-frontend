@@ -50,8 +50,6 @@ const UserFollowPage = () => {
   const followerList = followerData?.followList || [];
   const followingList = followingData?.followList || [];
 
-  console.log(followerData);
-  console.log(followingData);
   // useEffect(() => {
   //   const fetchFollowersOrFollowing =  () => {
   //     if (profileData) {

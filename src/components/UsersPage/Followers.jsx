@@ -11,7 +11,7 @@ import {
 const Followers = ({ userData }) => {
   const navigate = useNavigate();
   const { handle } = useParams();
-  const [myHandle, setMyHandle] = useState();
+  const [myHandle, setMyHandle] = useState("");
   const [isFollowing, setIsFollowing] = useState();
   const [followId, setFollowId] = useState();
   const [followerCount, setFollowerCount] = useState(userData.followerCount);
@@ -37,10 +37,10 @@ const Followers = ({ userData }) => {
     if (myHandle) {
       const checkFollowing = async () => {
         const res = await getFollowingList(myHandle);
-        const followingList = res.followingList;
+        const followingList = res.followList;
         const isFollow =
           followingList && followingList.find(it => it.handle === handle);
-
+        console.log(followingList);
         if (isFollow) {
           setIsFollowing(true);
           setFollowId(isFollow.followId);
