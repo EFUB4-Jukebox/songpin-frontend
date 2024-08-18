@@ -102,7 +102,6 @@ const FollowerComponent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* margin: 32px 34px; */
 `;
 
 const FollowInfoBox = styled.div`
@@ -113,7 +112,7 @@ const FollowBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 13px;
+  margin: 0px 13px 13px 13px;
   cursor: pointer;
 `;
 const FollowNumberBox = styled.div`

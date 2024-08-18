@@ -139,7 +139,7 @@ const ContentBox = styled.div`
 
   padding-left: 41px;
   padding-right: 34px;
-  padding-top: 40px;
+  padding-top: 35px;
 
   align-items: center;
 `;
@@ -150,7 +150,7 @@ const ContentBox2 = styled.div`
 
   padding-left: 42px;
   padding-right: 34px;
-  padding-top: 15px;
+  padding-top: 20px;
 
   align-items: center;
 `;
@@ -180,6 +180,7 @@ const MenuText = styled.div`
 const MenuBox = styled.div`
   display: flex;
   flex-direction: row;
+  padding-top: 14px;
 `;
 const Line = styled.div`
   width: 528px;
