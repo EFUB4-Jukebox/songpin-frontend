@@ -211,6 +211,7 @@ function App() {
               setLoginModal={setLoginModal}
               setLat={setLat}
               setLng={setLng}
+              handlePageClick={handlePageClick}
             />
           }
         >
@@ -279,6 +280,7 @@ function MapLayout({
   handleFilterChange2,
   isLoggedIn,
   setLoginModal,
+  handlePageClick,
 }) {
   const navigate = useNavigate();
   const [lat, setLat] = useState(defaultCenter.lat);
@@ -552,7 +554,12 @@ function MapLayout({
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
             path="/users/:handle"
-            element={<UsersPage onSelectedLocation={setSelectedLocation} />}
+            element={
+              <UsersPage
+                handlePageClick={handlePageClick}
+                onSelectedLocation={setSelectedLocation}
+              />
+            }
           />
           <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />

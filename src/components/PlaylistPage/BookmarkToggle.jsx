@@ -8,7 +8,12 @@ import { toggleBookmark } from "../../services/api/playlist";
 import useEditStore from "../../store/useProfileEditStore";
 import { useNavigate } from "react-router-dom";
 
-const BookmarkToggle = ({ playlistId, isBookmarked, color }) => {
+const BookmarkToggle = ({
+  handlePageClick,
+  playlistId,
+  isBookmarked,
+  color,
+}) => {
   const [Bookmarked, setBookmarked] = useState(isBookmarked);
   const { setEdit } = useEditStore();
   const isWhite = color === "white";
@@ -32,7 +37,7 @@ const BookmarkToggle = ({ playlistId, isBookmarked, color }) => {
         setBookmarked(!newBookmarkStatus);
       }
     } else {
-      navigate("/");
+      handlePageClick();
     }
   };
 

@@ -4,7 +4,7 @@ import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
 import BookmarkToggle from "./BookmarkToggle";
 import lock from "../../assets/images/UsersPage/lock.svg";
 
-const Playlist = ({ playlist, onClick }) => {
+const Playlist = ({ handlePageClick, playlist, onClick }) => {
   const {
     playlistName,
     creatorNickname,
@@ -38,6 +38,7 @@ const Playlist = ({ playlist, onClick }) => {
       <PlaylistBox onClick={onClick}>
         <BigBox imageUrl={imgPathList[0]}>
           <BookmarkToggle
+            handlePageClick={handlePageClick}
             playlistId={playlistId}
             isBookmarked={isBookmarked}
             color="white"

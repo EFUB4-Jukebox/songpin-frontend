@@ -8,7 +8,7 @@ import {
   getMyProfile,
 } from "../../services/api/myPage";
 
-const Followers = ({ userData }) => {
+const Followers = ({ handlePageClick, userData }) => {
   const navigate = useNavigate();
   const { handle } = useParams();
   const [myHandle, setMyHandle] = useState("");
@@ -18,19 +18,25 @@ const Followers = ({ userData }) => {
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
   const handleNavigation = menu => {
-    const path = window.location.pathname;
-    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+    const isLoggedIn = localStorage.getItem("accessToken");
 
-    const firstSegment = segments[0] || "";
-    const secondSegment = segments[1] || "";
+    if (isLoggedIn) {
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
 
-    const combinedSegments = secondSegment
-      ? `${firstSegment}/${secondSegment}`
-      : firstSegment;
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
 
-    navigate(`/users/follows?menu=${menu}&handle=${userData.handle}`, {
-      state: `/${combinedSegments}`,
-    });
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/users/follows?menu=${menu}&handle=${userData.handle}`, {
+        state: `/${combinedSegments}`,
+      });
+    } else {
+      handlePageClick();
+    }
   };
 
   useEffect(() => {
@@ -90,7 +96,7 @@ const Followers = ({ userData }) => {
         setFollowerCount(prevCount => prevCount + (isFollowing ? 1 : -1));
       }
     } else {
-      navigate("/");
+      handlePageClick();
     }
   };
 

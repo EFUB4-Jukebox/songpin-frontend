@@ -17,7 +17,7 @@ import SideSection from "../../components/common/SideSection";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import UserModalBox from "../../components/UsersPage/UserModalBox";
 
-const UsersPage = ({ onSelectedLocation = () => {} }) => {
+const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
   const { handle } = useParams();
   const [userData, setUserData] = useState(null);
   const [playlists, setPlaylists] = useState([]);
@@ -93,7 +93,11 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
                   handle={userData.handle}
                   profileImg={userData.profileImg}
                 />
-                <Followers myFollowId={userData.followId} userData={userData} />
+                <Followers
+                  handlePageClick={handlePageClick}
+                  myFollowId={userData.followId}
+                  userData={userData}
+                />
               </>
             )}
           </ContentBox2>
@@ -125,6 +129,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
               <PlaylistFeed
                 playlistCount={playlistCount}
                 playlists={playlists}
+                handlePageClick={handlePageClick}
               />
             )}
           </FeedBox>
