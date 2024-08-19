@@ -74,7 +74,7 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
   };
 
   return (
-    <SideSection showSideBar={showSideBar}>
+    <SideSection showSideBar={showSideBar} handlePageClick={handlePageClick}>
       {userData &&
       pins &&
       playlists &&

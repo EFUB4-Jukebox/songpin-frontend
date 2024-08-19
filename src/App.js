@@ -566,7 +566,10 @@ function MapLayout({
           <Route
             path="/playlists/:playlistId"
             element={
-              <PlaylistDetailPage onSelectedLocation={setSelectedLocation} />
+              <PlaylistDetailPage
+                onSelectedLocation={setSelectedLocation}
+                handlePageClick={handlePageClick}
+              />
             }
           />
           <Route
