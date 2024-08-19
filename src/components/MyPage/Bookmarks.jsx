@@ -58,21 +58,19 @@ export default Bookmarks;
 const BookmarkedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 30px;
   margin-bottom: 30px;
 `;
 
 const PlaylistOverview = styled.div`
   display: flex;
   flex-direction: row;
-  margin-left: 29px;
+  margin-left: 34px;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
 `;
 
 const PlaylistIcon = styled.img`
-  width: 30px;
-  height: 30px;
   flex-shrink: 0;
 `;
 
