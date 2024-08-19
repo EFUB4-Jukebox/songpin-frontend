@@ -88,7 +88,6 @@ const PlaylistEditPage = () => {
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
-        sortedPins.length, // 선택된 핀의 개수
         sortedPins, // 수정된 핀 리스트
       );
 
@@ -99,7 +98,7 @@ const PlaylistEditPage = () => {
         if (location.state) {
           navigate(location.state);
         } else {
-          navigate("/home");
+          navigate("/mypage");
         }
       }
     } catch (error) {

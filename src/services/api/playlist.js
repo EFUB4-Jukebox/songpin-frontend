@@ -105,14 +105,12 @@ export const editPlaylist = async (
   playlistId,
   playlistName,
   visibility,
-  pinCount,
   pinList,
 ) => {
   const url = `/playlists/${playlistId}`;
   const data = {
     playlistName,
     visibility,
-    pinCount,
     pinList,
   };
   try {

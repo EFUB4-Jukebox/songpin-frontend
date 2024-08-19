@@ -29,17 +29,7 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
     const res = await getMyProfile();
     if (handle === res.handle) {
       setMyPageClick(false);
-      const path = window.location.pathname;
-      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
-
-      const firstSegment = segments[0] || "";
-      const secondSegment = segments[1] || "";
-
-      const combinedSegments = secondSegment
-        ? `${firstSegment}/${secondSegment}`
-        : firstSegment;
-
-      navigate(`/mypage`, { state: `/${combinedSegments}` });
+      navigate(`/mypage`);
     } else {
       const path = window.location.pathname;
       const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
