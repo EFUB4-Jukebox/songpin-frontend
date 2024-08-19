@@ -16,7 +16,17 @@ const MyPlaylists = ({ myPlaylistData }) => {
     setIsOpen(prevState => !prevState);
   };
   const handlePlaylistClick = playlistId => {
-    navigate(`/playlists/${playlistId}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/playlists/${playlistId}`, { state: `/${combinedSegments}` });
   };
   // const { data, refetch } = useQuery({
   //   queryKey: ["getMyPlaylist"],
@@ -39,9 +49,7 @@ const MyPlaylists = ({ myPlaylistData }) => {
         <>
           <PlaylistOverview>
             <PlaylistTimes>
-              <Img>
-                <PlaylistIcon src={musicLibraryIcon} />
-              </Img>
+              <PlaylistIcon src={musicLibraryIcon} />
               <Num>{myPlaylistCount}</Num>
             </PlaylistTimes>
             <CreateNewPlaylist onClick={openCreatePlaylist}>
@@ -84,7 +92,6 @@ const PlaylistsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
-  margin-bottom: 30px;
 `;
 
 const PlaylistOverview = styled.div`
@@ -101,13 +108,13 @@ const PlaylistTimes = styled.div`
   align-items: center;
   gap: 10px;
 `;
-const Img = styled.div`
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const Img = styled.div`
+//   width: 20px;
+//   height: 20px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 const PlaylistIcon = styled.img`
   flex-shrink: 0;
@@ -132,12 +139,16 @@ const CreateNewPlaylist = styled.div`
   line-height: normal;
   cursor: pointer;
   padding-top: 3px;
+  &:hover {
+    color: #24ee81;
+  }
 `;
 
 const PlaylistSection = styled.div`
   margin: auto;
   width: 480px;
   margin-top: 34px;
+  margin-bottom: 13px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 28px 0;

@@ -5,7 +5,7 @@ import arrow_dropdown from "../../../assets/images/MusicSearchPage/arrow_drop_do
 
 const options = ["노래", "장소"];
 
-const SearchBar = ({ optionChange, onSearch }) => {
+const SearchBar = ({ optionChange, onSearch, setShowSortDropdown }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("노래");
   const [inputValue, setInputValue] = useState("");
@@ -33,6 +33,7 @@ const SearchBar = ({ optionChange, onSearch }) => {
   const handleSearchClick = () => {
     console.log(inputValue);
     onSearch(inputValue);
+    setShowSortDropdown(true);
   };
 
   const handleEnterKeySearch = event => {

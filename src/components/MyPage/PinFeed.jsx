@@ -109,8 +109,7 @@ const PinTimes = styled.div`
 `;
 
 const PinIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  padding: 5px;
   flex-shrink: 0;
 `;
 
@@ -143,7 +142,7 @@ const PinsSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 34px;
+  margin-top: 34px;
   margin-bottom: 13px;
 `;
 

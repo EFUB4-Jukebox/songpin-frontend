@@ -30,10 +30,21 @@ const UserSearchPage = () => {
       // 해당 유저 페이지로 이동
       if (isMe) {
         setMyPageClick(false);
-
         navigate("/mypage");
       } else {
-        navigate(`/users/${handle}`, { state: { isMe } });
+        const path = window.location.pathname;
+        const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+        const firstSegment = segments[0] || "";
+        const secondSegment = segments[1] || "";
+
+        const combinedSegments = secondSegment
+          ? `${firstSegment}/${secondSegment}`
+          : firstSegment;
+
+        navigate(`/users/${handle}`, {
+          state: `/${combinedSegments}`,
+        });
       }
     } catch (err) {
       console.error("Error fetching user detail:", err);

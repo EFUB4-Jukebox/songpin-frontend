@@ -7,6 +7,7 @@ const PinFeed = ({
   pins = [],
   totalElements,
   onSelectedLocation = () => {},
+  handlePageClick,
 }) => {
   return (
     <div>
@@ -25,6 +26,7 @@ const PinFeed = ({
                 // onClick={() => handlePlaylistClick(playlist.playlistId)}
                 pin={pin} // 플레이리스트 정보를 전달
                 onSelectedLocation={onSelectedLocation}
+                handlePageClick={handlePageClick}
               />
             ))}
           </PinsSection>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Calendar from "react-calendar";
 import moment from "moment";
 import "react-calendar/dist/Calendar.css";
@@ -16,6 +16,7 @@ import calendar_selected from "../../assets/images/CreatePin/calendar_selected.s
 import arrowIcon from "../../assets/images/CreatePin/arrow_back_ios.svg";
 import { getPin, editPin } from "../../services/api/pin";
 import SmallModal from "../../components/common/Modal/SmallModal";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const EditPinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -29,6 +30,8 @@ const EditPinPage = () => {
   const calendarRef = useRef(null);
   const navigate = useNavigate();
   const params = useParams();
+  const location = useLocation();
+  const { setIsSnackbar } = useSnackbarStore();
 
   const handleNavigate = () => {
     navigate("/details-song"); // 곡 ID로 수정
@@ -83,7 +86,13 @@ const EditPinPage = () => {
       console.log("수정된 핀 정보:", request);
       const res = await editPin(params.pinId, request);
       console.log("수정됐나?", res);
-      navigate(-1);
+
+      if (location.state) {
+        navigate(location.state);
+      } else {
+        navigate("/home");
+      }
+      setIsSnackbar("핀이 수정되었습니다!");
     } catch (error) {
       console.log("error", error);
     }
@@ -109,7 +118,11 @@ const EditPinPage = () => {
 
   const onClose = () => {
     setShowModal(false);
-    navigate(-1);
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   const onDecide = async () => {
@@ -124,7 +137,12 @@ const EditPinPage = () => {
       console.log("수정된 핀 정보:", request);
       const res = await editPin(params.pinId, request);
       console.log("수정됐나?", res);
-      navigate(-1);
+      if (location.state) {
+        navigate(location.state);
+      } else {
+        navigate("/home");
+      }
+      setIsSnackbar("핀이 수정되었습니다!");
     } catch (error) {
       console.log("error", error);
     }

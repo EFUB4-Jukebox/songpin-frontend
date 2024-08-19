@@ -8,19 +8,18 @@ const post = async (url, data) => {
 export const postSignup = async userData => {
   try {
     const res = await client.post("/signup", userData);
-    if (res.status === 409) {
-      alert("이미 가입된 이메일입니다.");
-      return null;
-    } else if (res.status === 401) {
-      alert("탈퇴한 회원입니다.");
-      return null;
-    } else if (res.status === 400) {
-      return null;
-    } else {
-      console.log(userData, "회원가입 성공");
-    }
+    console.log(userData, "회원가입 성공");
   } catch (e) {
     console.error(e);
+    if (e.response.status === 409) {
+      alert("이미 가입된 이메일입니다.");
+      return null;
+    } else if (e.response.status === 401) {
+      alert("탈퇴한 회원입니다.");
+      return null;
+    } else if (e.response.status === 400) {
+      return null;
+    }
     throw new Error(e.response.data.message);
   }
 };
@@ -30,15 +29,27 @@ export const postLogin = async userData => {
     const res = await post("/login", userData);
     console.log(userData);
     console.log(res);
+
     const token = res.accessToken;
     localStorage.setItem("accessToken", token);
     console.log(token);
+
     return { token };
   } catch (e) {
     console.error(e);
+
     if (e.response) {
+      if (
+        e.response.status === 401 &&
+        e.response.data.errorCode === "MEMBER_STATUS_DELETED"
+      ) {
+        alert("탈퇴한 회원입니다.");
+        return null;
+      }
+
       return { error: e.response.data.message, status: e.response.status };
     }
+
     return null;
   }
 };

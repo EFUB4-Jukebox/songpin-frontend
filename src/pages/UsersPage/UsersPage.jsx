@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   getUserDetail,
   getUserPlaylists,
@@ -17,7 +17,7 @@ import SideSection from "../../components/common/SideSection";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import UserModalBox from "../../components/UsersPage/UserModalBox";
 
-const UsersPage = ({ onSelectedLocation = () => {} }) => {
+const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
   const { handle } = useParams();
   const [userData, setUserData] = useState(null);
   const [playlists, setPlaylists] = useState([]);
@@ -29,6 +29,8 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const [followingsData, setFollowingsData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
   const [isMyFollower, setIsMyFollower] = useState();
+  const [userId, setUserId] = useState();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         setUserData(response.data);
 
         setIsMyFollower(response.data.isFollower);
-
+        setUserId(response.data.memberId);
         // 타 유저 플레이리스트 가져오기
         const playlistsResponse = await getUserPlaylists(handle);
         setPlaylists(playlistsResponse.playlistList); // 플레이리스트 상태 업데이트
@@ -64,7 +66,11 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   }, [handle]);
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   return (
@@ -77,7 +83,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         <>
           <ContentBox>
             <BackBtn src={backArrow} onClick={handleBackClick} />
-            <UserModalBox isMyFollower={isMyFollower} />
+            <UserModalBox isMyFollower={isMyFollower} userId={userId} />
           </ContentBox>
           <ContentBox2>
             {userData && (
@@ -87,7 +93,11 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
                   handle={userData.handle}
                   profileImg={userData.profileImg}
                 />
-                <Followers myFollowId={userData.followId} userData={userData} />
+                <Followers
+                  handlePageClick={handlePageClick}
+                  myFollowId={userData.followId}
+                  userData={userData}
+                />
               </>
             )}
           </ContentBox2>
@@ -114,11 +124,13 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
                 totalElements={totalElements}
                 pins={pins}
                 onSelectedLocation={onSelectedLocation}
+                handlePageClick={handlePageClick}
               />
             ) : (
               <PlaylistFeed
                 playlistCount={playlistCount}
                 playlists={playlists}
+                handlePageClick={handlePageClick}
               />
             )}
           </FeedBox>
@@ -180,6 +192,7 @@ const MenuText = styled.div`
 const MenuBox = styled.div`
   display: flex;
   flex-direction: row;
+  padding-top: 9px;
 `;
 const Line = styled.div`
   width: 528px;

@@ -8,6 +8,7 @@ const Input = ({
   value,
   onChange,
   hasError,
+  onKeyPress,
 }) => {
   return (
     <>
@@ -18,6 +19,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           hasError={hasError}
+          onKeyPress={onKeyPress}
         />
         <div className="input">
           {infoMsg && <div className="infoMsg">{infoMsg}</div>}

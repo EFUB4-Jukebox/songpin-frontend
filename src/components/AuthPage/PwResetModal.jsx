@@ -32,21 +32,32 @@ const PwResetModal = ({
     setLoading(true);
     try {
       const response = await postMail(email);
-      const responseMsg = response.data.message;
-
-      if (response.data.status === 400 && response.data.errorCode === "ERROR") {
-        handleSendMail();
-      } else if (response.data.status === 400) {
-        const errorMessage = responseMsg.replace(/^email:\s*/, "");
-        setMailMsg(errorMessage);
-      } else {
-        setMailMsg(
-          responseMsg || "비밀번호 재설정을 위한 메일이 발송되었습니다.",
-        );
-      }
-      setLoading(false);
+      const responseMsg = response.data.message || "";
+      setMailMsg(
+        responseMsg || "비밀번호 재설정을 위한 메일이 발송되었습니다.",
+      );
     } catch (error) {
       console.error(error);
+
+      if (error.status === 400) {
+        const responseMsg = error.message || "";
+        if (
+          error.errorCode === "INVALID_INPUT_VALUE" ||
+          error.errorCode === "INVALID_INPUT_FORMAT"
+        ) {
+          const errorMessage = responseMsg.replace(/^email:\s*/, "");
+          setMailMsg(errorMessage);
+        } else if (error.errorCode === "ERROR") {
+          handleSendMail();
+        } else {
+          setMailMsg(responseMsg);
+        }
+      } else if (error.status === 401 || error.status === 404) {
+        setMailMsg(error.message);
+      } else {
+        setMailMsg("메일 전송 중 문제가 발생했습니다. 다시 시도해 주세요.");
+      }
+    } finally {
       setLoading(false);
     }
   };
@@ -101,7 +112,6 @@ const PwResetWrapper = styled.div`
   background: var(--offwhite_, #fcfcfc);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 20px;
   position: relative;
@@ -118,6 +128,7 @@ const PwResetWrapper = styled.div`
     font-weight: 700;
     line-height: 40px; /* 125% */
     margin-bottom: 36px;
+    margin-top: 111px;
   }
   .pwResetMsg {
     color: var(--light_black, #232323);

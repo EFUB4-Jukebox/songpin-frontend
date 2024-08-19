@@ -6,13 +6,14 @@ const ColumnComponent = (alarm ={}) => {
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = (id) => {
+  const handleClick = () => {
     setIsClicked(true);
   };
 
-  const goToProfile = (id) => {
-    console.log("프로필이동!", id);
-    navigate(`/users/${id}`);
+  const goToProfile = (handle) => {
+    if(handle){
+      navigate(`/users/${handle}`);
+    }
   };
 
   const formatTimeAgo = (time) => {
@@ -35,7 +36,7 @@ const ColumnComponent = (alarm ={}) => {
   
   return (
     <Column onClick={handleClick} isClicked={isClicked} read={alarm.read}>
-      <Alarm isClicked={isClicked} read={alarm.read} onClick={() => goToProfile(alarm.id)}>
+      <Alarm isClicked={isClicked} read={alarm.read} onClick={() => goToProfile(alarm.handle)}>
         {alarm.message}
       </Alarm>
       <Time>{formattedTime}</Time>

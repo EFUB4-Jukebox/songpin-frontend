@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import PlaceComponent from "./PlaceComponent";
 import { getPlaces } from "../../../services/api/place";
+import LoadingSpinner from "../../common/LoadingSpinner";
 
 const SearchPlaces = ({ keyword, sortBy }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -94,18 +95,14 @@ const SearchPlaces = ({ keyword, sortBy }) => {
 
   return (
     <PlacesList>
-      {searchResults.length === 0 ? (
-        isInitialSearch ? (
-          <EmptySearchResult>
-            <BeforeMessage>
-              특정 장소에서 사람들이 들은 노래를 확인해보세요
-            </BeforeMessage>
-          </EmptySearchResult>
-        ) : !isLoading ? (
-          <EmptySearchResult>
-            <EmptyMessage>검색 결과가 없습니다.</EmptyMessage>
-          </EmptySearchResult>
-        ) : null
+      {isLoading && searchResults.length === 0 ? (
+        <Loading>
+          <LoadingSpinner />
+        </Loading>
+      ) : searchResults.length === 0 && !isLoading ? (
+        <EmptySearchResult>
+          <EmptyMessage>검색 결과가 없습니다.</EmptyMessage>
+        </EmptySearchResult>
       ) : (
         <>
           <Line />
@@ -118,12 +115,17 @@ const SearchPlaces = ({ keyword, sortBy }) => {
           ))}
         </>
       )}
+
       <div ref={loaderRef} style={{ height: "20px" }}></div>
     </PlacesList>
   );
 };
 
 export default SearchPlaces;
+const Loading = styled.div`
+  position: relative;
+  bottom: 130px;
+`;
 
 const PlacesList = styled.div`
   display: flex;

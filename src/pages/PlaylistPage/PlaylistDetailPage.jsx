@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getPlaylistDetail } from "../../services/api/playlist";
 import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
@@ -11,7 +11,6 @@ import BookmarkToggle from "../../components/PlaylistPage/BookmarkToggle";
 import PlaylistModalBox from "../../components/PlaylistPage/PlaylistModalBox";
 import lock from "../../assets/images/PlaylistPage/detail_lock.svg";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
-import useEditStore from "../../store/useProfileEditStore";
 import { getMyProfile } from "../../services/api/myPage";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
@@ -25,13 +24,24 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   const [isPrivate, setIsPrivate] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
   const { setMyPageClick } = useMyPageClickStore();
-  const handleUserClick = async id => {
+  const location = useLocation();
+  const handleUserClick = async handle => {
     const res = await getMyProfile();
-    if (id === res.memberId) {
+    if (handle === res.handle) {
       setMyPageClick(false);
       navigate(`/mypage`);
     } else {
-      navigate(`/users/${id}`);
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
+
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/users/${handle}`, { state: `/${combinedSegments}` });
     }
   };
 
@@ -65,7 +75,12 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (location.state) {
+      console.log(location.state);
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   const handleShareClick = () => {
@@ -108,7 +123,7 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
           <PlaylistName>{playlistData.playlistName}</PlaylistName>
         </NameContainer>
         <NameBox>
-          <UserName onClick={() => handleUserClick(playlistData.creatorId)}>
+          <UserName onClick={() => handleUserClick(playlistData.creatorHandle)}>
             by {playlistData.creatorNickname}
           </UserName>
           <IconBox>
@@ -258,12 +273,12 @@ const IconBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 20px;
 `;
 
 const ShareBtn = styled.img`
   width: 30px;
   height: 30px;
-  padding-left: 13px;
   flex-shrink: 0;
   cursor: pointer;
 `;
@@ -273,12 +288,13 @@ const InfoBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 13px;
+  margin-top: 18px;
 `;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 8px;
 `;
 
 const PinImg = styled.img`
@@ -293,7 +309,6 @@ const PinNum = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding-left: 5px;
 `;
 
 const UpdatedDate = styled.div`

@@ -66,6 +66,12 @@ const LoginModal = ({
     }
   };
 
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+      onLogin();
+    }
+  };
+
   return (
     <>
       {
@@ -77,6 +83,7 @@ const LoginModal = ({
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <Input
               placeholder="비밀번호"
@@ -84,6 +91,7 @@ const LoginModal = ({
               value={password}
               onChange={e => setPassword(e.target.value)}
               infoMsg={infoMsg}
+              onKeyPress={handleKeyPress}
             />
             <Info>
               <div className="loginButton">
@@ -133,11 +141,10 @@ const LoginWrapper = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 41px;
     margin-top: 104px;
   }
   .loginButton {
-    margin-top: 30px;
   }
 `;
 

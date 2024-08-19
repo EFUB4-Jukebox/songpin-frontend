@@ -5,8 +5,6 @@ import SmallModal from "./Modal/SmallModal";
 import AddPlaylistModal from "./Modal/AddPlaylistModal";
 import { useNavigate } from "react-router-dom";
 import { deletePin } from "../../services/api/pin";
-import CommonSnackbar from "./snackbar/CommonSnackbar";
-import useIsCreatePlaylistStore from "../../store/useIsCreatePlaylistStore";
 import CreatePlaylistModal from "./Modal/CreatePlaylistModal";
 
 const options = ["담기", "수정", "삭제"];
@@ -58,7 +56,17 @@ const PinModalBox = ({ top, right, padding, pinId }) => {
 
   const navigate = useNavigate();
   const goPinEditPage = () => {
-    navigate(`/pin-edit/${pinId}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/pin-edit/${pinId}`, { state: `/${combinedSegments}` });
   };
 
   useEffect(() => {

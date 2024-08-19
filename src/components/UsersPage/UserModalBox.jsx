@@ -5,18 +5,17 @@ import SmallModal from "../common/Modal/SmallModal";
 import { useNavigate, useParams } from "react-router-dom";
 import CommonSnackbar from "../common/snackbar/CommonSnackbar";
 import { deleteFollower } from "../../services/api/myPage";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const options = ["팔로워 삭제", "사용자 신고"];
 const options2 = ["사용자 신고"];
 
-const UserModalBox = ({ isMyFollower }) => {
-  const { memberId } = useParams();
+const UserModalBox = ({ isMyFollower, userId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOption, setClickedOption] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isReporttModalOpen, setIsReportModalOpen] = useState(false);
-  const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] =
-    useState(false);
+  const { setIsSnackbar } = useSnackbarStore();
 
   const handlePopup = () => {
     setIsOpen(!isOpen);
@@ -39,7 +38,8 @@ const UserModalBox = ({ isMyFollower }) => {
   const handleDeletePin = async () => {
     setIsDeleteModalOpen(false);
 
-    const res = await deleteFollower(Number(memberId));
+    const res = await deleteFollower(Number(userId));
+    setIsSnackbar("팔로워를 삭제했습니다.");
     console.log(res);
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import checked from "../../assets/images/PlaylistPage/checkbox_checked.svg";
 import unchecked from "../../assets/images/PlaylistPage/checkbox_unchecked.svg";
@@ -25,7 +25,7 @@ const PlaylistEditPage = () => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [back, setBack] = useState(false);
   const { setEdit } = useEditStore();
-
+  const location = useLocation();
   useEffect(() => {
     const fetchPlaylistDetail = async () => {
       try {
@@ -51,7 +51,12 @@ const PlaylistEditPage = () => {
 
   const handlePopup = () => {
     if (back) {
-      navigate(-1);
+      if (location.state) {
+        console.log(location.state);
+        navigate(location.state);
+      } else {
+        navigate("/home");
+      }
     } else {
       setIsOpen(!isOpen);
     }
@@ -83,16 +88,21 @@ const PlaylistEditPage = () => {
         playlistId,
         inputValue,
         isPublic ? "PUBLIC" : "PRIVATE",
-        sortedPins.length, // 선택된 핀의 개수
         sortedPins, // 수정된 핀 리스트
       );
+
       console.log(pinList);
       if (!res) {
         setEdit(true);
-        navigate(-1);
+        console.log(location.state);
+        if (location.state) {
+          navigate(location.state);
+        } else {
+          navigate("/mypage");
+        }
       }
     } catch (error) {
-      console.error("Error updating playlist:", error);
+      console.error("Error updating playlist!", error);
     }
   };
 

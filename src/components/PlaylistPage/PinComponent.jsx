@@ -13,7 +13,7 @@ const PinComponent = ({
   buttonVisible,
   onSelect,
   pinId,
-  onSelectedLocation = () => {}
+  onSelectedLocation = () => {},
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { songInfo = {} } = pin;
@@ -32,18 +32,17 @@ const PinComponent = ({
       ? { imgSrc: genre.imgSrc, iconSrc: genre.iconSrc }
       : { imgSrc: mapIconBlack, iconSrc: mapIconBallad };
   };
-  
+
   const goLocation = () => {
     var location = {
       lat: pin.latitude,
       lng: pin.longitude,
     };
-    if (pin.playlistPinId)
-    {
-      location ={
+    if (pin.playlistPinId) {
+      location = {
         lat: pin.placeLatitude,
         lng: pin.placeLongitude,
-      }
+      };
     }
 
     onSelectedLocation(location);
@@ -98,6 +97,7 @@ export default PinComponent;
 const PinBox = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   width: 462px;
   height: 100px;
   flex-shrink: 0;
@@ -119,7 +119,7 @@ const PinImg = styled.img`
 const SongBox = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 9px 11px 9px 0px;
+  width: 100%;
 `;
 
 const TitleBox = styled.div`
@@ -178,8 +178,10 @@ const InfoBox = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  box-sizing: border-box;
   white-space: nowrap;
-  width: 320px;
+  width: 100%;
+  padding-right: 11px;
 `;
 
 const InfoText = styled.div`

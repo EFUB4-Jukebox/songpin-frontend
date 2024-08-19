@@ -4,11 +4,21 @@ import { useNavigate } from "react-router-dom";
 import pinImage from "../../assets/images/UsersPage/library_music.svg";
 import Playlist from "../PlaylistPage/Playlist";
 
-const PlaylistFeed = ({ playlists, playlistCount }) => {
+const PlaylistFeed = ({ handlePageClick, playlists, playlistCount }) => {
   const navigate = useNavigate();
 
   const handlePlaylistClick = id => {
-    navigate(`/playlists/${id}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/playlists/${id}`, { state: `/${combinedSegments}` });
   };
   return (
     <PlaylistFeedContainer>
@@ -24,6 +34,7 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
         <PlaylistContainer>
           {playlists.map(playlist => (
             <Playlist
+              handlePageClick={handlePageClick}
               key={playlist.playlistId}
               onClick={() => handlePlaylistClick(playlist.playlistId)}
               playlist={playlist} // 플레이리스트 정보를 전달

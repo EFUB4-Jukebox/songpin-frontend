@@ -29,7 +29,17 @@ const PlaylistPage = (onSelectedLocation = () => {}) => {
   }, []);
 
   const handlePlaylistClick = playlistId => {
-    navigate(`/playlists/${playlistId}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/playlists/${playlistId}`, { state: `/${combinedSegments}` });
   };
 
   const handleSearch = keyword => {

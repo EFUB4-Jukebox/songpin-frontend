@@ -44,7 +44,8 @@ const ModalCommon = ({
   };
 
   useEffect(() => {
-    createPlaylist && setActive(inputValue.length > 0);
+    console.log(inputValue);
+    createPlaylist && setActive(inputValue.trim().length > 0);
   }, [inputValue, setActive]);
 
   const handlePlaylist = () => {

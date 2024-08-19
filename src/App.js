@@ -63,6 +63,7 @@ import useSnackbarStore from "./store/useSnackbarStore";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Error404Page from "./pages/Error404Page";
 import ProtectedRoute from "./components/AuthPage/ProtectedRoute";
+import useAuthStore from "./store/useAuthStore";
 
 const genreImages = {
   POP: pop,
@@ -210,6 +211,7 @@ function App() {
               setLoginModal={setLoginModal}
               setLat={setLat}
               setLng={setLng}
+              handlePageClick={handlePageClick}
             />
           }
         >
@@ -278,6 +280,7 @@ function MapLayout({
   handleFilterChange2,
   isLoggedIn,
   setLoginModal,
+  handlePageClick,
 }) {
   const navigate = useNavigate();
   const [lat, setLat] = useState(defaultCenter.lat);
@@ -292,6 +295,7 @@ function MapLayout({
   const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [myHandle, setMyHandle] = useState();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     const getMyHandle = async () => {
@@ -299,7 +303,7 @@ function MapLayout({
       console.log(res.handle);
       setMyHandle(res.handle);
     };
-    getMyHandle();
+    isAuthenticated && getMyHandle();
   }, []);
 
   useEffect(() => {
@@ -539,12 +543,23 @@ function MapLayout({
               />
             }
           />
-          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
-          <Route path="/playlists" element={<PlaylistPage />} />
+          <Route
+            path="/pin-edit/:pinId"
+            element={<ProtectedRoute element={<EditPinPage />} />}
+          />
+          <Route
+            path="/playlists"
+            element={<ProtectedRoute element={<PlaylistPage />} />}
+          />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
             path="/users/:handle"
-            element={<UsersPage onSelectedLocation={setSelectedLocation} />}
+            element={
+              <UsersPage
+                handlePageClick={handlePageClick}
+                onSelectedLocation={setSelectedLocation}
+              />
+            }
           />
           <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
@@ -556,7 +571,7 @@ function MapLayout({
           />
           <Route
             path="/playlist-edit/:playlistId"
-            element={<PlaylistEditPage />}
+            element={<ProtectedRoute element={<PlaylistEditPage />} />}
           />
           <Route
             path="/mypage"
@@ -574,18 +589,32 @@ function MapLayout({
               />
             }
           />
-          <Route path="/edit" element={<ProfileEditPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/edit"
+            element={<ProtectedRoute element={<ProfileEditPage />} />}
+          />
+          <Route
+            path="/settings"
+            element={<ProtectedRoute element={<SettingsPage />} />}
+          />
           <Route
             path="/calendar"
             element={
-              <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
           <Route
             path="/mypin-search"
             element={
-              <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
         </Routes>
