@@ -22,7 +22,7 @@ const PinMemoComponent = ({
   pinId,
   memo,
   visibility,
-  onSelectedLocation = () => {}
+  onSelectedLocation = () => {},
 }) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +40,17 @@ const PinMemoComponent = ({
 
   const navigate = useNavigate();
   const goMusicInfoPage = () => {
-    navigate(`/details-song/${songId}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/details-song/${songId}`, { state: `/${combinedSegments}` });
   };
   const goLocation = () => {
     const location = {

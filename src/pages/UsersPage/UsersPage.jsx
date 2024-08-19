@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   getUserDetail,
   getUserPlaylists,
@@ -30,7 +30,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [isMyFollower, setIsMyFollower] = useState();
   const [userId, setUserId] = useState();
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,7 +66,11 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   }, [handle]);
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   return (

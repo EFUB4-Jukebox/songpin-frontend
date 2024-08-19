@@ -63,6 +63,7 @@ import useSnackbarStore from "./store/useSnackbarStore";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Error404Page from "./pages/Error404Page";
 import ProtectedRoute from "./components/AuthPage/ProtectedRoute";
+import useAuthStore from "./store/useAuthStore";
 
 const genreImages = {
   POP: pop,
@@ -292,6 +293,7 @@ function MapLayout({
   const [playlistId, setPlaylistId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [myHandle, setMyHandle] = useState();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     const getMyHandle = async () => {
@@ -299,7 +301,7 @@ function MapLayout({
       console.log(res.handle);
       setMyHandle(res.handle);
     };
-    getMyHandle();
+    isAuthenticated && getMyHandle();
   }, []);
 
   useEffect(() => {
@@ -539,7 +541,10 @@ function MapLayout({
               />
             }
           />
-          <Route path="/pin-edit/:pinId" element={<EditPinPage />} />
+          <Route
+            path="/pin-edit/:pinId"
+            element={<ProtectedRoute element={<EditPinPage />} />}
+          />
           <Route path="/playlists" element={<PlaylistPage />} />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
@@ -556,7 +561,7 @@ function MapLayout({
           />
           <Route
             path="/playlist-edit/:playlistId"
-            element={<PlaylistEditPage />}
+            element={<ProtectedRoute element={<PlaylistEditPage />} />}
           />
           <Route
             path="/mypage"
@@ -574,8 +579,14 @@ function MapLayout({
               />
             }
           />
-          <Route path="/edit" element={<ProfileEditPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/edit"
+            element={<ProtectedRoute element={<ProfileEditPage />} />}
+          />
+          <Route
+            path="/settings"
+            element={<ProtectedRoute element={<SettingsPage />} />}
+          />
           <Route
             path="/calendar"
             element={

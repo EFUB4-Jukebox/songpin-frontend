@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getPlaylistDetail } from "../../services/api/playlist";
 import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import pinImage from "../../assets/images/MusicSearchPage/spark_122.svg";
@@ -24,13 +24,34 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   const [isPrivate, setIsPrivate] = useState(false);
   // const isPrivate = playlistData.visibility === "PRIVATE";
   const { setMyPageClick } = useMyPageClickStore();
-  const handleUserClick = async id => {
+  const location = useLocation();
+  const handleUserClick = async handle => {
     const res = await getMyProfile();
-    if (id === res.memberId) {
+    if (handle === res.handle) {
       setMyPageClick(false);
-      navigate(`/mypage`);
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
+
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/mypage`, { state: `/${combinedSegments}` });
     } else {
-      navigate(`/users/${id}`);
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
+
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/users/${handle}`, { state: `/${combinedSegments}` });
     }
   };
 
@@ -64,7 +85,12 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (location.state) {
+      console.log(location.state);
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   const handleShareClick = () => {
@@ -107,7 +133,7 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
           <PlaylistName>{playlistData.playlistName}</PlaylistName>
         </NameContainer>
         <NameBox>
-          <UserName onClick={() => handleUserClick(playlistData.creatorId)}>
+          <UserName onClick={() => handleUserClick(playlistData.creatorHandle)}>
             by {playlistData.creatorNickname}
           </UserName>
           <IconBox>
