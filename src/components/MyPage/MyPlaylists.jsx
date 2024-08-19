@@ -132,6 +132,9 @@ const CreateNewPlaylist = styled.div`
   line-height: normal;
   cursor: pointer;
   padding-top: 3px;
+  &:hover {
+    color: #24ee81;
+  }
 `;
 
 const PlaylistSection = styled.div`
