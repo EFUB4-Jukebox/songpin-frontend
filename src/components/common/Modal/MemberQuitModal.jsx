@@ -118,6 +118,8 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 21px;
+  background: var(--f8f8f8, #fcfcfc);
+  width: 440px;
   &::placeholder {
     color: var(--gray02, #747474);
   }
