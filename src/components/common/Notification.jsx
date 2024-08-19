@@ -95,7 +95,7 @@ const Notification = () => {
                     read={alarm.isRead}
                     message={alarm.message}
                     time={alarm.createdTime}
-                    id={alarm.senderId}
+                    handle={alarm.handle}
                   />
                 ))
               )}
