@@ -6,25 +6,35 @@ import mapIconBlack from "../../assets/images/MusicSearchPage/flower_black.svg";
 import lock from "../../assets/images/UsersPage/lock.svg";
 import { GenreList } from "../../constants/GenreList";
 
-const PinComponent = ({ pin, onSelectedLocation = () => {} }) => {
+const PinComponent = ({
+  handlePageClick,
+  pin,
+  onSelectedLocation = () => {},
+}) => {
   const [isTruncated, setIsTruncated] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const { songInfo = {} } = pin;
   const goSongInfo = () => {
-    const path = window.location.pathname;
-    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+    const isLoggedIn = localStorage.getItem("accessToken");
 
-    const firstSegment = segments[0] || "";
-    const secondSegment = segments[1] || "";
+    if (isLoggedIn) {
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
 
-    const combinedSegments = secondSegment
-      ? `${firstSegment}/${secondSegment}`
-      : firstSegment;
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
 
-    navigate(`/details-song/${songInfo?.songId}`, {
-      state: `/${combinedSegments}`,
-    });
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/details-song/${songInfo?.songId}`, {
+        state: `/${combinedSegments}`,
+      });
+    } else {
+      handlePageClick();
+    }
   };
 
   const isPrivate = pin.visibility === "PRIVATE";

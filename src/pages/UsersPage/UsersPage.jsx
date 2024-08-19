@@ -124,6 +124,7 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
                 totalElements={totalElements}
                 pins={pins}
                 onSelectedLocation={onSelectedLocation}
+                handlePageClick={handlePageClick}
               />
             ) : (
               <PlaylistFeed
