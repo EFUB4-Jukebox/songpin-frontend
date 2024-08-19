@@ -29,6 +29,8 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
   const [followingsData, setFollowingsData] = useState(null);
   const [showSideBar, setShowSideBar] = useState(true);
   const [isMyFollower, setIsMyFollower] = useState();
+  const [userId, setUserId] = useState();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         setUserData(response.data);
 
         setIsMyFollower(response.data.isFollower);
-
+        setUserId(response.data.memberId);
         // 타 유저 플레이리스트 가져오기
         const playlistsResponse = await getUserPlaylists(handle);
         setPlaylists(playlistsResponse.playlistList); // 플레이리스트 상태 업데이트
@@ -77,7 +79,7 @@ const UsersPage = ({ onSelectedLocation = () => {} }) => {
         <>
           <ContentBox>
             <BackBtn src={backArrow} onClick={handleBackClick} />
-            <UserModalBox isMyFollower={isMyFollower} />
+            <UserModalBox isMyFollower={isMyFollower} userId={userId} />
           </ContentBox>
           <ContentBox2>
             {userData && (

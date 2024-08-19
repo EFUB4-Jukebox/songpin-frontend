@@ -5,8 +5,6 @@ import SmallModal from "./Modal/SmallModal";
 import AddPlaylistModal from "./Modal/AddPlaylistModal";
 import { useNavigate } from "react-router-dom";
 import { deletePin } from "../../services/api/pin";
-import CommonSnackbar from "./snackbar/CommonSnackbar";
-import useIsCreatePlaylistStore from "../../store/useIsCreatePlaylistStore";
 import CreatePlaylistModal from "./Modal/CreatePlaylistModal";
 
 const options = ["담기", "수정", "삭제"];
