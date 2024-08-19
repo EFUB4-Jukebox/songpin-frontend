@@ -17,11 +17,11 @@ const CompleteLogin = ({ setCompleteLogin }) => {
   }, [setCompleteLogin]);
 
   const gotoHomePage = () => {
-    navigate("/home");
+    window.location.href = "/home";
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={e => e.stopPropagation()}>
       <CompleteWrapper ref={modalRef}>
         <div className="welcomeText">환영해요!</div>
         <div className="completeMsg">회원가입이 완료되었어요</div>
