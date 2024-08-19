@@ -29,7 +29,7 @@ const Notification = () => {
           `https://api.songpin.n-e.kr/alarms/subscribe`,
           {
               headers: {
-                ACCESS_KEY: accessKey,
+                Authorization: `Bearer ${accessKey}`,
                 //REFRESH_KEY: `${Refresh_key}`,
               },
               withCredentials: true,
