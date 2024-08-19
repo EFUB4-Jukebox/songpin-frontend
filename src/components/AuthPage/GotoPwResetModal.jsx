@@ -138,7 +138,6 @@ const ModalWrapper = styled.div`
   background: var(--f8f8f8, #fcfcfc);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   position: relative;
 
@@ -149,9 +148,13 @@ const ModalWrapper = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: 40px; /* 125% */
-    margin-bottom: 56px;
+    margin-bottom: 42px;
+    margin-top: 86px;
   }
 `;
+
 const ButtonWrapper = styled.div`
-  margin-top: 43px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 86px;
 `;

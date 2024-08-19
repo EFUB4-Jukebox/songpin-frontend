@@ -133,11 +133,10 @@ const LoginWrapper = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 41px;
     margin-top: 104px;
   }
   .loginButton {
-    margin-top: 30px;
   }
 `;
 
