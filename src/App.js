@@ -545,7 +545,10 @@ function MapLayout({
             path="/pin-edit/:pinId"
             element={<ProtectedRoute element={<EditPinPage />} />}
           />
-          <Route path="/playlists" element={<PlaylistPage />} />
+          <Route
+            path="/playlists"
+            element={<ProtectedRoute element={<PlaylistPage />} />}
+          />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
             path="/users/:handle"
@@ -590,13 +593,21 @@ function MapLayout({
           <Route
             path="/calendar"
             element={
-              <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
           <Route
             path="/mypin-search"
             element={
-              <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
         </Routes>

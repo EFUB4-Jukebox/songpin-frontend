@@ -16,6 +16,7 @@ const SearchContainer = () => {
     return sessionStorage.getItem("selectedOption") || "노래";
   });
   const [keyword, setKeyword] = useState("");
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   useEffect(() => {
     sessionStorage.setItem("selectedOption", selectedOption);
@@ -48,28 +49,34 @@ const SearchContainer = () => {
   return (
     <SideSection showSideBar={showSideBar}>
       <Content>
-        <SearchBar optionChange={handleOptionChange} onSearch={handleSearch} />
+        <SearchBar
+          setShowSortDropdown={setShowSortDropdown}
+          optionChange={handleOptionChange}
+          onSearch={handleSearch}
+        />
         <Sorting>
-          <DropdownSorting>
-            <DropdownHeader onClick={toggling}>
-              <SortingText>{selectedValue}</SortingText>
-              <DropIcon src={arrowDown} isOpen={isOpen} />
-            </DropdownHeader>
-            {isOpen && (
-              <DropdownList>
-                {values.map(value => (
-                  <ListItem
-                    onClick={onValueClicked(value)}
-                    style={{
-                      fontWeight: selectedValue === value ? "700" : "400",
-                    }}
-                  >
-                    {value}
-                  </ListItem>
-                ))}
-              </DropdownList>
-            )}
-          </DropdownSorting>
+          {showSortDropdown && (
+            <DropdownSorting>
+              <DropdownHeader onClick={toggling}>
+                <SortingText>{selectedValue}</SortingText>
+                <DropIcon src={arrowDown} isOpen={isOpen} />
+              </DropdownHeader>
+              {isOpen && (
+                <DropdownList>
+                  {values.map(value => (
+                    <ListItem
+                      onClick={onValueClicked(value)}
+                      style={{
+                        fontWeight: selectedValue === value ? "700" : "400",
+                      }}
+                    >
+                      {value}
+                    </ListItem>
+                  ))}
+                </DropdownList>
+              )}
+            </DropdownSorting>
+          )}
         </Sorting>
         <SearchResult>
           {selectedOption === "노래" && keyword && (
@@ -85,6 +92,11 @@ const SearchContainer = () => {
             />
           )}
         </SearchResult>
+        {!showSortDropdown && (
+          <BeforeMessage>
+            {`${selectedOption}를 검색해 다른 사람들의 핀을 확인해보세요`}
+          </BeforeMessage>
+        )}
       </Content>
     </SideSection>
   );
@@ -164,6 +176,16 @@ const ListItem = styled.div`
   font-weight: 400;
   line-height: 150%; /* 24px */
   cursor: pointer;
+`;
+const BeforeMessage = styled.div`
+  color: var(--gray, #747474);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  margin-top: 325px;
 `;
 
 const SearchResult = styled.div``;

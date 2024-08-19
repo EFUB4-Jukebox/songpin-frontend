@@ -2,23 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import PinComponent from "../PinComponent";
 import { getSongs } from "../../../services/api/song";
+import LoadingSpinner from "../../common/LoadingSpinner";
 
 const SearchSongs = ({ keyword, sortBy }) => {
   const [searchResults, setSearchResults] = useState([]);
-  const [isInitialSearch, setIsInitialSearch] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const loaderRef = useRef(null);
-  useEffect(() => {
-    console.log(keyword);
-  }, []);
+
   useEffect(() => {
     const fetchSongs = async () => {
       if (keyword.trim()) {
         try {
           setSearchResults([]);
-          setIsInitialSearch(false);
           setIsLoading(true);
           setPage(0);
           console.log(keyword);
@@ -40,7 +37,6 @@ const SearchSongs = ({ keyword, sortBy }) => {
           setIsLoading(false);
         }
       } else {
-        setIsInitialSearch(true);
         setSearchResults([]);
         setHasMore(false);
       }
@@ -95,25 +91,16 @@ const SearchSongs = ({ keyword, sortBy }) => {
     };
   }, [page, keyword, isLoading, hasMore]);
 
-  useEffect(() => {
-    console.log(searchResults.length);
-    console.log(searchResults);
-  }, []);
-
   return (
     <SongsList>
-      {searchResults.length === 0 || !searchResults ? (
-        isInitialSearch ? (
-          <EmptySearchResult>
-            <BeforeMessage>
-              노래를 검색해 다른 사람들의 핀을 확인해보세요
-            </BeforeMessage>
-          </EmptySearchResult>
-        ) : !isLoading ? (
-          <EmptySearchResult>
-            <EmptyMessage>검색 결과가 없습니다.</EmptyMessage>
-          </EmptySearchResult>
-        ) : null
+      {isLoading && searchResults.length === 0 ? (
+        <Loading>
+          <LoadingSpinner />
+        </Loading>
+      ) : searchResults.length === 0 && !isLoading ? (
+        <EmptySearchResult>
+          <EmptyMessage>검색 결과가 없습니다.</EmptyMessage>
+        </EmptySearchResult>
       ) : (
         <>
           {searchResults.map(result => (
@@ -132,7 +119,10 @@ const SearchSongs = ({ keyword, sortBy }) => {
 };
 
 export default SearchSongs;
-
+const Loading = styled.div`
+  position: relative;
+  bottom: 130px;
+`;
 const SongsList = styled.div`
   display: flex;
   flex-direction: column;
