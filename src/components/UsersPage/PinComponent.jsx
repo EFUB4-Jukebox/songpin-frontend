@@ -68,12 +68,11 @@ const PinComponent = ({ pin, onSelectedLocation = () => {} }) => {
           <PinImg src={pin.songInfo.imgPath} alt="앨범 이미지" />
           <TitleBox>
             <PinTitle>
-              <MapIcon src={currentIconSrc} alt="지도 아이콘" />
+              <MapIcon src={currentIconSrc} alt="장르 아이콘" />
               <TitleText>{pin.songInfo.title}</TitleText>
             </PinTitle>
             <PinSinger>{pin.songInfo.artist}</PinSinger>
           </TitleBox>
-          {/* <MoreIcon src={moreMenu} alt="더보기 아이콘" /> */}
         </SongBox>
         <ContentBox>
           <LyricText
@@ -106,8 +105,6 @@ const PinBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 462px;
-  min-height: 174px;
-  flex-shrink: 0;
   border-radius: 8px;
 
   background: var(--offwhite, #efefef);
@@ -118,7 +115,6 @@ const PinBox = styled.div`
 const PinImg = styled.img`
   width: 60px;
   height: 60px;
-  /* padding-left: 12px; */
   border-radius: 4px;
 `;
 
@@ -154,11 +150,8 @@ const PinTitle = styled.div`
 
 const MapIcon = styled.img`
   width: 20px;
-  height: 22.252px;
+  height: 20px;
   padding-right: 8px;
-  /* &:hover {
-    fill: #1ddfec;
-  } */
 `;
 
 const TitleText = styled.div`
@@ -190,12 +183,6 @@ const PinSinger = styled.div`
   text-overflow: ellipsis;
 `;
 
-const MoreIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  padding-right: 12px;
-`;
-
 const LockImg = styled.img`
   width: 13px;
   height: 16px;
@@ -207,10 +194,6 @@ const LockImg = styled.img`
 `;
 
 const LyricText = styled.div`
-  width: 426px;
-  min-height: 48px;
-  flex-shrink: 0;
-
   overflow: hidden;
 
   font-family: Pretendard;
@@ -230,19 +213,13 @@ const LyricText = styled.div`
 const ContentBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 426px;
+  width: 100%;
 `;
 const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-`;
-
-const MapIconGray = styled.img`
-  width: 16px;
-  height: 17.801px;
-  padding-right: 8px;
 `;
 
 const InfoText = styled.div`
@@ -253,7 +230,7 @@ const InfoText = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
-  padding-right: 12px;
+  padding-right: 8px;
   white-space: nowrap;
   flex-shrink: 0;
 `;

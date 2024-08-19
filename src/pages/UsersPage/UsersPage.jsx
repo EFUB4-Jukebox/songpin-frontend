@@ -180,6 +180,7 @@ const MenuText = styled.div`
 const MenuBox = styled.div`
   display: flex;
   flex-direction: row;
+  padding-top: 9px;
 `;
 const Line = styled.div`
   width: 528px;
