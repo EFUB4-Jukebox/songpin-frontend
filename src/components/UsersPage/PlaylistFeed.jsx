@@ -8,7 +8,17 @@ const PlaylistFeed = ({ playlists, playlistCount }) => {
   const navigate = useNavigate();
 
   const handlePlaylistClick = id => {
-    navigate(`/playlists/${id}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/playlists/${id}`, { state: `/${combinedSegments}` });
   };
   return (
     <PlaylistFeedContainer>

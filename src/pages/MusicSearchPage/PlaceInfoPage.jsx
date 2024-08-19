@@ -22,7 +22,11 @@ const PlaceInfoPage = ({ onSelectedLocation = () => {} }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const goPreviousPage = () => {
-    window.history.back();
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   useEffect(() => {

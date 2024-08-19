@@ -59,7 +59,17 @@ const PlaylistSearchPage = () => {
   }, [selectedValue]); // 정렬 기준이 변경될 때마다 검색 수행
 
   const handlePlaylistClick = id => {
-    navigate(`/playlists/${id}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/playlists/${id}`, { state: `/${combinedSegments}` });
   };
 
   return (

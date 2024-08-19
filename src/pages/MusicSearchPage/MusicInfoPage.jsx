@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  useLocation,
+  useNavigate,
+  useLoaderData,
+} from "react-router-dom";
 import backIcon from "../../assets/images/MusicSearchPage/arrow_back.svg";
 import mapIconSparkBlack from "../../assets/images/MusicSearchPage/spark_black.svg";
 import uncheckedBox from "../../assets/images/MusicSearchPage/checkbox.svg";
@@ -12,7 +17,7 @@ import { getSongPins } from "../../services/api/song";
 import { GenreList } from "../../constants/GenreList";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const MusicInfoPage = ({onSelectedLocation = () => {}}) => {
+const MusicInfoPage = ({ onSelectedLocation = () => {} }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [title, setTitle] = useState("");
@@ -29,6 +34,7 @@ const MusicInfoPage = ({onSelectedLocation = () => {}}) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const loaderRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (songInfo?.title) {
@@ -53,7 +59,11 @@ const MusicInfoPage = ({onSelectedLocation = () => {}}) => {
   };
 
   const goPreviousPage = () => {
-    window.history.back();
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   useEffect(() => {
@@ -230,7 +240,11 @@ const MusicInfoPage = ({onSelectedLocation = () => {}}) => {
             <></>
           ) : displayedPins.length > 0 ? (
             displayedPins.map(pin => (
-              <MusicInfoPinPreview key={pin.pinId} pin={pin} onSelectedLocation={onSelectedLocation} />
+              <MusicInfoPinPreview
+                key={pin.pinId}
+                pin={pin}
+                onSelectedLocation={onSelectedLocation}
+              />
             ))
           ) : (
             <NoPinMessage>아직 생성된 핀이 없습니다.</NoPinMessage>

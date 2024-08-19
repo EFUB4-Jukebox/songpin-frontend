@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import FollowList from "../../components/UsersPage/FollowList";
 import backArrow from "../../assets/images/UsersPage/arrow_back_ios.svg";
 import SideSection from "../../components/common/SideSection";
@@ -18,6 +18,7 @@ const UserFollowPage = () => {
   const [selectedMenu, setSelectedMenu] = useState(
     new URL(window.location.href).searchParams.get("menu"),
   );
+  const location = useLocation();
 
   // const [followerList, setFollowerList] = useState([]);
   // const [followingList, setFollowingList] = useState([]);
@@ -81,7 +82,11 @@ const UserFollowPage = () => {
   // if (isError) return <div>오류 발생: {error.message}</div>;
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/home");
+    }
   };
 
   return (

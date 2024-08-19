@@ -6,7 +6,19 @@ import { useNavigate } from "react-router-dom";
 const PlaceComponent = ({ placeId, placeName, placePinCount }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/details-place/${placeId}`);
+    const path = window.location.pathname;
+    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+
+    const firstSegment = segments[0] || "";
+    const secondSegment = segments[1] || "";
+
+    const combinedSegments = secondSegment
+      ? `${firstSegment}/${secondSegment}`
+      : firstSegment;
+
+    navigate(`/details-place/${placeId}`, {
+      state: `/${combinedSegments}`,
+    });
   };
 
   return (
