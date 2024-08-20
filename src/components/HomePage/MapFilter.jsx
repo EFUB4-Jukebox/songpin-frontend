@@ -507,10 +507,11 @@ const ApplyButton = styled.button`
   color: #232323;
   font-family: Pretendard;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 500;
   cursor: pointer;
   &:hover {
-    background-color: #5452ff;
+    background-color: #24EE81;
+    border: 1px solid #24EE81;
     color: #ffffff;
   }
 `;
@@ -533,7 +534,8 @@ const GenreApplyButton = styled.button`
   margin-top: 5px;
   cursor: pointer;
   &:hover {
-    background-color: #5452ff;
+    background-color: #24EE81;
+    border: 1px solid #24EE81;
     color: #ffffff;
   }
 `;
