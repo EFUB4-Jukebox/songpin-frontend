@@ -503,8 +503,8 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__tile--now {
     background: #fcfcfc;
     &:hover {
-      background: #5452ff;
-      color: #fcfcfc;
+      /* background: #5452ff;
+      color: #fcfcfc; */
       border-radius: 50%;
     }
   }

@@ -114,6 +114,16 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
       } else if (endDate && date.getTime() === endDate.getTime()) {
         return "react-calendar__tile--rangeEnd";
       }
+
+      const today = moment();
+      const tileDate = moment(date);
+
+      if (tileDate.isBefore(today, "day")) {
+        return "react-calendar__tile--past";
+      }
+      if (tileDate.isAfter(today, "day")) {
+        return "react-calendar__tile--future";
+      }
     }
     return null;
   };
@@ -188,6 +198,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
                 calendarType="gregory"
                 selectRange={false}
                 value={[startDate, endDate]}
+                maxDate={new Date()}
                 onChange={handleDateChange}
                 tileClassName={tileClassName}
                 formatDay={(locale, date) => moment(date).format("D")}
@@ -322,6 +333,9 @@ const Option = styled.div`
   border: none;
   background: none;
   cursor: pointer;
+  &:hover {
+    color: #24EE81;
+  }
 `;
 
 const SetTermWrapper = styled.div`
@@ -424,6 +438,7 @@ const StyledCalendar = styled(Calendar)`
   font-family: Pretendard;
   padding: 5px;
   padding: 15px;
+
   .react-calendar__navigation {
     margin: 5px;
     button {
@@ -440,17 +455,16 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
-  .react-calendar__tile--now {
-    background: #fcfcfc;
-  }
-
   .react-calendar__tile {
     font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .react-calendar__tile--now {
+    background: #fcfcfc;
     &:hover {
-      background: lightgray;
       border-radius: 50%;
     }
   }
@@ -484,6 +498,16 @@ const StyledCalendar = styled(Calendar)`
     height: 40px;
     width: 40px;
     margin-bottom: 1px;
+  }
+
+  .react-calendar__tile--past {
+    &:hover {
+      background: lightgray;
+      border-radius: 50%;
+    }
+  }
+
+  .react-calendar__tile--future {
   }
 `;
 
