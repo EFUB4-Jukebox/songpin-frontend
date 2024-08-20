@@ -35,6 +35,9 @@ const UserModalBox = ({ isMyFollower, userId }) => {
   const handleDeleteModal = () => {
     setIsDeleteModalOpen(prevState => !prevState);
   };
+  const handleReportModal = () => {
+    setIsReportModalOpen(prevState => !prevState);
+  };
 
   const handleDeletePin = async () => {
     setIsDeleteModalOpen(false);
@@ -82,7 +85,7 @@ const UserModalBox = ({ isMyFollower, userId }) => {
         />
       )}
       {clickedOption === "사용자 신고" && isReporttModalOpen && (
-        <ReportModal />
+        <ReportModal userId={userId} closeModal={handleReportModal} />
       )}
     </PinModal>
   );
