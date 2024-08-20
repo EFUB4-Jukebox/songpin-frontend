@@ -10,9 +10,18 @@ const Notification = () => {
   const [alarms, setAlarms] = useState([]);
   const [isNewAlarm, setIsNewAlarm] = useState(false);
 
-  const handleNotice = () => {
+  const handleNotice = async () => {
     setIsOpen(!isOpen);
     setIsNewAlarm(false);
+
+    if (!isOpen) {
+      try {
+        const alarmData = await showAlarms();
+        setAlarms(alarmData.data.alarmList);
+      } catch (error) {
+        console.error("Error fetching alarms:", error);
+      }
+    }
   };
 
   const EventSource = EventSourcePolyfill;
@@ -22,8 +31,8 @@ const Notification = () => {
       const accessKey = localStorage.getItem("accessToken");
 
       try {
-        const alarmData = await showAlarms();
-        setAlarms(alarmData.data.alarmList);
+        // const alarmData = await showAlarms();
+        // setAlarms(alarmData.data.alarmList);
 
         const eventSource = new EventSource(
           `https://api.songpin.n-e.kr/alarms/subscribe`,
