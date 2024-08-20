@@ -32,6 +32,7 @@ const Notification = () => {
                 Authorization: `Bearer ${accessKey}`,
                 //REFRESH_KEY: `${Refresh_key}`,
               },
+              heartbeatTimeout: 300000,
               withCredentials: true,
             }
         );
