@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { getMyProfile } from "../../services/api/myPage";
-import { useQuery } from "@tanstack/react-query";
 
 const Followers = ({ memberId, followerCount, followingCount, handle }) => {
   // const [followerCount, setFollowerCount] = useState();

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import userLogoEx from "../../assets/images/MyPage/user-logo-ex.svg"; //임시 유저 프로필
-import { getMyProfile } from "../../services/api/myPage";
 import { ProfileImg } from "../../constants/ProfileImg";
-import { useQuery } from "@tanstack/react-query";
 
 const UserInfo = ({ handle, nickname, imgSrc }) => {
   const [profileImg, setProfileImg] = useState();

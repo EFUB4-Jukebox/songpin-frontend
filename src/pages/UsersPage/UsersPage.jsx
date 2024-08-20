@@ -25,8 +25,7 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
   const [pins, setPins] = useState([]);
   const [totalElements, setTotalElements] = useState(0);
   const [selectedMenu, setSelectedMenu] = useState("pinFeed");
-  const [followersData, setFollowersData] = useState(null);
-  const [followingsData, setFollowingsData] = useState(null);
+
   const [showSideBar, setShowSideBar] = useState(true);
   const [isMyFollower, setIsMyFollower] = useState();
   const [userId, setUserId] = useState();
@@ -51,18 +50,13 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
         const pinsResponse = await getUserPins(handle);
         setPins(pinsResponse.pinFeedList);
         setTotalElements(pinsResponse.totalElements);
-
-        const followersResponse = await getUserFollowers(handle); // 추가된 API 호출
-        setFollowersData(followersResponse);
-
-        const followingsResponse = await getUserFollowings(handle); // 추가된 API 호출
-        setFollowingsData(followingsResponse);
       } catch (err) {
         console.error("Error fetching user data:", err);
       }
     };
 
     fetchUserData();
+    console.log(userData);
   }, [handle]);
 
   const handleBackClick = () => {

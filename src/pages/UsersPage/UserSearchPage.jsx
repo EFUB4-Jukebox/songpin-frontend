@@ -24,9 +24,6 @@ const UserSearchPage = () => {
       const myProfile = await getMyProfile();
       const isMe = myProfile.handle === handle;
 
-      // 프로필 정보를 가져오는 API 호출
-      const userDetail = isMe ? myProfile : await getUserDetail(handle);
-
       // 해당 유저 페이지로 이동
       if (isMe) {
         setMyPageClick(false);
