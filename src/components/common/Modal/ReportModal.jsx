@@ -67,10 +67,8 @@ const ReportModal = ({ userId, closeModal }) => {
         reason: memo,
       };
       console.log(report);
+      closeModal();
       const res = await reportUsers(report);
-      if (res) {
-        closeModal();
-      }
     } catch (error) {
       console.log("error : ", error);
     }
