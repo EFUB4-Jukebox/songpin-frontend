@@ -77,3 +77,14 @@ export const getUserFollowings = async handle => {
     throw error;
   }
 };
+
+//유저 신고 API
+export const reportUsers = async report => {
+  try {
+    const data = await client.post(`/mail/report`, report);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Error reporting users:", error);
+  }
+};

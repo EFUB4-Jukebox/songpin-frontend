@@ -12,7 +12,7 @@ import { GenreList } from "../../constants/GenreList";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const PlaceInfoPage = ({ onSelectedLocation = () => {} }) => {
+const PlaceInfoPage = ({ onSelectedLocation = () => {}, handlePageClick }) => {
   const navigate = useNavigate();
   const { placeId } = useParams();
   const location = useLocation();
@@ -93,25 +93,29 @@ const PlaceInfoPage = ({ onSelectedLocation = () => {} }) => {
   }
 
   return (
-    <SideSection showSideBar={showSideBar} key={`${placeId}-${location.key}`}>
+    <SideSection
+      showSideBar={showSideBar}
+      key={`${placeId}-${location.key}`}
+      handlePageClick={handlePageClick}
+    >
       <PlaceInfo>
         <BackIcon src={backIcon} onClick={goPreviousPage} />
         <PlaceDetails>
           <PlaceTitle onClick={goMapLocation}>
             <LocationIcon src={locationIcon} />
-            <Name>{placeInfo.placeName}</Name>
+            <Name>{placeInfo?.placeName}</Name>
           </PlaceTitle>
           <SharingBtn src={shareButton} onClick={handleShareClick} />
         </PlaceDetails>
-        <LocationInfo>{placeInfo.address}</LocationInfo>
+        <LocationInfo>{placeInfo?.address}</LocationInfo>
         <PinSection>
           <InfoSection>
             <PinCount>
               <PinIcon src={latestGenresrc} />
-              <Num>{placeInfo.placePinCount}</Num>
+              <Num>{placeInfo?.placePinCount}</Num>
             </PinCount>
             <RecentDate>
-              최근 등록 일자: {formatDate(placeInfo.updatedDate)}
+              최근 등록 일자: {formatDate(placeInfo?.updatedDate)}
             </RecentDate>
           </InfoSection>
           <PinsContainer>

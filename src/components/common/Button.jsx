@@ -76,12 +76,13 @@ const LoadingDots = styled.div`
   height: 40px;
 
   div {
+    display: inline-block;
     width: 10px;
     height: 10px;
     margin: 0 5px;
     background-color: gray;
     border-radius: 50%;
-    animation: ${loading} 1s infinite;
+    animation: ${loading} 1s linear infinite;
 
     &:nth-child(1) {
       animation-delay: 0s;

@@ -527,22 +527,24 @@ function MapLayout({
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/details-song/:songId"
-            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} />}
-          />
-          <Route
-            path="/details-place/:placeId"
-            element={<PlaceInfoPage onSelectedLocation={setSelectedLocation} />}
-          />
-          <Route
-            path="/create"
             element={
-              <CreatePinPage
+              <MusicInfoPage
+                onSelectedLocation={setSelectedLocation}
                 setLat={setLat}
                 setLng={setLng}
-                setMapKey={setMapKey}
               />
             }
           />
+          <Route
+            path="/details-place/:placeId"
+            element={
+              <PlaceInfoPage
+                onSelectedLocation={setSelectedLocation}
+                handlePageClick={handlePageClick}
+              />
+            }
+          />
+          <Route path="/create" element={<CreatePinPage />} />
           <Route
             path="/pin-edit/:pinId"
             element={<ProtectedRoute element={<EditPinPage />} />}
@@ -566,7 +568,10 @@ function MapLayout({
           <Route
             path="/playlists/:playlistId"
             element={
-              <PlaylistDetailPage onSelectedLocation={setSelectedLocation} />
+              <PlaylistDetailPage
+                onSelectedLocation={setSelectedLocation}
+                handlePageClick={handlePageClick}
+              />
             }
           />
           <Route

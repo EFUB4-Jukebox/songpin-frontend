@@ -315,7 +315,7 @@ const When = styled.div`
   margin-bottom: 17px;
   width: 462px;
   border-bottom: 1px solid #747474;
-  color: var(--gray02, #747474);
+  color: var(--light_black, #232323);
   font-family: Pretendard;
   font-size: 20px;
   font-style: normal;

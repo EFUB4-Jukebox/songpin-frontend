@@ -18,15 +18,13 @@ const PwResetModal = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!disableOutsideClick) {
-      const handleClickOutside = event => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-          setPwResetModal(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-  }, [setPwResetModal, disableOutsideClick]);
+    const handleClickOutside = event => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setPwResetModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [setPwResetModal]);
 
   const handleSendMail = async () => {
     setLoading(true);

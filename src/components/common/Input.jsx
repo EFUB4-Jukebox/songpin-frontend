@@ -9,6 +9,8 @@ const Input = ({
   onChange,
   hasError,
   onKeyPress,
+  autocomplete,
+  name,
 }) => {
   return (
     <>
@@ -20,6 +22,8 @@ const Input = ({
           onChange={onChange}
           hasError={hasError}
           onKeyPress={onKeyPress}
+          autoComplete={autocomplete}
+          name={name}
         />
         <div className="input">
           {infoMsg && <div className="infoMsg">{infoMsg}</div>}
@@ -45,6 +49,7 @@ const InputWrapper = styled.div`
   }
 `;
 const InputField = styled.input`
+  font-family: Pretendard;
   width: 477.87px;
   height: 40px;
   font-size: 20px;

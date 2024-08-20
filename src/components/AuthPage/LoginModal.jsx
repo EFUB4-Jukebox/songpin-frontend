@@ -13,18 +13,16 @@ const LoginModal = ({
   const modalRef = useRef(null);
 
   useEffect(() => {
-    if (!disableOutsideClick) {
-      const handleClickOutside = event => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-          setLoginModal(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [setLoginModal, disableOutsideClick]);
+    const handleClickOutside = event => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setLoginModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setLoginModal]);
 
   const handleSignup = () => {
     setLoginModal(false);

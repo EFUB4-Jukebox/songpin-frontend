@@ -20,10 +20,10 @@ const PublicToggle = ({ isPublic, setIsPublic }) => {
         uncheckedIcon={false}
         checkedIcon={false}
         // boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-        // activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
         height={30}
         width={60}
         className="react-switch"
+        activeBoxShadow="0 0 2px 3px rgba(119, 119, 119, 0)"
       />
     </Switch>
   );
