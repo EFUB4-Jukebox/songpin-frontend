@@ -14,7 +14,10 @@ import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import { getMyProfile } from "../../services/api/myPage";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
-const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
+const PlaylistDetailPage = ({
+  onSelectedLocation = () => {},
+  handlePageClick,
+}) => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
   const [playlistData, setPlaylistData] = useState(null);
@@ -102,7 +105,7 @@ const PlaylistDetailPage = ({ onSelectedLocation = () => {} }) => {
   }
 
   return (
-    <SideSection showSideBar={showSideBar}>
+    <SideSection showSideBar={showSideBar} handlePageClick={handlePageClick}>
       <DetailContainer>
         <ContentBox>
           <BackBtn src={backArrow} onClick={handleBackClick} />

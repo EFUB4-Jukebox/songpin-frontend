@@ -6,27 +6,38 @@ import noBookmarkBlack from "../../assets/images/PlaylistPage/nobookmark_black.s
 import yesBookmarkBlack from "../../assets/images/PlaylistPage/yesbookmark_black.svg";
 import { toggleBookmark } from "../../services/api/playlist";
 import useEditStore from "../../store/useProfileEditStore";
+import { useNavigate } from "react-router-dom";
 
-const BookmarkToggle = ({ playlistId, isBookmarked, color }) => {
+const BookmarkToggle = ({
+  handlePageClick,
+  playlistId,
+  isBookmarked,
+  color,
+}) => {
   const [Bookmarked, setBookmarked] = useState(isBookmarked);
   const { setEdit } = useEditStore();
   const isWhite = color === "white";
+  const navigate = useNavigate();
 
   const handleToggleBookmark = async event => {
     event.stopPropagation(); // 이벤트 버블링 방지
+    const isLoggedIn = localStorage.getItem("accessToken");
+    if (isLoggedIn) {
+      // 북마크 상태 즉시 변경
+      const newBookmarkStatus = !Bookmarked;
+      setBookmarked(newBookmarkStatus);
 
-    // 북마크 상태 즉시 변경
-    const newBookmarkStatus = !Bookmarked;
-    setBookmarked(newBookmarkStatus);
-
-    // API 요청
-    setEdit(true);
-    try {
-      await toggleBookmark(playlistId);
-    } catch (error) {
-      console.error("Error toggling bookmark:", error);
-      // API 요청이 실패하면 상태를 되돌림.
-      setBookmarked(!newBookmarkStatus);
+      // API 요청
+      setEdit(true);
+      try {
+        await toggleBookmark(playlistId);
+      } catch (error) {
+        console.error("Error toggling bookmark:", error);
+        // API 요청이 실패하면 상태를 되돌림.
+        setBookmarked(!newBookmarkStatus);
+      }
+    } else {
+      handlePageClick();
     }
   };
 

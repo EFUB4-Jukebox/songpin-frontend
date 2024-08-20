@@ -3,7 +3,7 @@ import styled from "styled-components";
 import arrowIcon from "../../assets/images/MyPage/arrow.svg";
 import SideBar from "../HomePage/SideBar";
 
-const SideSection = ({ children, isNotLoggedIn }) => {
+const SideSection = ({ children, isNotLoggedIn, handlePageClick }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [loginModal, setLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -38,7 +38,11 @@ const SideSection = ({ children, isNotLoggedIn }) => {
   return (
     <SideComponent>
       <SideBarContainer>
-        <SideBar onClick={handleSideBarClick} isNotLoggedIn={!isLogin} />
+        <SideBar
+          onClick={handleSideBarClick}
+          isNotLoggedIn={!isLogin}
+          handlePageClick={handlePageClick}
+        />
       </SideBarContainer>
       {!isNotLoggedIn && (
         <>

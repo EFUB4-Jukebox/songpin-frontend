@@ -16,6 +16,7 @@ import calendar_selected from "../../assets/images/CreatePin/calendar_selected.s
 import arrowIcon from "../../assets/images/CreatePin/arrow_back_ios.svg";
 import { getPin, editPin } from "../../services/api/pin";
 import SmallModal from "../../components/common/Modal/SmallModal";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const EditPinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -30,6 +31,7 @@ const EditPinPage = () => {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
+  const { setIsSnackbar } = useSnackbarStore();
 
   const handleNavigate = () => {
     navigate("/details-song"); // 곡 ID로 수정
@@ -90,6 +92,7 @@ const EditPinPage = () => {
       } else {
         navigate("/home");
       }
+      setIsSnackbar("핀이 수정되었습니다!");
     } catch (error) {
       console.log("error", error);
     }
@@ -139,6 +142,7 @@ const EditPinPage = () => {
       } else {
         navigate("/home");
       }
+      setIsSnackbar("핀이 수정되었습니다!");
     } catch (error) {
       console.log("error", error);
     }

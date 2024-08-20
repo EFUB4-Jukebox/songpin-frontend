@@ -8,7 +8,7 @@ import {
   getMyProfile,
 } from "../../services/api/myPage";
 
-const Followers = ({ userData }) => {
+const Followers = ({ handlePageClick, userData }) => {
   const navigate = useNavigate();
   const { handle } = useParams();
   const [myHandle, setMyHandle] = useState("");
@@ -18,19 +18,25 @@ const Followers = ({ userData }) => {
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
   const handleNavigation = menu => {
-    const path = window.location.pathname;
-    const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
+    const isLoggedIn = localStorage.getItem("accessToken");
 
-    const firstSegment = segments[0] || "";
-    const secondSegment = segments[1] || "";
+    if (isLoggedIn) {
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(segment => segment); // 빈 문자열을 필터링
 
-    const combinedSegments = secondSegment
-      ? `${firstSegment}/${secondSegment}`
-      : firstSegment;
+      const firstSegment = segments[0] || "";
+      const secondSegment = segments[1] || "";
 
-    navigate(`/users/follows?menu=${menu}&handle=${userData.handle}`, {
-      state: `/${combinedSegments}`,
-    });
+      const combinedSegments = secondSegment
+        ? `${firstSegment}/${secondSegment}`
+        : firstSegment;
+
+      navigate(`/users/follows?menu=${menu}&handle=${userData.handle}`, {
+        state: `/${combinedSegments}`,
+      });
+    } else {
+      handlePageClick();
+    }
   };
 
   useEffect(() => {
@@ -63,29 +69,34 @@ const Followers = ({ userData }) => {
   }, [myHandle]);
 
   const handleFollow = async () => {
-    // 클릭 시 UI 먼저 업데이트
-    setIsFollowing(prev => !prev);
-    setFollowerCount(prevCount => prevCount + (isFollowing ? -1 : 1));
-
-    try {
-      if (isFollowing) {
-        // 팔로우 상태에서 언팔로우 요청
-        const deleteFollowingId = {
-          memberId: userData.memberId,
-        };
-        await deleteFollowing(deleteFollowingId);
-        setFollowId(null);
-      } else {
-        // 언팔로우 상태에서 팔로우 요청
-        const addFollowingId = { memberId: userData.memberId };
-        const res = await addFollowing(addFollowingId);
-        setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
-      }
-    } catch (error) {
-      console.error("Error", error);
-      // 에러 발생 시, UI를 원래 상태로 롤백
+    const isLoggedIn = localStorage.getItem("accessToken");
+    if (isLoggedIn) {
+      // 클릭 시 UI 먼저 업데이트
       setIsFollowing(prev => !prev);
-      setFollowerCount(prevCount => prevCount + (isFollowing ? 1 : -1));
+      setFollowerCount(prevCount => prevCount + (isFollowing ? -1 : 1));
+
+      try {
+        if (isFollowing) {
+          // 팔로우 상태에서 언팔로우 요청
+          const deleteFollowingId = {
+            memberId: userData.memberId,
+          };
+          await deleteFollowing(deleteFollowingId);
+          setFollowId(null);
+        } else {
+          // 언팔로우 상태에서 팔로우 요청
+          const addFollowingId = { memberId: userData.memberId };
+          const res = await addFollowing(addFollowingId);
+          setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
+        }
+      } catch (error) {
+        console.error("Error", error);
+        // 에러 발생 시, UI를 원래 상태로 롤백
+        setIsFollowing(prev => !prev);
+        setFollowerCount(prevCount => prevCount + (isFollowing ? 1 : -1));
+      }
+    } else {
+      handlePageClick();
     }
   };
 

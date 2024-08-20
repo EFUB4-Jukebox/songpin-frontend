@@ -10,7 +10,12 @@ import sidebar_usersearch from "../../assets/sidebar/sidebar_usersearch.svg";
 import sidebar_mypage from "../../assets/sidebar/sidebar_mypage.svg";
 import useMyPageClickStore from "../../store/useMyPageClickStore";
 
-const SideBar = ({ isNotLoggedIn, setLoginModal, isModalOpen }) => {
+const SideBar = ({
+  isNotLoggedIn,
+  setLoginModal,
+  isModalOpen,
+  handlePageClick,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activePath, setActivePath] = React.useState(location.pathname);
@@ -40,7 +45,7 @@ const SideBar = ({ isNotLoggedIn, setLoginModal, isModalOpen }) => {
   };
 
   return (
-    <SideBarContainer isModalOpen={isModalOpen}>
+    <SideBarContainer isModalOpen={isModalOpen} onClick={handlePageClick}>
       <PinFeatures>
         <StyledButton
           onClick={() => onFirstItemClick("/")}

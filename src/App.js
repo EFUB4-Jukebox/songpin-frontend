@@ -211,6 +211,7 @@ function App() {
               setLoginModal={setLoginModal}
               setLat={setLat}
               setLng={setLng}
+              handlePageClick={handlePageClick}
             />
           }
         >
@@ -279,6 +280,7 @@ function MapLayout({
   handleFilterChange2,
   isLoggedIn,
   setLoginModal,
+  handlePageClick,
 }) {
   const navigate = useNavigate();
   const [lat, setLat] = useState(defaultCenter.lat);
@@ -545,18 +547,29 @@ function MapLayout({
             path="/pin-edit/:pinId"
             element={<ProtectedRoute element={<EditPinPage />} />}
           />
-          <Route path="/playlists" element={<PlaylistPage />} />
+          <Route
+            path="/playlists"
+            element={<ProtectedRoute element={<PlaylistPage />} />}
+          />
           <Route path="/usersearch" element={<UserSearchPage />} />
           <Route
             path="/users/:handle"
-            element={<UsersPage onSelectedLocation={setSelectedLocation} />}
+            element={
+              <UsersPage
+                handlePageClick={handlePageClick}
+                onSelectedLocation={setSelectedLocation}
+              />
+            }
           />
           <Route path="/users/follows" element={<UserFollowPage />} />
           <Route path="/playlistsearch" element={<PlaylistSearchPage />} />
           <Route
             path="/playlists/:playlistId"
             element={
-              <PlaylistDetailPage onSelectedLocation={setSelectedLocation} />
+              <PlaylistDetailPage
+                onSelectedLocation={setSelectedLocation}
+                handlePageClick={handlePageClick}
+              />
             }
           />
           <Route
@@ -590,13 +603,21 @@ function MapLayout({
           <Route
             path="/calendar"
             element={
-              <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <CalendarViewPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
           <Route
             path="/mypin-search"
             element={
-              <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+              <ProtectedRoute
+                element={
+                  <MyPinSearchPage onSelectedLocation={setSelectedLocation} />
+                }
+              />
             }
           />
         </Routes>
