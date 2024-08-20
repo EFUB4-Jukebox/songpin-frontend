@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moreButton from "../../assets/images/PlaylistPage/more_vert.svg";
 import SmallModal from "../common/Modal/SmallModal";
+import ReportModal from "../common/Modal/ReportModal";
 import { useNavigate, useParams } from "react-router-dom";
 import CommonSnackbar from "../common/snackbar/CommonSnackbar";
 import { deleteFollower } from "../../services/api/myPage";
@@ -33,6 +34,9 @@ const UserModalBox = ({ isMyFollower, userId }) => {
 
   const handleDeleteModal = () => {
     setIsDeleteModalOpen(prevState => !prevState);
+  };
+  const handleReportModal = () => {
+    setIsReportModalOpen(prevState => !prevState);
   };
 
   const handleDeletePin = async () => {
@@ -80,11 +84,9 @@ const UserModalBox = ({ isMyFollower, userId }) => {
           onDecide={handleDeletePin}
         />
       )}
-      {/* {clickedOption === "사용자 신고" && isReporttModalOpen && (
-        <SmallModal
-        
-        />
-      )} */}
+      {clickedOption === "사용자 신고" && isReporttModalOpen && (
+        <ReportModal userId={userId} closeModal={handleReportModal} />
+      )}
     </PinModal>
   );
 };

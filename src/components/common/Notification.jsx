@@ -10,9 +10,18 @@ const Notification = () => {
   const [alarms, setAlarms] = useState([]);
   const [isNewAlarm, setIsNewAlarm] = useState(false);
 
-  const handleNotice = () => {
+  const handleNotice = async () => {
     setIsOpen(!isOpen);
     setIsNewAlarm(false);
+
+    if (!isOpen) {
+      try {
+        const alarmData = await showAlarms();
+        setAlarms(alarmData.data.alarmList);
+      } catch (error) {
+        console.error("Error fetching alarms:", error);
+      }
+    }
   };
 
   const EventSource = EventSourcePolyfill;
@@ -22,53 +31,57 @@ const Notification = () => {
       const accessKey = localStorage.getItem("accessToken");
 
       try {
-        const alarmData = await showAlarms();
-        setAlarms(alarmData.data.alarmList);
+        // const alarmData = await showAlarms();
+        // setAlarms(alarmData.data.alarmList);
 
-        const eventSource = new EventSource(
-          `https://api.songpin.n-e.kr/alarms/subscribe`,
-          {
-              headers: {
-                Authorization: `Bearer ${accessKey}`,
-                //REFRESH_KEY: `${Refresh_key}`,
-              },
-              withCredentials: true,
+        if (accessKey)
+        {
+          const eventSource = new EventSource(
+            `https://api.songpin.n-e.kr/alarms/subscribe`,
+            {
+                headers: {
+                  Authorization: `Bearer ${accessKey}`,
+                  //REFRESH_KEY: `${Refresh_key}`,
+                },
+                heartbeatTimeout: 300000,
+                withCredentials: true,
+              }
+          );
+  
+  
+          eventSource.onopen = () => {
+            console.log("sse opened!");
+          };
+  
+          eventSource.addEventListener("sse-alarm", async event => {
+            console.log("sse-alarm");
+            const data = JSON.parse(event.data);
+            console.log(data);
+  
+            try {
+              const newAlarmData = await getNewAlarms();
+              console.log("새로운 알림 데이터:", newAlarmData);
+              if (data.isNewAlarm === true) { 
+                setIsNewAlarm(true);
+                console.log("isNewAlarm set to true");
+              }
+              else if (data.isNewAlarm === false) {
+                setIsNewAlarm(false);
+                console.log("isNewAlarm set to false");
+              }
+            } catch (error) {
+              console.error("Error checking new alarms:", error);
             }
-        );
-
-
-        eventSource.onopen = () => {
-          console.log("sse opened!");
-        };
-
-        eventSource.addEventListener("sse-alarm", async event => {
-          console.log("sse-alarm");
-          const data = JSON.parse(event.data);
-          console.log(data);
-
-          try {
-            const newAlarmData = await getNewAlarms();
-            console.log("새로운 알림 데이터:", newAlarmData);
-            if (data.isNewAlarm === true) { 
-              setIsNewAlarm(true);
-              console.log("isNewAlarm set to true");
-            }
-            else if (data.isNewAlarm === false) {
-              setIsNewAlarm(false);
-              console.log("isNewAlarm set to false");
-            }
-          } catch (error) {
-            console.error("Error checking new alarms:", error);
-          }
-        });
-
-        eventSource.onerror = e => {
-          console.error("SSE Error:", e);
-        };
-
-        return () => {
-          eventSource.close();
-        };
+          });
+  
+          eventSource.onerror = e => {
+            console.error("SSE Error:", e);
+          };
+  
+          return () => {
+            eventSource.close();
+          };
+        }
       } catch (error) {
         console.error("Error during initialization:", error);
       }

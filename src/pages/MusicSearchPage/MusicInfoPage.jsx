@@ -17,7 +17,7 @@ import { getSongPins } from "../../services/api/song";
 import { GenreList } from "../../constants/GenreList";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-const MusicInfoPage = ({ onSelectedLocation = () => {} }) => {
+const MusicInfoPage = ({ onSelectedLocation = () => {}, setLat, setLng }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [title, setTitle] = useState("");
@@ -36,11 +36,18 @@ const MusicInfoPage = ({ onSelectedLocation = () => {} }) => {
   const loaderRef = useRef(null);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     if (songInfo?.title) {
       setTitle(songInfo.title);
     }
-  }, [songInfo]);
+    const queryParams = new URLSearchParams(location.search);
+    const latitude = queryParams.get("lat");
+    const longitude = queryParams.get("lng");
+
+      setLat(parseFloat(latitude));  // 지도의 중심 좌표 설정
+      setLng(parseFloat(longitude));
+  }, [songInfo, location]);
 
   useEffect(() => {
     if (titleRef.current) {

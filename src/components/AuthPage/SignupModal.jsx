@@ -16,15 +16,13 @@ const SignupModal = ({
   const [redConsent, setRedConsent] = useState(false);
 
   useEffect(() => {
-    if (!disableOutsideClick) {
-      const handleClickOutside = event => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-          setSignupModal(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-  }, [setSignupModal, disableOutsideClick]);
+    const handleClickOutside = event => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setSignupModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [setSignupModal]);
 
   const handlePersonalInfoConsent = () => {
     setPersonalInfoConsent(!personalInfoConsent);

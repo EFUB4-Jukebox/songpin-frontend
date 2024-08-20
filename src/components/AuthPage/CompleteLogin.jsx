@@ -11,6 +11,7 @@ const CompleteLogin = ({ setCompleteLogin }) => {
     const handleClickOutside = event => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setCompleteLogin(false);
+        window.location.reload();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

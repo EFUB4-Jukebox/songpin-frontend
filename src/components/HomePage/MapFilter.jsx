@@ -27,6 +27,15 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
 
   const optionsRef = useRef(null);
   const [dropdownWidth, setDropdownWidth] = useState(0);
+  const setGenreRef = useRef(null);
+  const [genreDropdownTop, setGenreDropdownTop] = useState(0);
+
+  useEffect(() => {
+    if (setGenreRef.current) {
+      const height = setGenreRef.current.offsetHeight;
+      setGenreDropdownTop(`${height + 4}px`);
+    }
+  }, [selectedGenres]);
 
   const selectTerm = term => {
     setSelectedOption(term);
@@ -114,6 +123,16 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
       } else if (endDate && date.getTime() === endDate.getTime()) {
         return "react-calendar__tile--rangeEnd";
       }
+
+      const today = moment();
+      const tileDate = moment(date);
+
+      if (tileDate.isBefore(today, "day")) {
+        return "react-calendar__tile--past";
+      }
+      if (tileDate.isAfter(today, "day")) {
+        return "react-calendar__tile--future";
+      }
     }
     return null;
   };
@@ -188,6 +207,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
                 calendarType="gregory"
                 selectRange={false}
                 value={[startDate, endDate]}
+                maxDate={new Date()}
                 onChange={handleDateChange}
                 tileClassName={tileClassName}
                 formatDay={(locale, date) => moment(date).format("D")}
@@ -212,7 +232,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
           )}
         </SetTermWrapper>
       )}
-      <SetGenre hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
+      <SetGenre ref={setGenreRef} hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
         {selectedGenres.length > 0 ? (
           <SelectedGenres>
             <Genre
@@ -235,7 +255,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
         />
       </SetGenre>
       {showGenre && (
-        <GenreDropdown>
+        <GenreDropdown style={{ top: genreDropdownTop }}>
           <GenreTotal>
             {GenreList.map(genre => (
               <Genre
@@ -322,6 +342,9 @@ const Option = styled.div`
   border: none;
   background: none;
   cursor: pointer;
+  &:hover {
+    color: #24EE81;
+  }
 `;
 
 const SetTermWrapper = styled.div`
@@ -408,6 +431,7 @@ const ApplyContainer = styled.div`
 
 const CalendarContainer = styled.div`
   position: absolute;
+  
   .react-calendar {
     position: relative;
     top: 50px;
@@ -424,10 +448,12 @@ const StyledCalendar = styled(Calendar)`
   font-family: Pretendard;
   padding: 5px;
   padding: 15px;
+
   .react-calendar__navigation {
     margin: 5px;
     button {
       color: #232323;
+      font-family: Pretendard;
       font-size: 16px;
       font-weight: bold;
       padding: 0px;
@@ -440,17 +466,17 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
-  .react-calendar__tile--now {
-    background: #fcfcfc;
-  }
-
   .react-calendar__tile {
     font-size: 16px;
+    font-family: Pretendard;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .react-calendar__tile--now {
+    background: #fcfcfc;
     &:hover {
-      background: lightgray;
       border-radius: 50%;
     }
   }
@@ -485,6 +511,16 @@ const StyledCalendar = styled(Calendar)`
     width: 40px;
     margin-bottom: 1px;
   }
+
+  .react-calendar__tile--past {
+    &:hover {
+      background: lightgray;
+      border-radius: 50%;
+    }
+  }
+
+  .react-calendar__tile--future {
+  }
 `;
 
 const SelectedDates = styled.div`
@@ -507,10 +543,11 @@ const ApplyButton = styled.button`
   color: #232323;
   font-family: Pretendard;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 500;
   cursor: pointer;
   &:hover {
-    background-color: #5452ff;
+    background-color: #24EE81;
+    border: 1px solid #24EE81;
     color: #ffffff;
   }
 `;
@@ -533,7 +570,8 @@ const GenreApplyButton = styled.button`
   margin-top: 5px;
   cursor: pointer;
   &:hover {
-    background-color: #5452ff;
+    background-color: #24EE81;
+    border: 1px solid #24EE81;
     color: #ffffff;
   }
 `;
@@ -547,7 +585,6 @@ const GenreTotal = styled.div`
 `;
 const GenreDropdown = styled.div`
   position: absolute;
-  top: 110%;
   z-index: 10;
   width: 230px;
   height: 247px;
