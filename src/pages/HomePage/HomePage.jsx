@@ -41,10 +41,14 @@ const HomePage = ({ onSelectedLocation = () => {} }) => {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const Data = await getHomeInfo();
-        setHomeInfo(Data.nickname);
-        setRecentPins(Data.pinList);
-        setRecentPlaces(Data.placeList);
+        const token = localStorage.getItem("accessToken");
+        if (token)
+        {
+          const Data = await getHomeInfo();
+          setHomeInfo(Data.nickname);
+          setRecentPins(Data.pinList);
+          setRecentPlaces(Data.placeList);
+        }
       } catch (error) {
         console.error("Error fetching home data:", error);
       }
