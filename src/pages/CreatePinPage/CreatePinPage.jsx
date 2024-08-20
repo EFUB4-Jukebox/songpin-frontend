@@ -19,7 +19,7 @@ import { postNewPin } from "../../services/api/pin";
 import CommonSnackbar from "../../components/common/snackbar/CommonSnackbar";
 import useSnackbarStore from "../../store/useSnackbarStore";
 
-const CreatePinPage = ({ setLat, setLng, setMapKey }) => {
+const CreatePinPage = () => {
   const [inputCount, setInputCount] = useState(0);
   const [isSongSelected, setIsSongSelected] = useState(false);
   const [showSearchSongContainer, setShowSearchSongContainer] = useState(false);
@@ -105,11 +105,15 @@ const CreatePinPage = ({ setLat, setLng, setMapKey }) => {
     if (songInfo) {
       const songId = Number(songInfo);
       console.log(songId);
+      const placeParams = new URLSearchParams({
+        lat: selectedPlace.y,
+        lng: selectedPlace.x,
+      }).toString();
 
       //setMapKey(prevKey => prevKey + 1);
 
       //navigate(`/details-song/${songId}`);
-      window.location.href = `/details-song/${songId}`;
+      window.location.href = `/details-song/${songId}?${placeParams}`;
     }
   };
 

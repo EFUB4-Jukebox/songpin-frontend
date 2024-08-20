@@ -536,11 +536,7 @@ function MapLayout({
           <Route
             path="/create"
             element={
-              <CreatePinPage
-                setLat={setLat}
-                setLng={setLng}
-                setMapKey={setMapKey}
-              />
+              <CreatePinPage />
             }
           />
           <Route

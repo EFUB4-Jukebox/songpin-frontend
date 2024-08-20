@@ -35,16 +35,19 @@ const MusicInfoPage = ({ onSelectedLocation = () => {}, setLat, setLng }) => {
   const [page, setPage] = useState(0);
   const loaderRef = useRef(null);
   const navigate = useNavigate();
-  const [selectedPlace, setSelectedPlace] = useState(null);
+
 
   useEffect(() => {
     if (songInfo?.title) {
       setTitle(songInfo.title);
     }
-    // 지도의 중심 좌표를 생성된 핀의 위치로 변경
-    //setLat(parseFloat(selectedPlace.y));
-    //setLng(parseFloat(selectedPlace.x));
-  }, [songInfo]);
+    const queryParams = new URLSearchParams(location.search);
+    const latitude = queryParams.get("lat");
+    const longitude = queryParams.get("lng");
+
+      setLat(parseFloat(latitude));  // 지도의 중심 좌표 설정
+      setLng(parseFloat(longitude));
+  }, [songInfo, location]);
 
   useEffect(() => {
     if (titleRef.current) {
