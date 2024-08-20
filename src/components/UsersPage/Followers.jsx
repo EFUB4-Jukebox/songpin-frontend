@@ -12,8 +12,7 @@ const Followers = ({ handlePageClick, userData }) => {
   const navigate = useNavigate();
   const { handle } = useParams();
   const [myHandle, setMyHandle] = useState("");
-  const [isFollowing, setIsFollowing] = useState();
-  const [followId, setFollowId] = useState();
+  const [isFollowing, setIsFollowing] = useState(userData.isFollowing);
   const [followerCount, setFollowerCount] = useState(userData.followerCount);
   const [followingCount, setFollowingCount] = useState(userData.followingCount);
 
@@ -39,35 +38,6 @@ const Followers = ({ handlePageClick, userData }) => {
     }
   };
 
-  useEffect(() => {
-    const checkMyHandle = async () => {
-      try {
-        const res = await getMyProfile();
-        setMyHandle(res.handle);
-      } catch (error) {
-        console.error("Error fetching my profile:", error);
-      }
-    };
-    checkMyHandle();
-  }, []);
-
-  useEffect(() => {
-    if (myHandle) {
-      const checkFollowing = async () => {
-        const res = await getFollowingList(myHandle);
-        const followingList = res.followList;
-        const isFollow =
-          followingList && followingList.find(it => it.handle === handle);
-        console.log(followingList);
-        if (isFollow) {
-          setIsFollowing(true);
-          setFollowId(isFollow.followId);
-        }
-      };
-      checkFollowing();
-    }
-  }, [myHandle]);
-
   const handleFollow = async () => {
     const isLoggedIn = localStorage.getItem("accessToken");
     if (isLoggedIn) {
@@ -82,12 +52,10 @@ const Followers = ({ handlePageClick, userData }) => {
             memberId: userData.memberId,
           };
           await deleteFollowing(deleteFollowingId);
-          setFollowId(null);
         } else {
           // 언팔로우 상태에서 팔로우 요청
           const addFollowingId = { memberId: userData.memberId };
-          const res = await addFollowing(addFollowingId);
-          setFollowId(res.bookmarkId); // 새로 생성된 followId를 설정
+          await addFollowing(addFollowingId);
         }
       } catch (error) {
         console.error("Error", error);

@@ -82,8 +82,12 @@ const UserFollowPage = () => {
   // if (isError) return <div>오류 발생: {error.message}</div>;
 
   const handleBackClick = () => {
-    if (location.state) {
-      navigate(location.state);
+    console.log(document.referrer);
+    const isInternalReferrer =
+      document.referrer && document.referrer === `${window.location.origin}/`;
+    console.log(isInternalReferrer);
+    if (isInternalReferrer) {
+      navigate(-1);
     } else {
       navigate("/home");
     }

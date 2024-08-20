@@ -9,33 +9,26 @@ const UserInfo = ({
   memberId,
   nickname,
   handle,
-  profileImg: propProfileImg,
+  profileImg,
   isMe,
   onClick,
+  fontSize,
 }) => {
-  const { isError, data, error } = useQuery({
-    queryKey: ["getMyProfile"],
-    queryFn: getMyProfile,
-    enabled: !nickname || !handle || !propProfileImg,
-  });
+  const [userProfileImg, setUserProfileImg] = useState();
+  useEffect(() => {
+    const res = ProfileImg.find(it => it.EngName === profileImg);
+    setUserProfileImg(res.imgSrc);
+  }, []);
 
-  const profileData = data || {};
-  const img = ProfileImg.find(
-    it => it.EngName === (propProfileImg || profileData.profileImg),
-  );
-  const profileImg = img ? img.imgSrc : userLogoPop; // 기본 이미지 설정
-  // const nickname = nickname || profileData.nickname;
-  // const handle = handle || profileData.handle;
   return (
     nickname &&
     handle &&
     profileImg && (
       <UserInfoBox onClick={onClick}>
-        <UserLogo src={profileImg} alt="User logo pop" />
-
+        <UserLogo src={userProfileImg} alt="User logo pop" />
         <UserNameBox>
-          <UserName>{nickname || profileData.nickname}</UserName>
-          <UserId>@{handle || profileData.handle}</UserId>
+          <UserName fontSize={fontSize}>{nickname}</UserName>
+          <UserId>@{handle}</UserId>
         </UserNameBox>
       </UserInfoBox>
     )
@@ -69,9 +62,9 @@ const UserName = styled.div`
 
   /* 본문_medium */
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: ${props => props.fontSize || "20px"};
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: normal;
 `;
 
