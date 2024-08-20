@@ -1,6 +1,7 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { reportUsers } from "../../../services/api/user";
 
 const options = [
   "스팸/영리성 홍보",
@@ -11,16 +12,68 @@ const options = [
   "기타",
 ];
 
-const ReportModal = () => {
+const ReportModal = ({ userId, closeModal }) => {
   const [memo, setMemo] = useState("");
   const [active, setActive] = useState(false);
   const [clickedOption, setClickedOption] = useState(null);
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
+
   useEffect(() => {
     setActive(clickedOption !== null);
   }, [memo, clickedOption]);
 
   const onInputHandler = e => {
     setMemo(e.target.value);
+  };
+
+  const handleReportUsers = async () => {
+    try {
+      let reportType;
+
+      switch (clickedOption) {
+        case "스팸/영리성 홍보":
+          reportType = "SPAM";
+          break;
+        case "도배":
+          reportType = "FLOODING";
+          break;
+        case "욕설/비방":
+          reportType = "ABUSE";
+          break;
+        case "개인정보노출":
+          reportType = "DOXXING";
+          break;
+        case "불쾌감 조성":
+          reportType = "OFFENSIVE";
+          break;
+        case "기타":
+          reportType = "OTHER";
+          break;
+      }
+      const report = {
+        reportedId: userId,
+        reportType: reportType,
+        reason: memo,
+      };
+      console.log(report);
+      const res = await reportUsers(report);
+      if (res) {
+        closeModal();
+      }
+    } catch (error) {
+      console.log("error : ", error);
+    }
   };
 
   const handleOptionClick = option => {
@@ -32,7 +85,7 @@ const ReportModal = () => {
   };
   return (
     <BackGround>
-      <ModalComponent>
+      <ModalComponent ref={modalRef}>
         <Message>사용자 신고</Message>
         <ReportContainer>
           <SubMessage>신고 유형</SubMessage>
@@ -60,7 +113,9 @@ const ReportModal = () => {
             <TextNum>{memo.length}/200</TextNum>
           </ReportTextBox>
         </ReportContainer>
-        <SubmitBtn active={active}>제출</SubmitBtn>
+        <SubmitBtn active={active} onClick={handleReportUsers}>
+          제출
+        </SubmitBtn>
       </ModalComponent>
     </BackGround>
   );
@@ -87,7 +142,6 @@ const ModalComponent = styled.div`
   align-items: center;
   width: 621px;
   height: 710px;
-  /* 18px로 수정필요할수도  */
   border-radius: 19px;
   background: var(--f8f8f8, #fcfcfc);
 `;
