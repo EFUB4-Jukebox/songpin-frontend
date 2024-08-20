@@ -12,6 +12,7 @@ const UserInfo = ({
   profileImg,
   isMe,
   onClick,
+  fontSize,
 }) => {
   const [userProfileImg, setUserProfileImg] = useState();
   useEffect(() => {
@@ -26,7 +27,7 @@ const UserInfo = ({
       <UserInfoBox onClick={onClick}>
         <UserLogo src={userProfileImg} alt="User logo pop" />
         <UserNameBox>
-          <UserName>{nickname}</UserName>
+          <UserName fontSize={fontSize}>{nickname}</UserName>
           <UserId>@{handle}</UserId>
         </UserNameBox>
       </UserInfoBox>
@@ -61,9 +62,9 @@ const UserName = styled.div`
 
   /* 본문_medium */
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: ${props => props.fontSize || "20px"};
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: normal;
 `;
 

@@ -60,11 +60,20 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
   }, [handle]);
 
   const handleBackClick = () => {
-    if (location.state) {
-      navigate(location.state);
+    console.log(document.referrer);
+    const isInternalReferrer =
+      document.referrer && document.referrer === `${window.location.origin}/`;
+    console.log(isInternalReferrer);
+    if (isInternalReferrer) {
+      navigate(-1);
     } else {
       navigate("/home");
     }
+    // if (location.state) {
+    //   navigate(location.state);
+    // } else {
+    //   navigate("/home");
+    // }
   };
 
   return (
@@ -86,6 +95,7 @@ const UsersPage = ({ handlePageClick, onSelectedLocation = () => {} }) => {
                   nickname={userData.nickname}
                   handle={userData.handle}
                   profileImg={userData.profileImg}
+                  fontSize="24px"
                 />
                 <Followers
                   handlePageClick={handlePageClick}
