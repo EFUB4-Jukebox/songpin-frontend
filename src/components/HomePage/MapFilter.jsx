@@ -431,6 +431,7 @@ const ApplyContainer = styled.div`
 
 const CalendarContainer = styled.div`
   position: absolute;
+  
   .react-calendar {
     position: relative;
     top: 50px;
@@ -452,6 +453,7 @@ const StyledCalendar = styled(Calendar)`
     margin: 5px;
     button {
       color: #232323;
+      font-family: Pretendard;
       font-size: 16px;
       font-weight: bold;
       padding: 0px;
@@ -466,6 +468,7 @@ const StyledCalendar = styled(Calendar)`
 
   .react-calendar__tile {
     font-size: 16px;
+    font-family: Pretendard;
     display: flex;
     align-items: center;
     justify-content: center;

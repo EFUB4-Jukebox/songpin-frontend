@@ -461,7 +461,7 @@ const CreateBtn = styled.button`
 
 const CalendarContainer = styled.div`
   position: absolute;
-  top: 25.4%;
+  top: 28.2%;
   left: 45%;
   z-index: 10;
   border: 1px solid var(--gray02, #747474);
@@ -482,6 +482,7 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__navigation {
     button {
       color: #232323;
+      font-family: Pretendard;
       font-size: 0.9em;
       font-weight: bold;
     }
@@ -496,6 +497,7 @@ const StyledCalendar = styled(Calendar)`
 
   .react-calendar__tile {
     font-size: 13px;
+    font-family: Pretendard;
     display: flex;
     align-items: center;
     justify-content: center;
