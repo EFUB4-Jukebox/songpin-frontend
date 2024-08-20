@@ -525,7 +525,7 @@ function MapLayout({
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/details-song/:songId"
-            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} />}
+            element={<MusicInfoPage onSelectedLocation={setSelectedLocation} setLat={setLat} setLng={setLng} />}
           />
           <Route
             path="/details-place/:placeId"

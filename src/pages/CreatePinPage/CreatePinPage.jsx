@@ -97,6 +97,7 @@ const CreatePinPage = ({ setLat, setLng, setMapKey }) => {
     console.log("핀 정보:", selectedPin);
     console.log("Posting data:", request);
     const res = await postNewPin(request);
+
     setIsSnackbar("핀이 생성되었습니다!");
 
     console.log(res.headers.location.slice(7));
@@ -105,13 +106,11 @@ const CreatePinPage = ({ setLat, setLng, setMapKey }) => {
       const songId = Number(songInfo);
       console.log(songId);
 
-      navigate(`/details-song/${songId}`);
-    }
+      //setMapKey(prevKey => prevKey + 1);
 
-    // 지도의 중심 좌표를 생성된 핀의 위치로 변경
-    setLat(parseFloat(selectedPlace.y));
-    setLng(parseFloat(selectedPlace.x));
-    setMapKey(prevKey => prevKey + 1);
+      //navigate(`/details-song/${songId}`);
+      window.location.href = `/details-song/${songId}`;
+    }
   };
 
   useEffect(() => {
