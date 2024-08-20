@@ -175,43 +175,51 @@ const SignupModal = ({
         <Wrapper onClick={e => e.stopPropagation()}>
           <SignupWrapper ref={modalRef}>
             <div className="signup">회원가입</div>
-            <Input
-              placeholder="이메일"
-              infoMsg={emailMsg}
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              hasError={!emailValid && email !== ""}
-            />
-            <Input
-              placeholder="닉네임"
-              infoMsg={nicknameMsg}
-              type="text"
-              value={nickname}
-              onChange={e => setNickname(e.target.value)}
-              hasError={!nicknameValid && nickname !== ""}
-            />
+              <Input
+                placeholder="이메일"
+                infoMsg={emailMsg}
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                hasError={!emailValid && email !== ""}
+                autocomplete="off"
+                name="signup-email"
+              />
+              <Input
+                placeholder="닉네임"
+                infoMsg={nicknameMsg}
+                type="text"
+                value={nickname}
+                onChange={e => setNickname(e.target.value)}
+                hasError={!nicknameValid && nickname !== ""}
+                autocomplete="off"
+              />
 
-            <Input
-              placeholder="비밀번호"
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              hasError={
-                (password.length < 8 ||
-                  password.length > 20 ||
-                  !passwordValid) &&
-                password !== ""
-              }
-            />
-            <Input
-              placeholder="비밀번호 확인"
-              infoMsg={confirmPasswordMsg}
-              type="password"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-              hasError={confirmPassword !== "" && password !== confirmPassword}
-            />
+              <Input
+                placeholder="비밀번호"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                hasError={
+                  (password.length < 8 ||
+                    password.length > 20 ||
+                    !passwordValid) &&
+                  password !== ""
+                }
+                autocomplete="new-password"
+                name="signup-password"
+              />
+              <Input
+                placeholder="비밀번호 확인"
+                infoMsg={confirmPasswordMsg}
+                type="password"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                hasError={
+                  confirmPassword !== "" && password !== confirmPassword
+                }
+                autocomplete="off"
+              />
 
             <PersonalInfoConsent>
               <div className="personalInfoConsentCheck">
