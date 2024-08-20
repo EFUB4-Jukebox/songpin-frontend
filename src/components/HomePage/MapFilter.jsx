@@ -27,6 +27,15 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
 
   const optionsRef = useRef(null);
   const [dropdownWidth, setDropdownWidth] = useState(0);
+  const setGenreRef = useRef(null);
+  const [genreDropdownTop, setGenreDropdownTop] = useState(0);
+
+  useEffect(() => {
+    if (setGenreRef.current) {
+      const height = setGenreRef.current.offsetHeight;
+      setGenreDropdownTop(`${height + 4}px`);
+    }
+  }, [selectedGenres]);
 
   const selectTerm = term => {
     setSelectedOption(term);
@@ -223,7 +232,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
           )}
         </SetTermWrapper>
       )}
-      <SetGenre hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
+      <SetGenre ref={setGenreRef} hasGenres={selectedGenres.length > 0} onClick={handleShowGenre}>
         {selectedGenres.length > 0 ? (
           <SelectedGenres>
             <Genre
@@ -246,7 +255,7 @@ const MapFilter = ({ onFilterChange, onFilterChange2 }) => {
         />
       </SetGenre>
       {showGenre && (
-        <GenreDropdown>
+        <GenreDropdown style={{ top: genreDropdownTop }}>
           <GenreTotal>
             {GenreList.map(genre => (
               <Genre
@@ -573,7 +582,6 @@ const GenreTotal = styled.div`
 `;
 const GenreDropdown = styled.div`
   position: absolute;
-  top: 110%;
   z-index: 10;
   width: 230px;
   height: 247px;
