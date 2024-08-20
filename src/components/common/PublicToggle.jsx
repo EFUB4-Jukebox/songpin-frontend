@@ -23,7 +23,7 @@ const PublicToggle = ({ isPublic, setIsPublic }) => {
         height={30}
         width={60}
         className="react-switch"
-        activeBoxShadow="0 0 2px 3px rgba(119, 119, 119, 0.5)"
+        activeBoxShadow="0 0 2px 3px rgba(119, 119, 119, 0)"
       />
     </Switch>
   );
