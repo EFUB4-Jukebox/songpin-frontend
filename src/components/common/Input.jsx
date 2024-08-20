@@ -45,6 +45,7 @@ const InputWrapper = styled.div`
   }
 `;
 const InputField = styled.input`
+  font-family: Pretendard;
   width: 477.87px;
   height: 40px;
   font-size: 20px;
