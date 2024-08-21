@@ -212,6 +212,7 @@ const ReportText = styled.textarea`
   background: var(--offwhite, #efefef);
   color: var(--light_black, #232323);
   font-size: 16px;
+  font-family: Pretendard;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
