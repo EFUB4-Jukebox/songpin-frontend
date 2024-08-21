@@ -43,10 +43,11 @@ const BackgroundWrapper = styled.div`
 `;
 const Wrapper = styled.div`
   min-width: 1000px;
+  position: relative;
   z-index: 1;
 `;
 const Center = styled.div`
-  position: absolute;
+  position: fixed;
   left: 50%;
   z-index: 1;
   transform: translateX(-50%);
@@ -62,13 +63,13 @@ const Center = styled.div`
   }
 `;
 const Bottom = styled.div`
+  position: relative;
   img {
     width: 684x;
     height: 357.2px;
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
     left: 50%;
-
+    bottom: 0px;
     z-index: 0;
     transform: translateX(-50%);
     cursor: pointer;
