@@ -81,6 +81,7 @@ const defaultLevel = 3;
 
 function App() {
   const [allPins, setAllPins] = useState([]);
+  const [term, setTerm] = useState(null);
   const [recentPins, setRecentPins] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
@@ -120,6 +121,7 @@ function App() {
           };
           const data = await postAllMarkers(request);
           setAllPins(data.mapPlaceSet || []);
+          setTerm("ALL");
         } catch (error) {
           console.error("Error fetching all pin data:", error);
         }
@@ -145,6 +147,7 @@ function App() {
       const data = await postAllMarkers(request);
       setAllPins(data.mapPlaceSet || []);
       setRecentPins([]);
+      setTerm("ALL");
     } else if (term === "1week" || term === "1month" || term === "3months") {
       const periodMap = {
         "1week": "week",
@@ -167,6 +170,7 @@ function App() {
       };
       const data = await postRecentMarkers(request);
       setRecentPins(data.mapPlaceSet || []);
+      setTerm("NOTALL");
     }
   };
 
@@ -187,6 +191,7 @@ function App() {
     };
     const data = await postCustomPeriodMarkers(request);
     setRecentPins(data.mapPlaceSet || []);
+    setTerm("NOTALL");
   };
 
   return (
@@ -208,6 +213,7 @@ function App() {
             <MapLayout
               allPins={allPins}
               recentPins={recentPins}
+              term={term}
               handleFilterChange={handleFilterChange}
               handleFilterChange2={handleFilterChange2}
               isLoggedIn={isLoggedIn}
@@ -279,6 +285,7 @@ export default App;
 function MapLayout({
   allPins,
   recentPins,
+  term,
   handleFilterChange,
   handleFilterChange2,
   isLoggedIn,
@@ -328,8 +335,14 @@ function MapLayout({
           const data = await getMyPins(memberId);
           setPinsToDisplay(data.mapPlaceSet || []);
         } else {
-          const pins = recentPins.length >= 0 ? recentPins : allPins;
-          setPinsToDisplay(pins);
+          if (term !== "ALL") {
+            const pins = recentPins.length > 0 ? recentPins : [];
+            setPinsToDisplay(pins);
+          }
+          else {
+            const pins = allPins;
+            setPinsToDisplay(pins);
+          }
         }
         setMapKey(Date.now()); // 핀을 불러온 후 맵 새로고침
       } catch (error) {
