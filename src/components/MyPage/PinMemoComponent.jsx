@@ -31,10 +31,7 @@ const PinMemoComponent = ({
     setIsTruncated(!isTruncated);
   };
 
-  const text =
-    visibility === "PUBLIC"
-      ? memo || "메모가 비어 있습니다"
-      : "비공개 메모입니다.";
+  const text = memo || "메모가 비어 있습니다.";
   const maxLines = 2;
   const showMoreBtn = text.split("\n").length > maxLines;
   const displayText = isTruncated
