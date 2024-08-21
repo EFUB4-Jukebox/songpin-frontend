@@ -1,6 +1,6 @@
 import NavBar from "../../components/IntroducePage/NavBar";
 import main_center from "../../assets/introduce/main_center.svg";
-import main_bottom from "../../assets/introduce/main_bottom.svg";
+import main_bottom from "../../assets/introduce/bottom.png";
 import styled from "styled-components";
 import Background from "../../components/IntroducePage/Background";
 import { useNavigate } from "react-router-dom";
@@ -66,39 +66,39 @@ const Center = styled.div`
 const Bottom = styled.div`
   position: relative;
   img {
-    width: 810.9px;
-    height: 366.3px;
+    width: 684x;
+    height: 357.2px;
     position: fixed;
     left: 50%;
     bottom: 0px;
-    z-index: 2;
+    z-index: 0;
     transform: translateX(-50%);
     cursor: pointer;
-    @media (min-width: 1024px) {
-      width: 100%; /*1024px보다 클 때 width 100%*/
-    }
-    @media (max-width: 1024px) {
+
+    @media (max-width: 700px) {
+      width: 100%;
+      height: auto;
     }
   }
 `;
 const BottomText = styled.div`
   position: fixed;
   left: 50%;
-  bottom: 80px;
+  bottom: 2.5em;
   transform: translateX(-50%);
   z-index: 3;
   color: var(--light_black, #232323);
   text-align: center;
-  font-size: 32px;
+  font-size: 2rem;
   font-style: normal;
   font-weight: 700;
   line-height: 40px; /* 125% */
   cursor: pointer;
-  @media (max-width: 768px) {
-    postiion: absolute;
-    bottom: 80px;
-  }
   white-space: nowrap;
+  @media (max-width: 500px) {
+    font-size: 1.2em;
+    bottom: 1em;
+  }
 `;
 
 export default Main;
