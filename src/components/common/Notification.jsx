@@ -57,21 +57,30 @@ const Notification = () => {
             console.log("sse-alarm");
             const data = JSON.parse(event.data);
             console.log(data);
-  
-            try {
-              const newAlarmData = await getNewAlarms();
-              console.log("새로운 알림 데이터:", newAlarmData);
-              if (data.isNewAlarm === true) { 
-                setIsNewAlarm(true);
-                console.log("isNewAlarm set to true");
-              }
-              else if (data.isNewAlarm === false) {
-                setIsNewAlarm(false);
-                console.log("isNewAlarm set to false");
-              }
-            } catch (error) {
-              console.error("Error checking new alarms:", error);
+
+            if (data.isNewAlarm === true) { 
+              setIsNewAlarm(true);
+              console.log("isNewAlarm set to true");
             }
+            else if (data.isNewAlarm === false) {
+              setIsNewAlarm(false);
+              console.log("isNewAlarm set to false");
+            }
+  
+            // try {
+            //   const newAlarmData = await getNewAlarms();
+            //   console.log("새로운 알림 데이터:", newAlarmData);
+            //   if (data.isNewAlarm === true) { 
+            //     setIsNewAlarm(true);
+            //     console.log("isNewAlarm set to true");
+            //   }
+            //   else if (data.isNewAlarm === false) {
+            //     setIsNewAlarm(false);
+            //     console.log("isNewAlarm set to false");
+            //   }
+            // } catch (error) {
+            //   console.error("Error checking new alarms:", error);
+            // }
           });
   
           eventSource.onerror = e => {
