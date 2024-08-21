@@ -49,7 +49,6 @@ const BackgroundWrapper = styled.div`
   z-index: 0;
 `;
 const Wrapper = styled.div`
-  min-width: 1920px;
   position: relative;
   z-index: 1;
 `;
