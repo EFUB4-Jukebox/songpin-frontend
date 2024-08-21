@@ -106,20 +106,23 @@ function App() {
 
   useEffect(() => {
     const fetchAllPinData = async () => {
-      try {
-        const request = {
-          boundCoords: {
-            swLat: 35,
-            swLng: 126,
-            neLat: 40,
-            neLng: 129,
-          },
-          genreNameFilters: null,
-        };
-        const data = await postAllMarkers(request);
-        setAllPins(data.mapPlaceSet || []);
-      } catch (error) {
-        console.error("Error fetching all pin data:", error);
+      if (window.location.pathname !== "/home")
+      {
+        try {
+          const request = {
+            boundCoords: {
+              swLat: 33,
+              swLng: 124,
+              neLat: 43,
+              neLng: 132,
+            },
+            genreNameFilters: null,
+          };
+          const data = await postAllMarkers(request);
+          setAllPins(data.mapPlaceSet || []);
+        } catch (error) {
+          console.error("Error fetching all pin data:", error);
+        }
       }
     };
     fetchAllPinData();
@@ -132,10 +135,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 35,
-          swLng: 126,
-          neLat: 40,
-          neLng: 129,
+          swLat: 33,
+          swLng: 124,
+          neLat: 43,
+          neLng: 132,
         },
         genreNameFilters,
       };
@@ -154,10 +157,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 35,
-          swLng: 126,
-          neLat: 40,
-          neLng: 129,
+          swLat: 33,
+          swLng: 124,
+          neLat: 43,
+          neLng: 132,
         },
         genreNameFilters,
         periodFilter,
@@ -173,10 +176,10 @@ function App() {
     );
     const request = {
       boundCoords: {
-        swLat: 35,
-        swLng: 126,
-        neLat: 40,
-        neLng: 129,
+        swLat: 33,
+        swLng: 124,
+        neLat: 43,
+        neLng: 132,
       },
       genreNameFilters: genreNameFilters,
       startDate: startDate,
@@ -318,7 +321,7 @@ function MapLayout({
   useEffect(() => {
     const fetchPins = async () => {
       try {
-        if (memberId) {
+        if (memberId && location.pathname.startsWith("/mypage")) {
           const data = await getMyPins(memberId);
           setPinsToDisplay(data.mapPlaceSet || []);
         } else {
@@ -369,7 +372,13 @@ function MapLayout({
   }, [selectedLocation]);
 
   useEffect(() => {
-    if (location.pathname.startsWith("/users/")) {
+    const pathParts = location.pathname.split("/");
+
+    if (
+      pathParts.length === 3 &&
+      pathParts[1] === "users" &&
+      pathParts[2] !== "follows"
+    ) {
       const handle = location.pathname.split("/")[2];
 
       setMemberId(handle);

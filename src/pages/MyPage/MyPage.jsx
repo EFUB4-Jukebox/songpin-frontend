@@ -18,7 +18,7 @@ import useProfileEditStore from "../../store/useProfileEditStore";
 import useEditStore from "../../store/useProfileEditStore";
 import useBookmarkStore from "../../store/useBookmarkStore";
 
-const MyPage = ({onSelectedLocation = () => {}}) => {
+const MyPage = ({ onSelectedLocation = () => {} }) => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [clickedPage, setClickedPage] = useState(
     localStorage.getItem("clickedPage") || "pinfeed",
@@ -170,20 +170,25 @@ const MyPage = ({onSelectedLocation = () => {}}) => {
             </PageSelect>
             <Line />
           </TopBar>
-          {!isPlaylistFetching && !edit ? (
-            clickedPage === "playlist" && (
-              <MyPlaylists myPlaylistData={myPlaylistData && myPlaylistData} />
-            )
-          ) : (
-            <LoadingWrapper>
-              <LoadingSpinner />
-            </LoadingWrapper>
-          )}
+          {!isPlaylistFetching && !edit
+            ? clickedPage === "playlist" && (
+                <MyPlaylists
+                  myPlaylistData={myPlaylistData && myPlaylistData}
+                />
+              )
+            : clickedPage === "playlist" && (
+                <LoadingWrapper>
+                  <LoadingSpinner />
+                </LoadingWrapper>
+              )}
           {clickedPage === "bookmark" && (
             <Bookmarks myBookmarkData={myBookmarkData && myBookmarkData} />
           )}
           {clickedPage === "pinfeed" && (
-            <PinFeed myPinFeedData={myPinFeedData && myPinFeedData} onSelectedLocation={onSelectedLocation} />
+            <PinFeed
+              myPinFeedData={myPinFeedData && myPinFeedData}
+              onSelectedLocation={onSelectedLocation}
+            />
           )}
         </>
       ) : (

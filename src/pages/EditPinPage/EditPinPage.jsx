@@ -17,6 +17,7 @@ import arrowIcon from "../../assets/images/CreatePin/arrow_back_ios.svg";
 import { getPin, editPin } from "../../services/api/pin";
 import SmallModal from "../../components/common/Modal/SmallModal";
 import useSnackbarStore from "../../store/useSnackbarStore";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const EditPinPage = () => {
   const [inputCount, setInputCount] = useState(0);
@@ -153,76 +154,85 @@ const EditPinPage = () => {
         <SideBar></SideBar>
         <EditSection>
           <Arrow src={arrowIcon} onClick={handleModal} />
-          <Content>
-            <PinComponent
-              imgPath={pinData.songImgPath}
-              title={pinData.songTitle}
-              artist={pinData.songArtist}
-            />
-          </Content>
-          <Title>언제</Title>
-          <When
-            className="calendar-area"
-            onClick={() => setShowCalendar(!showCalendar)}
-          >
-            {moment(pinData.listenedDate).format("YYYY.MM.DD")}
-            <CalendarImg />
-          </When>
-          {showCalendar && (
-            <CalendarContainer ref={calendarRef}>
-              <StyledCalendar
-                calendarType="gregory"
-                value={date}
-                onChange={handleDateChange}
-                formatDay={(locale, date) => moment(date).format("D")}
-                formatYear={(locale, date) => moment(date).format("YYYY")}
-                formatMonthYear={(locale, date) =>
-                  moment(date).format("YYYY. MMMM")
-                }
-                showNeighboringMonth={true}
-              />
-            </CalendarContainer>
+          {pinData ? (
+            <>
+              <Content>
+                <PinComponent
+                  imgPath={pinData.songImgPath}
+                  title={pinData.songTitle}
+                  artist={pinData.songArtist}
+                />
+              </Content>
+              <Title>언제</Title>
+              <When
+                className="calendar-area"
+                onClick={() => setShowCalendar(!showCalendar)}
+              >
+                {moment(pinData.listenedDate).format("YYYY.MM.DD")}
+                <CalendarImg />
+              </When>
+              {showCalendar && (
+                <CalendarContainer ref={calendarRef}>
+                  <StyledCalendar
+                    calendarType="gregory"
+                    value={date}
+                    onChange={handleDateChange}
+                    formatDay={(locale, date) => moment(date).format("D")}
+                    formatYear={(locale, date) => moment(date).format("YYYY")}
+                    formatMonthYear={(locale, date) =>
+                      moment(date).format("YYYY. MMMM")
+                    }
+                    showNeighboringMonth={true}
+                  />
+                </CalendarContainer>
+              )}
+              <Title>어디서</Title>
+              <Where>
+                {pinData.placeName}
+                <LocationImg />
+              </Where>
+              <Title>장르</Title>
+              <GenreContainer>
+                {GenreList.map(genre => (
+                  <Genre
+                    key={genre.id}
+                    name={genre.name}
+                    img={
+                      selectedGenre?.id === genre.id
+                        ? genre.whiteImgSrc
+                        : genre.imgSrc
+                    }
+                    bgColor={
+                      selectedGenre?.id === genre.id ? genre.bgColor : null
+                    }
+                    onClick={() => handleGenreClick(genre.id, genre.EngName)}
+                    height="24px"
+                  />
+                ))}
+              </GenreContainer>
+              <Title>메모</Title>
+              <MemoArea
+                placeholder="이곳에 메모를 남겨주세요."
+                maxLength={200}
+                value={pinData.memo}
+                onChange={onInputHandler}
+              ></MemoArea>
+              <TextNum>
+                <span>{inputCount}</span>
+                <span>/200</span>
+              </TextNum>
+              <IsPublic>
+                <Title>메모 공개 여부</Title>
+                <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
+              </IsPublic>
+              <CreateBtn onClick={handleEditPin}>수정 완료</CreateBtn>
+            </>
+          ) : (
+            <LoadingSpinner />
           )}
-          <Title>어디서</Title>
-          <Where>
-            {pinData.placeName}
-            <LocationImg />
-          </Where>
-          <Title>장르</Title>
-          <GenreContainer>
-            {GenreList.map(genre => (
-              <Genre
-                key={genre.id}
-                name={genre.name}
-                img={
-                  selectedGenre?.id === genre.id
-                    ? genre.whiteImgSrc
-                    : genre.imgSrc
-                }
-                bgColor={selectedGenre?.id === genre.id ? genre.bgColor : null}
-                onClick={() => handleGenreClick(genre.id, genre.EngName)}
-                height="24px"
-              />
-            ))}
-          </GenreContainer>
-          <Title>메모</Title>
-          <MemoArea
-            placeholder="이곳에 메모를 남겨주세요."
-            maxLength={200}
-            value={pinData.memo}
-            onChange={onInputHandler}
-          ></MemoArea>
-          <TextNum>
-            <span>{inputCount}</span>
-            <span>/200</span>
-          </TextNum>
-          <IsPublic>
-            <Title>메모 공개 여부</Title>
-            <PublicToggle isPublic={isPublic} setIsPublic={setIsPublic} />
-          </IsPublic>
-          <CreateBtn onClick={handleEditPin}>수정 완료</CreateBtn>
         </EditSection>
       </MainContainer>
+
       {showModal && (
         <SmallModal
           text="편집한 내용을 저장할까요?"
