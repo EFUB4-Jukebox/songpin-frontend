@@ -104,26 +104,29 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchAllPinData = async () => {
-  //     try {
-  //       const request = {
-  //         boundCoords: {
-  //           swLat: 35,
-  //           swLng: 126,
-  //           neLat: 40,
-  //           neLng: 129,
-  //         },
-  //         genreNameFilters: null,
-  //       };
-  //       const data = await postAllMarkers(request);
-  //       setAllPins(data.mapPlaceSet || []);
-  //     } catch (error) {
-  //       console.error("Error fetching all pin data:", error);
-  //     }
-  //   };
-  //   fetchAllPinData();
-  // }, [lat, lng, level]);
+  useEffect(() => {
+    const fetchAllPinData = async () => {
+      if (window.location.pathname !== "/home")
+      {
+        try {
+          const request = {
+            boundCoords: {
+              swLat: 35,
+              swLng: 126,
+              neLat: 40,
+              neLng: 129,
+            },
+            genreNameFilters: null,
+          };
+          const data = await postAllMarkers(request);
+          setAllPins(data.mapPlaceSet || []);
+        } catch (error) {
+          console.error("Error fetching all pin data:", error);
+        }
+      }
+    };
+    fetchAllPinData();
+  }, [lat, lng, level]);
 
   const handleFilterChange = async (term, genres) => {
     if (term === "All") {
