@@ -324,6 +324,9 @@ function MapLayout({
         if (memberId && location.pathname.startsWith("/mypage")) {
           const data = await getMyPins(memberId);
           setPinsToDisplay(data.mapPlaceSet || []);
+        } else if (location.pathname.startsWith("/users/")) {
+          const data = await getMyPins(memberId);
+          setPinsToDisplay(data.mapPlaceSet || []);
         } else {
           const pins = recentPins.length > 0 ? recentPins : allPins;
           setPinsToDisplay(pins);
