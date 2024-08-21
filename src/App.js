@@ -318,7 +318,7 @@ function MapLayout({
   useEffect(() => {
     const fetchPins = async () => {
       try {
-        if (memberId) {
+        if (memberId && location.pathname.startsWith("/mypage")) {
           const data = await getMyPins(memberId);
           setPinsToDisplay(data.mapPlaceSet || []);
         } else {
@@ -369,7 +369,13 @@ function MapLayout({
   }, [selectedLocation]);
 
   useEffect(() => {
-    if (location.pathname.startsWith("/users/")) {
+    const pathParts = location.pathname.split("/");
+
+    if (
+      pathParts.length === 3 &&
+      pathParts[1] === "users" &&
+      pathParts[2] !== "follows"
+    ) {
       const handle = location.pathname.split("/")[2];
 
       setMemberId(handle);
