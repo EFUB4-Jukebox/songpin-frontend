@@ -75,8 +75,8 @@ const Bottom = styled.div`
     transform: translateX(-50%);
     cursor: pointer;
 
-    @media (max-width: 700px) {
-      width: 100%;
+    @media (max-width: 800px) {
+      width: 80%;
       height: auto;
     }
   }
@@ -84,7 +84,7 @@ const Bottom = styled.div`
 const BottomText = styled.div`
   position: fixed;
   left: 50%;
-  bottom: 2.5em;
+  bottom: 4.5rem;
   transform: translateX(-50%);
   z-index: 3;
   color: var(--light_black, #232323);
@@ -95,9 +95,13 @@ const BottomText = styled.div`
   line-height: 40px; /* 125% */
   cursor: pointer;
   white-space: nowrap;
-  @media (max-width: 700px) {
-    font-size: 1.2em;
-    bottom: 1em;
+  @media (max-width: 800px) {
+    font-size: 1.5rem;
+    bottom: 3%.5;
+  }
+  @media (max-width: 450px) {
+    font-size: 1rem;
+    bottom: 2rem;
   }
 `;
 
