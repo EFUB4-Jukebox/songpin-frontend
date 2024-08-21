@@ -45,8 +45,12 @@ const MusicInfoPage = ({ onSelectedLocation = () => {}, setLat, setLng }) => {
     const latitude = queryParams.get("lat");
     const longitude = queryParams.get("lng");
 
+    if (latitude && longitude)
+    {
       setLat(parseFloat(latitude));  // 지도의 중심 좌표 설정
       setLng(parseFloat(longitude));
+    }
+
   }, [songInfo, location]);
 
   useEffect(() => {
