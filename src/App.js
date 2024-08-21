@@ -111,10 +111,10 @@ function App() {
         try {
           const request = {
             boundCoords: {
-              swLat: 35,
-              swLng: 126,
-              neLat: 40,
-              neLng: 129,
+              swLat: 33,
+              swLng: 124,
+              neLat: 43,
+              neLng: 132,
             },
             genreNameFilters: null,
           };
@@ -135,10 +135,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 35,
-          swLng: 126,
-          neLat: 40,
-          neLng: 129,
+          swLat: 33,
+          swLng: 124,
+          neLat: 43,
+          neLng: 132,
         },
         genreNameFilters,
       };
@@ -157,10 +157,10 @@ function App() {
       );
       const request = {
         boundCoords: {
-          swLat: 35,
-          swLng: 126,
-          neLat: 40,
-          neLng: 129,
+          swLat: 33,
+          swLng: 124,
+          neLat: 43,
+          neLng: 132,
         },
         genreNameFilters,
         periodFilter,
@@ -176,10 +176,10 @@ function App() {
     );
     const request = {
       boundCoords: {
-        swLat: 35,
-        swLng: 126,
-        neLat: 40,
-        neLng: 129,
+        swLat: 33,
+        swLng: 124,
+        neLat: 43,
+        neLng: 132,
       },
       genreNameFilters: genreNameFilters,
       startDate: startDate,
