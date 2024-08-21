@@ -76,7 +76,7 @@ const Bottom = styled.div`
     cursor: pointer;
 
     @media (max-width: 800px) {
-      width: 80%;
+      width: 70%;
       height: auto;
     }
   }
@@ -96,11 +96,15 @@ const BottomText = styled.div`
   cursor: pointer;
   white-space: nowrap;
   @media (max-width: 800px) {
-    font-size: 1.5rem;
-    bottom: 3rem;
+    font-size: 28px;
+    bottom: 4.5rem;
   }
-  @media (max-width: 360px) {
-    font-size: 1rem;
+  @media (max-width: 500px) {
+    font-size: 28px;
+    bottom: 4.5rem;
+  }
+  @media (max-width: 350px) {
+    font-size: 16px;
     bottom: 2rem;
   }
 `;
