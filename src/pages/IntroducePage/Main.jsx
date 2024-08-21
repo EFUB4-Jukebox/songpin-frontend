@@ -27,7 +27,7 @@ const Main = () => {
             src={main_bottom}
             alt="main_bottom"
           />
-          <BottomText>음악지도 보러가기</BottomText>
+          <BottomText>음악 지도 보러 가기</BottomText>
         </Bottom>
       </Wrapper>
     </>
@@ -97,9 +97,9 @@ const BottomText = styled.div`
   white-space: nowrap;
   @media (max-width: 800px) {
     font-size: 1.5rem;
-    bottom: 3%.5;
+    bottom: 3rem;
   }
-  @media (max-width: 450px) {
+  @media (max-width: 360px) {
     font-size: 1rem;
     bottom: 2rem;
   }
