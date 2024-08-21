@@ -492,6 +492,9 @@ const MostListenGenreWrapper = styled.div`
   gap: 49px;
   width: 600px;
   opacity: 0;
+  white-space: nowrap;
+  min-width: 600px;
+
   transform: translateY(50%);
   transition:
     opacity 1.5s ease-in-out,
@@ -510,6 +513,8 @@ const MostListenGenreWrapper2 = styled.div`
   gap: 49px;
   width: 600px;
   opacity: 0;
+  white-space: nowrap;
+  min-width: 600px;
   transition: opacity 1.5s ease-in-out;
 
   &.in-view {
