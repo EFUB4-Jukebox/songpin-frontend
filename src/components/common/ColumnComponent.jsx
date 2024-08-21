@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
 
 const ColumnComponent = (alarm ={}) => {
   const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
 
   const handleClick = () => {
     setIsClicked(true);
@@ -12,7 +10,7 @@ const ColumnComponent = (alarm ={}) => {
 
   const goToProfile = (handle) => {
     if(handle){
-      navigate(`/users/${handle}`);
+      window.location.href = `/users/${handle}`;
     }
   };
 
