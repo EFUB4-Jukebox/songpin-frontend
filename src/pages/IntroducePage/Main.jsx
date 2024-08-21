@@ -27,8 +27,14 @@ const Main = () => {
             src={main_bottom}
             alt="main_bottom"
           />
-          <BottomText>음악지도 보러가기</BottomText>
         </Bottom>
+        <BottomText>
+          <img
+            onClick={handleGotoHomepage}
+            src={main_bottom_text}
+            alt="main_bottom_text"
+          />
+        </BottomText>
       </Wrapper>
     </>
   );
@@ -43,41 +49,26 @@ const BackgroundWrapper = styled.div`
   z-index: 0;
 `;
 const Wrapper = styled.div`
-  min-width: 1536px;
+  min-width: 1920px;
   position: relative;
   z-index: 1;
 `;
 const Center = styled.div`
-  position: absolute;
+  position: fixed;
   left: 50%;
   z-index: 1;
+  top: 85px;
   transform: translateX(-50%);
-  @media (min-width: 1024px) {
-    img {
-      width: 100%; /*1024px보다 클 때 width 100%*/
-    }
-  }
-  @media (max-width: 1024px) {
-    img {
-      width: 100%; /*1024px보다 작을 때 width 10%*/
-    }
-  }
 `;
 const Bottom = styled.div`
-  position: relative;
   img {
     width: 810.9px;
     height: 366.3px;
     position: fixed;
     left: 50%;
     bottom: 0px;
-    z-index: 2;
     transform: translateX(-50%);
     cursor: pointer;
-    @media (max-width: 768px) {
-      width: 340.578px;
-      height: 153.846px;
-    }
   }
 `;
 const BottomText = styled.div`
@@ -85,19 +76,8 @@ const BottomText = styled.div`
   left: 50%;
   bottom: 80px;
   transform: translateX(-50%);
-  z-index: 3;
-  color: var(--light_black, #232323);
-  text-align: center;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 40px; /* 125% */
+  z-index: 2;
   cursor: pointer;
-  @media (max-width: 768px) {
-    postiion: absolute;
-    bottom: 20px;
-    font-size: 16px;
-  }
 `;
 
 export default Main;
