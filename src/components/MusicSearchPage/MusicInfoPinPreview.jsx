@@ -112,7 +112,7 @@ const MusicInfoPinPreview = ({ pin, onSelectedLocation = () => {} }) => {
           >
             {visibility === "PRIVATE" && <SecretPin src={lockIcon} />}
             {visibility === "PRIVATE" && !isMine
-              ? "비공개 메모입니다"
+              ? "비공개 메모입니다."
               : displayText}
             {showMoreBtn && isTruncated && (
               <MoreBtn onClick={toggleTruncation}> ...더보기</MoreBtn>
