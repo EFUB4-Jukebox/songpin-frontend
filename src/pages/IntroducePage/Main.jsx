@@ -27,7 +27,6 @@ const Main = () => {
             src={main_bottom}
             alt="main_bottom"
           />
-          <BottomText>음악 지도 보러 가기</BottomText>
         </Bottom>
       </Wrapper>
     </>
@@ -79,33 +78,6 @@ const Bottom = styled.div`
       width: 70%;
       height: auto;
     }
-  }
-`;
-const BottomText = styled.div`
-  position: fixed;
-  left: 50%;
-  bottom: 4.5rem;
-  transform: translateX(-50%);
-  z-index: 3;
-  color: var(--light_black, #232323);
-  text-align: center;
-  font-size: 2rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 40px; /* 125% */
-  cursor: pointer;
-  white-space: nowrap;
-  @media (max-width: 800px) {
-    font-size: 28px;
-    bottom: 4.5rem;
-  }
-  @media (max-width: 500px) {
-    font-size: 28px;
-    bottom: 4.5rem;
-  }
-  @media (max-width: 350px) {
-    font-size: 16px;
-    bottom: 2rem;
   }
 `;
 
