@@ -95,7 +95,7 @@ const BottomText = styled.div`
   line-height: 40px; /* 125% */
   cursor: pointer;
   white-space: nowrap;
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
     font-size: 1.2em;
     bottom: 1em;
   }
