@@ -38,6 +38,7 @@ const PinComponent = ({
   };
 
   const isPrivate = pin.visibility === "PRIVATE";
+  const isEmpty = !pin.memo;
   const text =
     isPrivate && !pin.isMine
       ? "비공개인 메모입니다."
