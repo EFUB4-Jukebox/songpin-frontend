@@ -35,6 +35,7 @@ const CreatePinPage = () => {
   const [active, setActive] = useState(false);
   const [infoMsg, setInfoMsg] = useState("");
   const { setIsSnackbar } = useSnackbarStore();
+  const [disabled, setDisabled] = useState(false);
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
@@ -75,6 +76,10 @@ const CreatePinPage = () => {
 
   const handlePostPin = async e => {
     e.preventDefault();
+
+    if (disabled) return;
+
+    setDisabled(true);
     const request = {
       song: {
         title: selectedPin.title,
@@ -115,6 +120,9 @@ const CreatePinPage = () => {
       //navigate(`/details-song/${songId}`);
       window.location.href = `/details-song/${songId}?${placeParams}`;
     }
+    setTimeout(() => {
+      setDisabled(false);
+    }, 5000);
   };
 
   useEffect(() => {
