@@ -19,9 +19,9 @@ export const getMyProfile = async () => {
   }
 };
 
-export const getMyPinFeed = async () => {
+export const getMyPinFeed = async page => {
   try {
-    const data = await get(`/me/feed`);
+    const data = await get(`me/feed?page=${page}&size=20`);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
@@ -124,10 +124,10 @@ export const deleteBookmarkOne = async playlistId => {
   }
 };
 
-export const searchPin = async ({ keyword }) => {
+export const searchPin = async ({ keyword, page }) => {
   try {
     console.log(keyword);
-    const data = await get(`/me/pins?keyword=${keyword}`);
+    const data = await get(`/me/pins?keyword=${keyword}&page=${page}&size=20`);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");

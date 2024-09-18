@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import pinIconSpark from "../../assets/images/MyPage/spark-51.svg";
 import calendarIcon from "../../assets/images/MyPage/calendar.svg";
@@ -11,13 +11,64 @@ import { useQuery } from "@tanstack/react-query";
 const PinFeed = ({ myPinFeedData, onSelectedLocation = () => {} }) => {
   const [totalPinNum, setTotalPinNum] = useState();
   const [pinFeedList, setPinFeedList] = useState([]);
-  const [feedElementTitle, setFeedElementTitle] = useState();
-  const [feedElementArtist, setFeedElementArtist] = useState();
-  const [feedElementImgPath, setFeedElementImgPath] = useState();
-  const [listenedDate, setListenedDate] = useState();
-  const [placeName, setPlaceName] = useState();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const navigate = useNavigate();
+  const loaderRef = useRef(null);
+
+  useEffect(() => {
+    if (myPinFeedData) {
+      console.log(myPinFeedData);
+      setTotalPinNum(myPinFeedData.totalElements);
+      setPinFeedList(myPinFeedData.pinFeedList);
+      setHasMore(myPinFeedData.pinFeedList.length === 20);
+    }
+  }, []);
+
+  const loadMoreResults = async () => {
+    console.log(pinFeedList.length);
+    console.log(hasMore);
+    if (!hasMore) return;
+
+    try {
+      console.log(currentPage);
+      const data = await getMyPinFeed(currentPage);
+      console.log("fetched Data:", data);
+      setPinFeedList(prev => [...prev, ...data.pinFeedList]);
+      setCurrentPage(prev => prev + 1);
+      setHasMore(data.pinFeedList.length === 20);
+    } catch (error) {
+      console.error("핀피드 조회 에러: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        console.log(entries);
+
+        if (entries[0].isIntersecting) {
+          console.log("로딩");
+          loadMoreResults(); // 스크롤 끝까지 내릴 때 추가 데이터 요청
+        }
+      },
+      {
+        root: null, // 기본값 viewport
+        rootMargin: " 0px 0px 100px 0px",
+        threshold: 0, // 0%에서 호출
+      },
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [currentPage, hasMore]);
+
   const goCalendar = () => {
     navigate("/calendar");
   };
@@ -38,7 +89,7 @@ const PinFeed = ({ myPinFeedData, onSelectedLocation = () => {} }) => {
       setTotalPinNum(myPinFeedData.totalElements);
       setPinFeedList(myPinFeedData.pinFeedList);
     }
-  }, [myPinFeedData]);
+  }, []);
 
   return (
     <PinFeedContainer>
@@ -80,6 +131,7 @@ const PinFeed = ({ myPinFeedData, onSelectedLocation = () => {} }) => {
           )}
         </>
       )}
+      <div ref={loaderRef} style={{ height: "15px" }}></div>
     </PinFeedContainer>
   );
 };

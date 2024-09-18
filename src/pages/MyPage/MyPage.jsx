@@ -60,8 +60,8 @@ const MyPage = ({ onSelectedLocation = () => {} }) => {
     refetch: refetchPinFeed,
     isFetching: isPinFeedFetching,
   } = useQuery({
-    queryKey: ["getMyPinFeed"],
-    queryFn: getMyPinFeed,
+    queryKey: ["getMyPinFeed", 0], // 두 번째 요소로 page 값을 포함
+    queryFn: ({ queryKey }) => getMyPinFeed(queryKey[1]), // queryKey에서 page 값을 추출하여 전달
   });
 
   const {
@@ -118,6 +118,7 @@ const MyPage = ({ onSelectedLocation = () => {} }) => {
   // }, []);
 
   useEffect(() => {
+    console.log(myPinFeedData);
     if (clickedPage === "playlist") {
       refetchPlaylist();
     } else if (clickedPage === "pinfeed") {
