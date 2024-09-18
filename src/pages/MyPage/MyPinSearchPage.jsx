@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import SideSection from "../../components/common/SideSection";
@@ -13,6 +13,10 @@ const MyPinSearchPage = ({ onSelectedLocation = () => {} }) => {
   const [showSideBar, setShowSideBar] = useState(true);
   const [pinList, setPinList] = useState();
   const [init, setInit] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const loaderRef = useRef(null);
+
   // const [searchTriggered, setSearchTriggered] = useState(false);
 
   const navigate = useNavigate();
@@ -45,10 +49,56 @@ const MyPinSearchPage = ({ onSelectedLocation = () => {} }) => {
     console.log(inputValue);
     const encodedKeyword = encodeURIComponent(inputValue);
     console.log(encodedKeyword);
-    const res = await searchPin({ keyword: encodedKeyword });
+    const res = await searchPin({ keyword: encodedKeyword, page: page });
     console.log(res);
+    setPage(prev => prev + 1);
+    setHasMore(res.myPinList.length === 20);
     setPinList(res.myPinList);
   };
+
+  const loadMoreResults = async () => {
+    console.log(hasMore);
+    if (!hasMore) return;
+
+    try {
+      console.log("page:", page);
+      const encodedKeyword = encodeURIComponent(inputValue);
+      const data = await searchPin({ keyword: encodedKeyword, page: page });
+      console.log("fetched Data:", data);
+      setPinList(prev => [...prev, ...data.myPinList]);
+      setPage(prev => prev + 1);
+      setHasMore(data.myPinList.length === 20);
+    } catch (error) {
+      console.error("핀피드 조회 에러: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        console.log(entries);
+
+        if (entries[0].isIntersecting) {
+          console.log("로딩");
+          loadMoreResults(); // 스크롤 끝까지 내릴 때 추가 데이터 요청
+        }
+      },
+      {
+        root: null, // 기본값 viewport
+        rootMargin: " 0px 0px 100px 0px",
+        threshold: 0, // 0%에서 호출
+      },
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [page, hasMore]);
 
   return (
     <SideSection showSideBar={showSideBar}>
@@ -79,6 +129,7 @@ const MyPinSearchPage = ({ onSelectedLocation = () => {} }) => {
             <EmptyMessage>{init ? "" : "검색 결과가 없습니다."}</EmptyMessage>
           </Empty>
         )}
+        <div ref={loaderRef} style={{ height: "15px" }}></div>
       </Content>
     </SideSection>
   );

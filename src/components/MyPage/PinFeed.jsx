@@ -55,7 +55,7 @@ const PinFeed = ({ myPinFeedData, onSelectedLocation = () => {} }) => {
       {
         root: null, // 기본값 viewport
         rootMargin: " 0px 0px 100px 0px",
-        threshold: 0, // 100%에서 호출
+        threshold: 0, // 0%에서 호출
       },
     );
 
