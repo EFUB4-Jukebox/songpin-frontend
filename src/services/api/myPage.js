@@ -19,9 +19,9 @@ export const getMyProfile = async () => {
   }
 };
 
-export const getMyPinFeed = async () => {
+export const getMyPinFeed = async page => {
   try {
-    const data = await get(`/me/feed`);
+    const data = await get(`me/feed?page=${page}&size=20`);
     return data;
   } catch (error) {
     throw new Error("데이터 불러오기에 실패하였습니다.");
