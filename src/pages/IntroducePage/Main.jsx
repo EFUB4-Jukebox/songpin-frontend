@@ -3,15 +3,28 @@ import main_center from "../../assets/introduce/main_center.svg";
 import main_bottom from "../../assets/introduce/bottom.png";
 import styled from "styled-components";
 import Background from "../../components/IntroducePage/Background";
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import main_bottom_text from "../../assets/introduce/main_bottom_text.svg";
+import OutofServiceModal from '../../components/common/Modal/OutOfServiceModal';
+
 const Main = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
   const handleGotoHomepage = () => {
     navigate("/home");
   };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
+      {isModalOpen && (
+        <OutofServiceModal onClose={closeModal} />
+      )}
       <BackgroundWrapper>
         <Background />
       </BackgroundWrapper>
